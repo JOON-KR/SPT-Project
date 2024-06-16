@@ -16,13 +16,12 @@ import java.time.LocalDateTime;
 public class Series {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @Column(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(name = "title", nullable = false, length = 50)
@@ -39,8 +38,11 @@ public class Series {
     @ColumnDefault("0")
     private long viewCnt;
 
-    @Column(name = "reg_date", nullable = false)
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "reg_date", nullable = false, updatable = false)
     private LocalDateTime regDate;
 
+    @PrePersist
+    protected void onCreate() {
+            regDate = LocalDateTime.now();
+    }
 }

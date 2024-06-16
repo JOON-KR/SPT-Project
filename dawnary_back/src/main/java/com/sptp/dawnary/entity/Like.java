@@ -6,7 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "like")
+@Entity(name = "likes")
 @Getter
 @Setter
 @ToString
@@ -16,22 +16,23 @@ import java.time.LocalDateTime;
 public class Like {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @Column(name = "series_id", nullable = false)
+    @JoinColumn(name = "series_id", nullable = false)
     private Series series;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @Column(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "reg_date", nullable = false)
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "reg_date", nullable = false, updatable = false)
     private LocalDateTime regDate;
 
+    @PrePersist
+    protected void onCreate() {
+        regDate = LocalDateTime.now();
+    }
 }

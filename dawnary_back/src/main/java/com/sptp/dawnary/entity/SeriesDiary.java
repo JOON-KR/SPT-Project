@@ -12,17 +12,15 @@ import lombok.*;
 public class SeriesDiary {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @Column(name = "series_id", nullable = false)
+    @JoinColumn(name = "series_id", nullable = false)
     private Series series;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @Column(name = "diary_id", nullable = false)
+    @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
 }
