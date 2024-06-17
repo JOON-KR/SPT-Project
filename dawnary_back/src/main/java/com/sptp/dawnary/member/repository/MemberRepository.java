@@ -19,8 +19,12 @@ public class MemberRepository {
 		em.persist(member);
 	}
 
-	public Member findOne(Long id) {
+	public Member findMemberById(Long id) {
 		return em.find(Member.class, id);
+	}
+
+	public Member findMemberByEmail(String email) {
+		return em.find(Member.class, email);
 	}
 
 	public List<Member> findAll() {
