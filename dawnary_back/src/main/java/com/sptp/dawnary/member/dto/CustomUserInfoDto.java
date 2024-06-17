@@ -1,5 +1,7 @@
 package com.sptp.dawnary.member.dto;
 
+import com.sptp.dawnary.member.domain.RoleType;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +15,5 @@ public class CustomUserInfoDto extends MemberDto{
 	private String email;
 	private String password;
 	private String name;
-	// private RoleType roleType;
+	private RoleType role;
 }
