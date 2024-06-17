@@ -7,7 +7,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.sptp.dawnary.member.dto.MemberDto;
+import com.sptp.dawnary.member.dto.CustomUserInfoDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,7 +41,7 @@ public class JwtUtil {
 	 * @param member
 	 * @return Access Token String
 	 */
-	public String createAccessToken(MemberDto member) {
+	public String createAccessToken(CustomUserInfoDto member) {
 		return createToken(member, accessTokenExpTime);
 	}
 
@@ -51,7 +51,7 @@ public class JwtUtil {
 	 * @param expireTime
 	 * @return JWT String
 	 */
-	private String createToken(MemberDto member, long expireTime) {
+	private String createToken(CustomUserInfoDto member, long expireTime) {
 		Claims claims = Jwts.claims();
 		claims.put("memberId", member.getId());
 		claims.put("email", member.getEmail());
