@@ -1,4 +1,4 @@
-package com.sptp.dawnary.security;
+package com.sptp.dawnary.security.util;
 
 import java.security.Key;
 import java.time.ZonedDateTime;
@@ -56,7 +56,7 @@ public class JwtUtil {
 		claims.put("memberId", member.getId());
 		claims.put("email", member.getEmail());
 		claims.put("name", member.getName());
-		// claims.put("role", member.getRole()); //USER, ADMIN 추가
+		claims.put("role", member.getRole()); //USER, ADMIN
 
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime tokenValidity = now.plusSeconds(expireTime);
