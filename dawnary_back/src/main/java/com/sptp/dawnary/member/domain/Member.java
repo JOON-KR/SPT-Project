@@ -1,11 +1,17 @@
 package com.sptp.dawnary.member.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.sptp.dawnary.follow.domain.Follow;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +48,12 @@ public class Member {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "ROLE", nullable = false)
 	private RoleType role;
+
+	@OneToMany(mappedBy = "following")
+	private Set<Follow> followers = new HashSet<>();
+
+	@OneToMany(mappedBy = "follower")
+	private Set<Follow> followings = new HashSet<>();
 
 	public void updatePassword(String password) {
 		this.password = password;
