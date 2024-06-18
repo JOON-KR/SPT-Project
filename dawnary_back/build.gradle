@@ -43,6 +43,9 @@ dependencies {
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2'
 	//validation
 	implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+	//p6spy
+	implementation 'p6spy:p6spy:3.9.1'
+	implementation 'com.github.gavlyukovskiy:datasource-decorator-spring-boot-autoconfigure:1.9.0'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
