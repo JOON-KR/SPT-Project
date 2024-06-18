@@ -1,0 +1,8 @@
+.cal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease;
+    z-index: 1; /* Slide 위로 올라가기 위해 z-index 설정 */
+  }  
