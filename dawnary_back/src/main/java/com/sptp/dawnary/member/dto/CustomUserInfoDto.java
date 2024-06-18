@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomUserInfoDto extends MemberDto{
+public class CustomUserInfoDto extends MemberDto {
 
 	private Long memberId;
 	private String email;
