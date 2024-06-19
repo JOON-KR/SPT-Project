@@ -1,4 +1,4 @@
-package com.sptp.dawnary.entity;
+package com.sptp.dawnary.diary.domain;
 
 public enum Weather {
     SUNNY, CLOUDY, RAINING, WINDY, SNOWING

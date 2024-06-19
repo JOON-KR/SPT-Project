@@ -1,6 +1,6 @@
-package com.sptp.dawnary.entity;
+package com.sptp.dawnary.diary.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sptp.dawnary.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
