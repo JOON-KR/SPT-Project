@@ -1,6 +1,8 @@
-package com.sptp.dawnary.entity;
+package com.sptp.dawnary.seriesDiary.domain;
 
 
+import com.sptp.dawnary.diary.domain.Diary;
+import com.sptp.dawnary.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
 
