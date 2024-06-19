@@ -1,5 +1,7 @@
 package com.sptp.dawnary.security.service;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,8 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(final String id) throws UsernameNotFoundException {
-		Member member = memberRepository.findMemberById(Long.parseLong(id));
-		if (member == null) {
+		Optional<Member> member = memberRepository.findById(Long.parseLong(id));
+		if (member.isEmpty()) {
 			throw new UsernameNotFoundException("해당하는 유저가 없습니다.");
 		}
 
