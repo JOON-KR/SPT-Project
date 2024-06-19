@@ -1,13 +1,11 @@
 package com.sptp.dawnary.elastic.document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.InnerField;
-import org.springframework.data.elasticsearch.annotations.MultiField;
 
 import com.sptp.dawnary.series.domain.Series;
 
@@ -41,9 +39,9 @@ public class SeriesDocument {
     private String title;
     private int status;
     private String imagePath;
-    private int viewCnt;
+    private long viewCnt;
     @Field(type = FieldType.Date)
-    private Date regDate;
+    private LocalDateTime regDate;
     // 자동 완성을 위한 필드
 
     public static SeriesDocument from(Series series) {
