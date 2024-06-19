@@ -1,2 +1,6 @@
 .bin
 .env
+.log
+.gradle
+.classpath
+.project
