@@ -1,8 +1,9 @@
-package com.sptp.dawnary.entity;
+package com.sptp.dawnary.like.domain;
 
+import com.sptp.dawnary.entity.Member;
+import com.sptp.dawnary.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
