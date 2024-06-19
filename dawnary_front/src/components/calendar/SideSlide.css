@@ -1,0 +1,64 @@
+.slide {
+    position: fixed;
+    top: 0;
+    right: -400px; /* 초기에는 화면 밖으로 이동 */
+    width: 400px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .slide.open {
+    right: 0; /* 슬라이드가 열릴 때 오른쪽으로 이동하여 보이게 함 */
+  }
+  
+  .slide.open ~ .cal-container {
+    transform: translateX(calc(-50% - 400px)); /* 슬라이드가 열릴 때 왼쪽으로 이동 */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+  
+  .slide-create {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .slide-create h3 {
+    margin-bottom: 20px;
+  }
+  
+  .btn-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .create-btn {
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    width: 80%;
+  }
+  
+  .create-btn:hover {
+    background-color: #45a049;
+  }

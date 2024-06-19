@@ -1,0 +1,22 @@
+.calendar-container {
+    width: 100%;
+    height: 100%; /* 적절한 높이 설정 */
+    max-width: 800px; /* 적절한 최대 가로 크기 설정 */
+    margin: 0 auto;
+}
+
+.calendar-container > * {
+    min-height: 520px; /* 최소 높이 설정 */
+  }
+
+.event-detail-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+}
+
