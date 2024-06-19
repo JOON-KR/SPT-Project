@@ -24,5 +24,5 @@ public class MemberRequestDto {
 	@NotBlank(message = "닉네임은 필수 입력 값입니다.")
 	private String name;
 
-	private RoleType role;
+	private RoleType role = RoleType.USER;
 }

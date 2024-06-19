@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("해당하는 유저가 없습니다.");
 		}
 
-		CustomUserInfoDto dto = mapper.map(member, CustomUserInfoDto.class);
+		CustomUserInfoDto dto = mapper.map(member.get(), CustomUserInfoDto.class);
 
 		return new CustomUserDetails(dto);
 	}

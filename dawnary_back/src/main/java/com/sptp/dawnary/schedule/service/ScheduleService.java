@@ -1,22 +1,39 @@
 package com.sptp.dawnary.schedule.service;
 
+import com.sptp.dawnary.global.exception.MemberNotFoundException;
+import com.sptp.dawnary.global.util.MemberInfo;
+import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.member.repository.MemberRepository;
 import com.sptp.dawnary.schedule.domain.Schedule;
-import com.sptp.dawnary.exception.ScheduleNotFoundException;
+import com.sptp.dawnary.global.exception.ScheduleNotFoundException;
 import com.sptp.dawnary.schedule.repository.ScheduleRepository;
+import com.sptp.dawnary.security.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final MemberRepository memberRepository;
 
-    public ScheduleService(ScheduleRepository scheduleRepository) {
-        this.scheduleRepository = scheduleRepository;
-    }
+    private final JwtUtil jwtUtil;
 
     // 스케줄 등록
     public Schedule saveSchedule(Schedule schedule) {
+        Long memberId = MemberInfo.getMemberId();
+        Optional<Member> member = memberRepository.findById(memberId);
+        if(member.isEmpty()) throw new MemberNotFoundException("멤버가 존재하지 않습니다.");
+        schedule.setMember(member.get());
         Schedule result = scheduleRepository.save(schedule);
         return result;
     };
@@ -33,7 +50,7 @@ public class ScheduleService {
     }
 
     // 스케줄 삭제
-    public boolean deleteDiary(Long scheduleId) {
+    public boolean deleteSchedule(Long scheduleId) {
         if (scheduleRepository.existsById(scheduleId)) {
             scheduleRepository.deleteById(scheduleId);
             return true;
@@ -43,18 +60,18 @@ public class ScheduleService {
     }
 
     // 스케줄 목록 조회
-    public List<Schedule> findAllSchedules(Long memberId) {
-        List<Schedule> schedules = scheduleRepository.findByMemberId(memberId);
+    public List<Schedule> findAllSchedules() {
+        Long memberId = MemberInfo.getMemberId();
+        List<Schedule> schedules = scheduleRepository.findAllOrderByDateDesc(memberId);
         return schedules;
     }
 
     // 특정 스케줄 조회
-    public Schedule findDiary(Long scheduleId) {
+    public Schedule findSchedule(Long scheduleId) {
         Optional<Schedule> schedule = scheduleRepository.findById(scheduleId);
         if(schedule.isPresent()) {
             return schedule.get();
         }
-
         throw new ScheduleNotFoundException("존재하지 않는 스케줄 입니다.");
     }
 }

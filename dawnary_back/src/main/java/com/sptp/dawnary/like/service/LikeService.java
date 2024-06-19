@@ -2,9 +2,8 @@ package com.sptp.dawnary.like.service;
 
 import com.sptp.dawnary.like.domain.Like;
 import com.sptp.dawnary.series.domain.Series;
-import com.sptp.dawnary.exception.AlreadyExistsLikeException;
+import com.sptp.dawnary.global.exception.AlreadyExistsLikeException;
 import com.sptp.dawnary.like.repository.LikeRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
