@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Regist.css";
 
@@ -7,6 +8,8 @@ const Regist = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+
+  const nav = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,7 +22,8 @@ const Regist = () => {
       });
 
       if (response.status === 200) {
-        setMessage("회원가입이 성공적으로 완료되었습니다.");
+        alert("회원가입이 성공적으로 완료되었습니다.");
+        nav("/login");
       }
     } catch (error) {
       setMessage("회원가입 중 오류가 발생했습니다.");
@@ -82,6 +86,9 @@ const Regist = () => {
           <div className="naver" onClick={() => handleSocialRegist("naver")}>
             네이버
           </div>
+        </div>
+        <div>
+          이미 계정이 있나요? <Link to={"/login"}>로그인</Link>
         </div>
       </div>
     </div>
