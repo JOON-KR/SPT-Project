@@ -32,7 +32,7 @@ public class MemberService {
 	public String login(LoginRequestDto dto) {
 		String email = dto.getEmail();
 		String password = dto.getPassword();
-		Optional<Member> member = memberRepository.findMemberByEmail(email);
+		Optional<Member> member = memberRepository.findByEmail(email);
 		if (member.isEmpty()) {
 			throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
 		}
@@ -48,14 +48,14 @@ public class MemberService {
 
 	@Transactional
 	public Long signup(Member member) {
-		Optional<Member> validMember = memberRepository.findMemberByEmail(member.getEmail());
+		Optional<Member> validMember = memberRepository.findByEmail(member.getEmail());
 
 		if (validMember.isPresent()) {
 			throw new ValidateMemberException("this member email is already exist. " + member.getEmail());
 		}
 		//비밀번호 해시 처리
 		member.updatePassword(encoder.encode(member.getPassword()));
-		memberRepository.create(member);
+		memberRepository.save(member);
 		return member.getId();
 	}
 }
