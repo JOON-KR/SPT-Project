@@ -7,6 +7,9 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.GenerationType.*;
+
 @Entity
 @Getter
 @Setter
@@ -17,11 +20,11 @@ import java.time.LocalDateTime;
 public class Series {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 

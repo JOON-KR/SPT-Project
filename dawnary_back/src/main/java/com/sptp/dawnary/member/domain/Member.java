@@ -21,6 +21,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static jakarta.persistence.GenerationType.*;
+
 @Entity
 @Table(name = "MEMBER")
 @Setter
@@ -31,7 +33,7 @@ import lombok.Setter;
 public class Member {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "member_id")
 	private Long id;
 

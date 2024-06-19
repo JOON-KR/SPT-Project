@@ -1,9 +1,13 @@
 package com.sptp.dawnary.schedule.domain;
 
+import com.sptp.dawnary.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
+import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Getter @Setter
@@ -14,11 +18,11 @@ import java.time.LocalDateTime;
 public class Schedule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
