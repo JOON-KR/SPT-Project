@@ -1,0 +1,67 @@
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  background-image: url("../assets/dawn3.jpg");
+  background-repeat: no-repeat;
+  background-position: top 35% center;
+  background-size: cover;
+  /* background-attachment: fixed; */
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "IBM Plex Sans KR", sans-serif;
+}
+
+.frame {
+  border: 8px solid #d9e4e9;
+}
+
+.login-div {
+  margin-top: 100px;
+  height: 80px;
+}
+
+h1 {
+  margin: 0 15px;
+  font-size: 120px;
+  font-weight: 400;
+  color: #d9e4e9;
+  /* padding: 5px 20px; */
+  /* color: #aab8c2; */
+  /* color: #6b7b8c; */
+  /* color: #42526e; */
+  /* color: #233040; */
+}
+h2 {
+  font-size: 30px;
+  color: #d9e4e9;
+}
+
+.login-hover {
+  display: inline-block;
+  position: relative;
+}
+
+.login-hover::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  background: #d9e4e9;
+  transform-origin: bottom right;
+  transition: transform 0.14s ease-out;
+}
+
+.login-hover:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
