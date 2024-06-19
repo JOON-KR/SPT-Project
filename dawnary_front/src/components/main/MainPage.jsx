@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useMouseInteractive from "./useMouseInteractive";
-import "../../css/MainPage.css";
+import "./MainPage.css";
 
 const MainPage = () => {
   const nav = useNavigate();
@@ -17,7 +17,9 @@ const MainPage = () => {
   return (
     <main>
       <div ref={frameRef} className="frame">
-        <h1 ref={logoRef}>Dawnary</h1>
+        <h1 ref={logoRef} className="logo">
+          Dawnary
+        </h1>
       </div>
       <div className="login-div">
         <h2 className="login-hover" onClick={goLogin}>
