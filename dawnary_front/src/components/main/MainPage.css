@@ -40,6 +40,7 @@ main {
 }
 
 .login-hover {
+  cursor: pointer;
   font-size: 30px;
   color: #d9e4e9;
   display: inline-block;
