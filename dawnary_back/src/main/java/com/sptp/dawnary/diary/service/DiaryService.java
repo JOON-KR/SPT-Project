@@ -3,10 +3,12 @@ package com.sptp.dawnary.diary.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.sptp.dawnary.diary.dto.Diary;
+import com.sptp.dawnary.diary.domain.Diary;
 import com.sptp.dawnary.exception.DiaryNotFoundException;
 import com.sptp.dawnary.diary.repository.DiaryRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
