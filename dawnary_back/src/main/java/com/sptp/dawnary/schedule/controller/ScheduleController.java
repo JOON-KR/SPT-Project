@@ -24,14 +24,14 @@ public class ScheduleController {
     @GetMapping
     public ResponseEntity<?> getAllSchedules() {
         List<Schedule> scheduleList = scheduleService.findAllSchedules();
-        return new ResponseEntity<List<Schedule>>(scheduleList, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleList, HttpStatus.OK);
     }
 
     // 특정 스케줄 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<?> getSchedule(@PathVariable("scheduleId") Long scheduleId) {
         Schedule schedule = scheduleService.findSchedule(scheduleId);
-        return new ResponseEntity<Schedule>(schedule, HttpStatus.OK);
+        return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 
     // 스케줄 등록
@@ -40,8 +40,8 @@ public class ScheduleController {
         Schedule entity = modelMapper.map(schedule, Schedule.class);
         Schedule result = scheduleService.saveSchedule(entity);
 
-        if(result == null) return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        if(result == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -52,8 +52,8 @@ public class ScheduleController {
 
         boolean result = scheduleService.updateSchedule(scheduleId, entity);
 
-        if(result) return new ResponseEntity<Void>(HttpStatus.OK);
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        if(result) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     // 특정 스케줄 삭제
@@ -61,7 +61,7 @@ public class ScheduleController {
     public ResponseEntity<?> removeSchedule(@PathVariable("scheduleId") Long scheduleId) {
         boolean result = scheduleService.deleteSchedule(scheduleId);
 
-        if(result) return new ResponseEntity<Void>(HttpStatus.OK);
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        if(result) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

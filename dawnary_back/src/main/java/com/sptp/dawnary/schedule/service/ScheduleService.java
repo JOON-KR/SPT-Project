@@ -30,16 +30,16 @@ public class ScheduleService {
 
     // 스케줄 등록
     public Schedule saveSchedule(Schedule schedule) {
-        Long memberId = MemberInfo.getMemberId();
-        Optional<Member> member = memberRepository.findById(memberId);
-        if(member.isEmpty()) throw new MemberNotFoundException("멤버가 존재하지 않습니다.");
-        schedule.setMember(member.get());
+        Member member = getMember();
+        schedule.setMember(member);
         Schedule result = scheduleRepository.save(schedule);
         return result;
     };
 
     // 스케줄 수정
     public boolean updateSchedule(Long scheduleId, Schedule schedule) {
+        Member member = getMember();
+        schedule.setMember(member);
         if (scheduleRepository.existsById(scheduleId)) {
             schedule.setId(scheduleId);
             scheduleRepository.save(schedule);
@@ -73,5 +73,12 @@ public class ScheduleService {
             return schedule.get();
         }
         throw new ScheduleNotFoundException("존재하지 않는 스케줄 입니다.");
+    }
+
+    private Member getMember() {
+        Long memberId = MemberInfo.getMemberId();
+        Optional<Member> member = memberRepository.findById(memberId);
+        if(member.isEmpty()) throw new MemberNotFoundException("멤버가 존재하지 않습니다.");
+        return member.get();
     }
 }

@@ -1,11 +1,15 @@
 package com.sptp.dawnary.series.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sptp.dawnary.like.domain.Like;
 import com.sptp.dawnary.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -17,6 +21,7 @@ import static jakarta.persistence.GenerationType.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Series {
 
 	@Id
@@ -26,6 +31,7 @@ public class Series {
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "member_id", nullable = false)
+	@JsonIgnore
 	private Member member;
 
 	@Column(name = "title", nullable = false, length = 50)
@@ -44,6 +50,9 @@ public class Series {
 
 	@Column(name = "reg_date", nullable = false, updatable = false)
 	private LocalDateTime regDate;
+
+	@OneToMany(mappedBy = "series", fetch = LAZY, cascade = CascadeType.ALL)
+	private List<Like> likes;
 
 	@PrePersist
 	protected void onCreate() {
