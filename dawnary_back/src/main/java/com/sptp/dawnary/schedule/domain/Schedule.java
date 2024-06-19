@@ -1,5 +1,7 @@
 package com.sptp.dawnary.schedule.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sptp.dawnary.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +17,7 @@ import static jakarta.persistence.GenerationType.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Schedule {
 
     @Id
@@ -24,6 +27,7 @@ public class Schedule {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member member;
 
     @Column(name = "date", nullable = false)

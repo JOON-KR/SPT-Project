@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.sptp.dawnary.diary.domain.Diary;
-import com.sptp.dawnary.exception.DiaryNotFoundException;
+import com.sptp.dawnary.global.exception.DiaryNotFoundException;
 import com.sptp.dawnary.diary.repository.DiaryRepository;
 import org.springframework.stereotype.Service;
 

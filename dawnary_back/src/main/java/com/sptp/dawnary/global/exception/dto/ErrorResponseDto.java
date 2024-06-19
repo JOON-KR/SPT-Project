@@ -1,4 +1,4 @@
-package com.sptp.dawnary.exception.dto;
+package com.sptp.dawnary.global.exception.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
