@@ -2,8 +2,8 @@ package com.sptp.dawnary.series.service;
 
 import java.util.List;
 
+import com.sptp.dawnary.series.SeriesRepository;
 import com.sptp.dawnary.series.domain.Series;
-import com.sptp.dawnary.series.repository.SeriesRepository;
 
 public class SeriesService {
 
@@ -19,7 +19,5 @@ public class SeriesService {
     }
 
     // 명예의 전당(좋아요 많은 순 조회
-    public List<Series> findBestSeries() {
 
-    }
 }
