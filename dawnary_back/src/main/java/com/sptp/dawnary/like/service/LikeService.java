@@ -1,22 +1,21 @@
 package com.sptp.dawnary.like.service;
 
+import com.sptp.dawnary.global.exception.AlreadyExistsLikeException;
 import com.sptp.dawnary.global.exception.LikeNotFoundException;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
 import com.sptp.dawnary.global.exception.SeriesNotFoundException;
 import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.like.domain.Like;
+import com.sptp.dawnary.like.repository.LikeRepository;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.repository.MemberRepository;
 import com.sptp.dawnary.series.domain.Series;
-import com.sptp.dawnary.global.exception.AlreadyExistsLikeException;
-import com.sptp.dawnary.like.repository.LikeRepository;
 import com.sptp.dawnary.series.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class LikeService {
         List<Like> likes = likeRepository.findByMemberId(memberId);
         return likes.stream()
                 .map(Like::getSeries)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 시리즈 좋아요
