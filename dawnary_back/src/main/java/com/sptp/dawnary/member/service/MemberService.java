@@ -8,7 +8,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sptp.dawnary.global.exception.MemberNotFoundException;
+import com.sptp.dawnary.global.exception.SameMemberException;
 import com.sptp.dawnary.global.exception.ValidateMemberException;
+import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 import com.sptp.dawnary.member.dto.request.LoginRequest;
@@ -21,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
 
 	private final JwtUtil jwtUtil;
@@ -60,6 +63,22 @@ public class MemberService {
 		log.info("member info {}", member);
 		memberRepository.save(member);
 		return member.getId();
+	}
+
+	public Member getMember() {
+		Long memberId = MemberInfo.getMemberId();
+		log.info("memberId {}", memberId);
+		return memberRepository.findById(memberId)
+			.orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않습니다."));
+	}
+
+	public Optional<Member> getMember(Long memberId) {
+		return Optional.ofNullable(memberRepository.findById(memberId)
+			.orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않습니다.")));
+	}
+
+	public void sameUserCheck(Long memberId, Long othersMemberId) {
+		if (memberId.equals(othersMemberId)) throw new SameMemberException();
 	}
 }
 

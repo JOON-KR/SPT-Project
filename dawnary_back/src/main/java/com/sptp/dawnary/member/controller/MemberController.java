@@ -1,6 +1,5 @@
 package com.sptp.dawnary.member.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final ModelMapper modelMapper;
 
 	@PostMapping("login")
 	public ResponseEntity<String> getMemberProfile(
