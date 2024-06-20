@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,40 +37,44 @@ public class ScheduleService {
         schedule.setMember(member);
         schedule.setLocation(null);
 
-        Schedule savedSchedule = scheduleRepository.save(schedule);
+        scheduleRepository.save(schedule);
 
         Location location = modelMapper.map(scheduleDto.getLocation(), Location.class);
-        location.setSchedule(savedSchedule);
+        location.setSchedule(schedule);
 
         Location savedLocation = locationRepository.save(location);
-        savedSchedule.setLocation(savedLocation);
-        scheduleRepository.save(savedSchedule);
+        schedule.setLocation(savedLocation);
+        scheduleRepository.save(schedule);
 
-        return modelMapper.map(savedSchedule, ScheduleDto.class);
+        return modelMapper.map(schedule, ScheduleDto.class);
     }
 
     // 스케줄 수정
     public ScheduleDto updateSchedule(Long scheduleId, ScheduleDto scheduleDto) {
-        Member member = getMember();
+
         Schedule schedule = modelMapper.map(scheduleDto, Schedule.class);
-        schedule.setMember(member);
+        schedule.setMember(getMember());
+
         if (scheduleRepository.existsById(scheduleId)) {
             schedule.setId(scheduleId);
             Schedule updatedSchedule = scheduleRepository.save(schedule);
             return modelMapper.map(updatedSchedule, ScheduleDto.class);
-        } else {
-            throw new ScheduleNotFoundException("존재하지 않는 스케줄 입니다.");
         }
+
+        throw new ScheduleNotFoundException("존재하지 않는 스케줄 입니다.");
+
     }
 
     // 스케줄 삭제
     public boolean deleteSchedule(Long scheduleId) {
+
         if (scheduleRepository.existsById(scheduleId)) {
             scheduleRepository.deleteById(scheduleId);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
+
     }
 
     // 스케줄 목록 조회
@@ -80,7 +83,7 @@ public class ScheduleService {
         List<Schedule> schedules = scheduleRepository.findAllOrderByDateDesc(memberId);
         return schedules.stream()
                 .map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 특정 스케줄 조회
