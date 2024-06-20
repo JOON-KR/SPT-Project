@@ -72,4 +72,3 @@ tasks.withType(JavaCompile).configureEach {
 clean {
 	delete file('src/main/generated')
 }
-
