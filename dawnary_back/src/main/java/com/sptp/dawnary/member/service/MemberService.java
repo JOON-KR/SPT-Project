@@ -2,6 +2,7 @@ package com.sptp.dawnary.member.service;
 
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sptp.dawnary.exception.ValidateMemberException;
+import com.sptp.dawnary.global.exception.ValidateMemberException;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.dto.CustomUserInfoDto;
 import com.sptp.dawnary.member.dto.LoginRequestDto;
@@ -18,6 +19,7 @@ import com.sptp.dawnary.security.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -41,8 +43,8 @@ public class MemberService {
 		if (!encoder.matches(password, member.get().getPassword())) {
 			throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
 		}
-
-		CustomUserInfoDto info = modelMapper.map(member, CustomUserInfoDto.class);
+		CustomUserInfoDto info = modelMapper.map(member.get(), CustomUserInfoDto.class);
+		log.info("CustomUserInfoDto {}", info.toString());
 		return jwtUtil.createAccessToken(info);
 	}
 

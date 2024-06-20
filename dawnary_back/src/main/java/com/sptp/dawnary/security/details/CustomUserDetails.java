@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,8 @@ import com.sptp.dawnary.member.dto.CustomUserInfoDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
+@Setter
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -22,7 +26,9 @@ public class CustomUserDetails implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<String> roles = new ArrayList<>();
-		roles.add("ROLE_" + member.getRole().toString());
+		log.info("meber.getRole {}", member.getRole());
+		log.info("meber.getRole.toString {}", member.getRole().toString());
+		roles.add("ROLE_" + member.getRole());
 
 		return roles.stream()
 			.map(SimpleGrantedAuthority::new)

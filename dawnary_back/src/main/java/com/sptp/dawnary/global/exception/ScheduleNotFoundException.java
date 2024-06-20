@@ -1,4 +1,4 @@
-package com.sptp.dawnary.exception;
+package com.sptp.dawnary.global.exception;
 
 public class ScheduleNotFoundException extends IllegalArgumentException{
 

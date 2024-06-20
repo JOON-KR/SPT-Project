@@ -1,11 +1,13 @@
 package com.sptp.dawnary.diary.domain;
 
 import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.seriesDiary.domain.SeriesDiary;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -48,5 +50,8 @@ public class Diary {
 
     @Column(name = "image_path", nullable = true)
     private String imagePath;
+
+    @OneToMany(mappedBy = "diary", fetch = LAZY, cascade = CascadeType.ALL)
+    private List<SeriesDiary> seriesDiaries;
 
 }

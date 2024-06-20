@@ -2,13 +2,13 @@ package com.sptp.dawnary.member.dto;
 
 import com.sptp.dawnary.member.domain.RoleType;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class CustomUserInfoDto extends MemberDto {
 
 	private Long memberId;
