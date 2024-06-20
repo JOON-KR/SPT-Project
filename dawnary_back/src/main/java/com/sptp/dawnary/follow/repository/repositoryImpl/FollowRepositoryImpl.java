@@ -13,14 +13,12 @@ import com.sptp.dawnary.follow.dto.response.FollowMemberResponse;
 import com.sptp.dawnary.follow.repository.querydsl.FollowRepositoryCustom;
 import com.sptp.dawnary.member.domain.Member;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class FollowRepositoryImpl implements FollowRepositoryCustom {
 
-    private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
     @Override

@@ -2,7 +2,6 @@ package com.sptp.dawnary.security.service;
 
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class CustomUserDetailsService implements UserDetailsService {
 
 	private final MemberRepository memberRepository;
-	private final ModelMapper mapper;
 
 	@Override
 	public UserDetails loadUserByUsername(final String id) throws UsernameNotFoundException {
@@ -31,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("해당하는 유저가 없습니다.");
 		}
 
-		CustomUserInfo dto = mapper.map(member.get(), CustomUserInfo.class);
+		CustomUserInfo dto = CustomUserInfo.transfer(member.get());
 
 		return new CustomUserDetails(dto);
 	}
