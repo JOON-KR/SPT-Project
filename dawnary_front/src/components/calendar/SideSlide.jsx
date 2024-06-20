@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import ScheduleCreate from "./schedule/ScheduleCreate";
+import DiaryCreate from "./diary/DiaryCreate";
 
 import "./SideSlide.css";
 
@@ -45,7 +46,7 @@ const SideSlide = ({ date, onClose }) => {
       )}
 
       {isEvent && <ScheduleCreate date={date} onClose={save} />}
-      {isDiary && <p>Create Diary</p>}
+      {isDiary && <DiaryCreate date={date} onClose={save} />}
 
     </div>
   );
