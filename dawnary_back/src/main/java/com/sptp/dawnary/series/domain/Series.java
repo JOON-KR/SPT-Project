@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sptp.dawnary.like.domain.Like;
 import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.seriesDiary.domain.SeriesDiary;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -52,7 +53,12 @@ public class Series {
 	private LocalDateTime regDate;
 
 	@OneToMany(mappedBy = "series", fetch = LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<Like> likes;
+
+	@OneToMany(mappedBy = "series", fetch = LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<SeriesDiary> seriesDiaries;
 
 	@PrePersist
 	protected void onCreate() {

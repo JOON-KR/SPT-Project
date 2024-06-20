@@ -57,8 +57,7 @@ public class SeriesController {
     // 특정 시리즈 조회
     @GetMapping("/{seriesId}")
     public ResponseEntity<?> getDetailSeries(@PathVariable("seriesId") Long seriesId) {
-        List<DiaryDto> diaries = seriesDiaryService.findDiaryBySeries(seriesId);
-        return new ResponseEntity<>(diaries, HttpStatus.OK);
+        return new ResponseEntity<>(seriesService.findSeries(seriesId), HttpStatus.OK);
     }
 
     // 시리즈 등록
