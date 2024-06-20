@@ -7,7 +7,10 @@ import KakaoLogin from "./components/main/KakaoLogin";
 import MainCalendar from "./components/calendar/MainCalendar";
 import Calendar from "./components/calendar/Calendar";
 import SideSlide from "./components/calendar/SideSlide";
+import SearchResult from "./components/Search/SearchResults";
+import EssayResult from "./components/Search/EssayResult";
 import { Routes, Route } from "react-router-dom";
+
 
 function App() {
   return (
@@ -21,6 +24,8 @@ function App() {
       <Route path="/mainCalendar" element={<MainCalendar />} />
       <Route path="/calendar" element={<Calendar />} />
       <Route path="/sideSlide" element={<SideSlide />} />
+      <Route path="/searchResult" element={<SearchResult />} />
+      <Route path="/essayResult" element={<EssayResult />} />
     </Routes>
   );
 }
