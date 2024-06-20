@@ -15,6 +15,7 @@ const ScheduleDetails = ({ event, onClose }) => {
   return (
     <div className="event-detail-popup">
       <h3>{event.title}</h3>
+      <p>{event.extendedProps.content}</p>
       <p>{formatDateTime(event.startStr)}</p>
       <button onClick={onClose}>닫기</button>
     </div>
