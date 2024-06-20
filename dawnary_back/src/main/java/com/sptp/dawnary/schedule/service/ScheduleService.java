@@ -3,12 +3,13 @@ package com.sptp.dawnary.schedule.service;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
 import com.sptp.dawnary.global.exception.ScheduleNotFoundException;
 import com.sptp.dawnary.global.util.MemberInfo;
+import com.sptp.dawnary.location.domain.Location;
+import com.sptp.dawnary.location.repository.LocationRepository;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.repository.MemberRepository;
 import com.sptp.dawnary.schedule.domain.Schedule;
 import com.sptp.dawnary.schedule.dto.ScheduleDto;
 import com.sptp.dawnary.schedule.repository.ScheduleRepository;
-import com.sptp.dawnary.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,15 +27,26 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
+    private final LocationRepository locationRepository;
+
     private final ModelMapper modelMapper;
-    private final JwtUtil jwtUtil;
 
     // 스케줄 등록
     public ScheduleDto saveSchedule(ScheduleDto scheduleDto) {
         Member member = getMember();
         Schedule schedule = modelMapper.map(scheduleDto, Schedule.class);
         schedule.setMember(member);
+        schedule.setLocation(null);
+
         Schedule savedSchedule = scheduleRepository.save(schedule);
+
+        Location location = modelMapper.map(scheduleDto.getLocation(), Location.class);
+        location.setSchedule(savedSchedule);
+
+        Location savedLocation = locationRepository.save(location);
+        savedSchedule.setLocation(savedLocation);
+        scheduleRepository.save(savedSchedule);
+
         return modelMapper.map(savedSchedule, ScheduleDto.class);
     }
 
