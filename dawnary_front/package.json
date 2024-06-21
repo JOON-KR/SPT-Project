@@ -15,10 +15,14 @@
     "@fullcalendar/interaction": "^6.1.14",
     "@fullcalendar/react": "^6.1.14",
     "axios": "^1.7.2",
+    "base-64": "^1.0.0",
+    "moment": "^2.30.1",
     "query-string": "^9.0.0",
     "react": "^18.2.0",
+    "react-calendar": "^5.0.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

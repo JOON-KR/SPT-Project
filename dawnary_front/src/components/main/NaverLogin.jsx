@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import queryString from "query-string";
+import base64 from "base-64";
+import utf8 from "utf8";
 
 const NaverLogin = () => {
   const navigate = useNavigate();
@@ -9,23 +11,77 @@ const NaverLogin = () => {
   const password = "Abcdefg999!"; // 비밀번호는 변경되지 않는 것으로 가정
 
   useEffect(() => {
-    const signUp = async () => {
+    const signUpAndLogin = async (email, name) => {
       try {
-        const response = await axios.post(
-          "http://localhost:8080/member/signup",
-          {
-            email: userData.email,
-            password,
-            name: userData.name,
-          }
-        );
+        //회원가입 전에 이미 등록되어있는지 체크 하기
+        const isExist = true;
 
-        if (response.status === 200) {
-          alert("회원가입 및 로그인이 성공적으로 완료되었습니다.");
-          navigate("/mainCalendar");
+        if (!isExist) {
+          // 회원가입 요청
+          const signUpResponse = await axios.post(
+            "http://localhost:8080/member/signup",
+            {
+              email: email,
+              password,
+              name: name,
+            }
+          );
+
+          if (signUpResponse.status === 200) {
+            console.log("회원가입이 성공적으로 완료되었습니다.");
+
+            // 로그인 요청
+            const loginResponse = await axios.post(
+              "http://localhost:8080/member/login",
+              {
+                email: email,
+                password,
+              }
+            );
+
+            if (loginResponse.status === 200) {
+              const token = loginResponse.data;
+              const payload = token.substring(
+                token.indexOf(".") + 1,
+                token.lastIndexOf(".")
+              );
+              const dec = base64.decode(payload);
+              const dec_utf8 = utf8.decode(dec);
+              //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
+              sessionStorage.setItem("token", token);
+              sessionStorage.setItem("loginUser", dec_utf8);
+              alert("로그인이 성공적으로 완료되었습니다.");
+              navigate("/mainCalendar");
+            }
+          }
+        } else {
+          //이미 있는 회원인 경우 로그인만 요청
+          // 로그인 요청
+          const loginResponse = await axios.post(
+            "http://localhost:8080/member/login",
+            {
+              email: email,
+              password,
+            }
+          );
+
+          if (loginResponse.status === 200) {
+            const token = loginResponse.data;
+            const payload = token.substring(
+              token.indexOf(".") + 1,
+              token.lastIndexOf(".")
+            );
+            const dec = base64.decode(payload);
+            const dec_utf8 = utf8.decode(dec);
+            //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
+            sessionStorage.setItem("token", token);
+            sessionStorage.setItem("loginUser", dec_utf8);
+            alert("로그인이 성공적으로 완료되었습니다.");
+            navigate("/mainCalendar");
+          }
         }
       } catch (error) {
-        alert("회원가입 중 오류가 발생했습니다.");
+        alert("회원가입 또는 로그인 중 오류가 발생했습니다.");
         console.error("에러 발생!", error);
       }
     };
@@ -50,13 +106,15 @@ const NaverLogin = () => {
             const userName = naverLogin.user.getNickName();
             setUserData({ email: userEmail, name: userName });
 
-            const { access_token } = queryString.parse(location.search);
-            // 세션 스토리지에 사용자 정보 저장 (닉네임만 필요한 경우)
-            sessionStorage.setItem("loginUser", userName);
+            const { access_token } = queryString.parse(
+              window.location.hash.substring(1)
+            );
+            // 세션 스토리지에 네이버 엑세스토큰, 소셜 로그인 정보 저장
             sessionStorage.setItem("access_token", access_token);
+            sessionStorage.setItem("socialLogin", "naver");
 
-            // 네이버 로그인한 유저 회원가입
-            signUp();
+            // 네이버 로그인한 유저 회원가입 및 로그인
+            signUpAndLogin(userEmail, userName);
           } else {
             console.error("네이버 로그인에 실패했습니다.");
             navigate("/login"); // 로그인 페이지로 리디렉션
@@ -68,6 +126,9 @@ const NaverLogin = () => {
     document.body.appendChild(script);
 
     // useEffect 클린업 함수에서 스크립트 제거하는 것도 고려해보세요.
+    return () => {
+      document.body.removeChild(script);
+    };
   }, [navigate]);
 
   return <div>로그인 중...</div>;

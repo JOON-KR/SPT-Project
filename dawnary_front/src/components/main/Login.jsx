@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import base64 from "base-64";
+import utf8 from "utf8";
 import "./Login.css";
 
 const Login = () => {
@@ -39,6 +41,17 @@ const Login = () => {
       });
 
       if (response.status === 200) {
+        const token = response.data;
+        const payload = token.substring(
+          token.indexOf(".") + 1,
+          token.lastIndexOf(".")
+        );
+        const dec = base64.decode(payload);
+        const dec_utf8 = utf8.decode(dec);
+        //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("loginUser", dec_utf8);
+        sessionStorage.setItem("socialLogin", "none");
         alert("로그인이 성공적으로 완료되었습니다.");
         nav("/mainCalendar"); // 로그인 후 이동할 페이지로 이동합니다.
       }
@@ -72,6 +85,7 @@ const Login = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="off"
               required
             />
           </div>

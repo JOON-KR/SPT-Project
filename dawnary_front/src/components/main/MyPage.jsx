@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import Feed from "./Feed";
 import Follow from "./Follow";
 import "./MyPage.css"; // 스타일링을 위한 CSS 파일을 임포트합니다.
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css"; // css import
+import moment from "moment";
 
 const MyPage = () => {
   const [showFollowing, setShowFollowing] = useState(false); // 팔로잉 목록의 표시 여부를 관리할 상태 변수
   const [showFollowers, setShowFollowers] = useState(false); // 팔로워 목록의 표시 여부를 관리할 상태 변수
+  const [value, onChange] = useState(new Date());
+
+  const token = sessionStorage.getItem("token");
 
   const items = [
     "첫 번째 아이템",
@@ -73,7 +79,13 @@ const MyPage = () => {
           <button>설정</button>{" "}
           {/* 설정 버튼에 대한 기능은 추가 구현이 필요합니다. */}
         </div>
-        <div className="emo-calendar"></div>
+        <div className="emo-calendar">
+          <Calendar
+            onChange={onChange}
+            value={value}
+            formatDay={(locale, date) => moment(date).format("D")}
+          />
+        </div>
       </div>
 
       <div className={`following ${showFollowing ? "show" : ""}`}>
