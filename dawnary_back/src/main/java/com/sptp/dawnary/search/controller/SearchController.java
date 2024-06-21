@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sptp.dawnary.elastic.document.MemberDocument;
+import com.sptp.dawnary.elastic.document.SeriesDocument;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.search.service.SearchService;
+import com.sptp.dawnary.series.domain.Series;
 
 import lombok.RequiredArgsConstructor;
 
@@ -67,10 +69,20 @@ public class SearchController {
     //자동완성 기능은 컨트롤러에서 키워드만 받아서 member와 series 양쪽으로 보낸 뒤 두 결과를 합쳐서 resultDto를 받아오는 방향으로 설계해야겠음.
     @GetMapping("/part/{partialName}")
     public ResponseEntity<?> findLive(@PathVariable("partialName") String partialName) {
-    	
-        return new ResponseEntity<>( HttpStatus.OK);
+    	List<SeriesDocument>list = ss.findSeriesByMemberNameOrTitleStartingWith(partialName);
+        return new ResponseEntity<>(list,  HttpStatus.OK);
     }
-
+    
+    @PostMapping("/series")
+    public ResponseEntity<?> saveSeries(@RequestBody Series series) {
+        SeriesDocument s = ss.saveSeries(series);
+        return new ResponseEntity<>(s, HttpStatus.OK);
+    }
+    @GetMapping("/test/{partialName}")
+    public ResponseEntity<?> Live(@PathVariable("partialName") String partialName) {
+    	List<SeriesDocument>list = ss.findSeriesByMemberNameOrTitleStartingWith(partialName);
+        return new ResponseEntity<>(list,  HttpStatus.OK);
+    }
     @GetMapping("/A")
     public ResponseEntity<?> test() {
         return new ResponseEntity<>(HttpStatus.OK);

@@ -23,22 +23,21 @@ public class MemberDocument {
 
     @Id
     private long id;
-   // @MultiField(mainField = @Field(type = FieldType.Text, analyzer = "edge_ngram_analyzer"),
-   //         otherFields = {
-   //             @InnerField(suffix = "exact", type = FieldType.Keyword),
-   //             @InnerField(suffix = "autocomplete", type = FieldType.Text, analyzer = "autocomplete_analyzer")
-   //         })
+    @MultiField(mainField = @Field(type = FieldType.Text, analyzer = "edge_ngram_analyzer"),
+            otherFields = {
+                @InnerField(suffix = "exact", type = FieldType.Keyword),
+                @InnerField(suffix = "autocomplete", type = FieldType.Text, analyzer = "autocomplete_analyzer")
+            })
     private String name;
-    //@MultiField(mainField = @Field(type = FieldType.Text, analyzer = "edge_ngram_analyzer"),
-    //        otherFields = {
-     //           @InnerField(suffix = "exact", type = FieldType.Keyword),
-     //           @InnerField(suffix = "autocomplete", type = FieldType.Text, analyzer = "autocomplete_analyzer")
-     //       })
+    @MultiField(mainField = @Field(type = FieldType.Text, analyzer = "edge_ngram_analyzer"),
+            otherFields = {
+                @InnerField(suffix = "exact", type = FieldType.Keyword),
+                @InnerField(suffix = "autocomplete", type = FieldType.Text, analyzer = "autocomplete_analyzer")
+            })
     private String email;
     private String imagePath;
     public static MemberDocument from(Member member) {
         return MemberDocument.builder()
-                .id(member.getId())
                 .name(member.getName())
                 .email(member.getEmail())
                 .imagePath(member.getImagePath())

@@ -78,4 +78,10 @@ public class SearchServiceImpl implements SearchService {
         return seriesElasticRepository.findByMemberNameStartingWithOrTitleStartingWith(keyword, keyword);
     }
 
+    @Override
+    public List<MemberDocument> findMembersByNameOrEmailStartingWith(String keyword) {
+        return memberElasticRepository.findByNameAutocomplete( keyword);
+    }
+
+
 }

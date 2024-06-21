@@ -1,6 +1,7 @@
 package com.sptp.dawnary.elastic.repository;
 
 import com.sptp.dawnary.elastic.document.MemberDocument;
+
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -24,8 +25,8 @@ public interface MemberElasticRepository extends ElasticsearchRepository<MemberD
     @Query("{\"bool\": {\"should\": [{\"match\": {\"name\": \"?0\"}}, {\"match\": {\"email\": \"?0\"}}]}}")
     List<MemberDocument> findByNameOrEmail(String keyword);
     
-    // 이름의 일부분으로 검색하는 쿼리 추가
-    @Query("{\"match\": {\"name\": {\"query\": \"?0\", \"operator\": \"and\"}}}")
-    List<MemberDocument> findByPartialName(String partialName);
+    @Query("{\"match_phrase_prefix\": {\"searchTerm.autocomplete\": {\"query\": \"?0\"}}}")
+    List<MemberDocument> findByNameAutocomplete(String keyword);
+
 
 }
