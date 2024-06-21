@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.sptp.dawnary.elastic.document.SeriesDocument;
 
 @Repository
-public interface SeriesElasticRepository extends ElasticsearchRepository<SeriesDocument, String> {
+public interface SeriesElasticRepository extends ElasticsearchRepository<SeriesDocument, Long> {
     // 제목으로 시리즈 검색
     List<SeriesDocument> findByTitle(String title);
 

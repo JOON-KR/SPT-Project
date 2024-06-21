@@ -26,7 +26,7 @@ import lombok.Setter;
 public class SeriesDocument {
 
     @Id
-    private String id;
+    private long id;
     @MultiField(mainField = @Field(type = FieldType.Text, analyzer = "ngram"),
             otherFields = {
                 @InnerField(suffix = "exact", type = FieldType.Keyword),
