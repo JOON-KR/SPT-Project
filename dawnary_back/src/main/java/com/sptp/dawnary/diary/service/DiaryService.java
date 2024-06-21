@@ -84,6 +84,14 @@ public class DiaryService {
         throw new DiaryNotFoundException("존재하지 않는 다이어리 입니다.");
     }
 
+    // 팔로잉하는 유저의 다이어리 가져오기
+    public List<DiaryDto> findFollowDiary() {
+        return diaryRepository.findFollowUserdiaries(MemberInfo.getMemberId())
+                .stream()
+                .map(DiaryDto::toDto)
+                .toList();
+    }
+
     private Member getMember() {
         Long memberId = MemberInfo.getMemberId();
         Optional<Member> member = memberRepository.findById(memberId);

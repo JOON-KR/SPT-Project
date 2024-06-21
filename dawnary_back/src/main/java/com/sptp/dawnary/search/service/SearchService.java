@@ -26,7 +26,7 @@ public interface SearchService {
 	List<MemberDocument> findMembersByNameAndEmail(String keyword);
 	
 	//실시간 검색 (멤버)
-	
+	List<MemberDocument> findMembersByNameOrEmailStartingWith(String keyword);
 	//후에 시리즈 서비스에서 저장, 지금은테스트
 	SeriesDocument saveSeries(Series series);
 

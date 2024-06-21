@@ -25,8 +25,7 @@ public interface SeriesElasticRepository extends ElasticsearchRepository<SeriesD
     @Query("{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"memberName\": \"?0\"}}]}}")
     List<SeriesDocument> findByKeyword(String keyword);
     
-    // 제목 또는 작성자에서 키워드를 포함하는 시리즈 검색
-    @Query("{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"memberName\": \"?0\"}}]}}")
-    List<SeriesDocument> findByTitleOrMemberNameStartingWith(String keyword);
+    @Query("{\"bool\": {\"should\": [{\"match_phrase_prefix\": {\"memberName.autocomplete\": {\"query\": \"?0\"}}}, {\"match_phrase_prefix\": {\"title.autocomplete\": {\"query\": \"?0\"}}}]}}")
+    List<SeriesDocument> findByMemberNameStartingWithOrTitleStartingWith(String keyword);
 
 }
