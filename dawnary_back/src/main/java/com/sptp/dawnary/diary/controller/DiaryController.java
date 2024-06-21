@@ -59,4 +59,11 @@ public class DiaryController {
         if(result) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    // 팔로잉 다이어리 가져오기
+    @GetMapping("/follow")
+    public ResponseEntity<?> getFollowDiary() {
+        List<DiaryDto> diaries = diaryService.findFollowDiary();
+        return new ResponseEntity<>(diaries, HttpStatus.OK);
+    }
 }
