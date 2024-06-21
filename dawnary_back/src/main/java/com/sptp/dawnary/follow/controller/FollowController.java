@@ -1,21 +1,22 @@
 package com.sptp.dawnary.follow.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sptp.dawnary.follow.dto.response.FollowMemberResponse;
+import com.sptp.dawnary.follow.dto.response.FollowMemberListResponse;
 import com.sptp.dawnary.follow.service.FollowService;
 import com.sptp.dawnary.global.util.MemberInfo;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Builder
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/follow")
@@ -29,15 +30,14 @@ public class FollowController {
 		return followService.followMember(followingId);
 	}
 
-	@PostMapping("/following")
-	public ResponseEntity<List<FollowMemberResponse>> myFollowingList() {
+	@GetMapping("/following")
+	public ResponseEntity<FollowMemberListResponse> myFollowingList() {
 		Long memberId = MemberInfo.getMemberId();
-		log.info("memberId {}", memberId);
 		return followService.getFollows(memberId);
 	}
 
-	@PostMapping("/follower")
-	public ResponseEntity<List<FollowMemberResponse>> myFollowerList() {
+	@GetMapping("/follower")
+	public ResponseEntity<FollowMemberListResponse> myFollowerList() {
 		Long memberId = MemberInfo.getMemberId();
 		return followService.getFollowers(memberId);
 	}

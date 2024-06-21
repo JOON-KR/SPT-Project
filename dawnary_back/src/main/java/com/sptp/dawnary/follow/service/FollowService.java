@@ -1,6 +1,5 @@
 package com.sptp.dawnary.follow.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sptp.dawnary.follow.domain.Follow;
-import com.sptp.dawnary.follow.dto.response.FollowMemberResponse;
+import com.sptp.dawnary.follow.dto.response.FollowMemberListResponse;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
 import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.member.domain.Member;
@@ -52,21 +51,32 @@ public class FollowService {
 		return ResponseEntity.ok("성공");
 	}
 
-	public ResponseEntity<List<FollowMemberResponse>> getFollows(Long memberId) {
+	public ResponseEntity<FollowMemberListResponse> getFollows(Long memberId) {
 		Optional<Member> member = memberService.getMember(memberId);
-		if(member.isEmpty()) {
+		if (member.isEmpty()) {
 			throw new MemberNotFoundException();
 		}
-		return ResponseEntity.ok().body(followReadService.getFollowing(member.get()));
+
+		FollowMemberListResponse list = FollowMemberListResponse.builder()
+			.followMemberList(followReadService.getFollowing(member.get())).build();
+
+		return ResponseEntity.ok()
+			.body(list);
 	}
 
 
-	public ResponseEntity<List<FollowMemberResponse>> getFollowers(Long memberId) {
+	public ResponseEntity<FollowMemberListResponse> getFollowers(Long memberId) {
 		Optional<Member> member = memberService.getMember(memberId);
 		if(member.isEmpty()) {
 			throw new MemberNotFoundException();
 		}
-		return ResponseEntity.ok().body(followReadService.getFollower(member.get()));
+
+		FollowMemberListResponse list = FollowMemberListResponse.builder()
+			.followMemberList(followReadService.getFollower(member.get())).build();
+
+
+		return ResponseEntity.ok()
+			.body(list);
 	}
 
 
