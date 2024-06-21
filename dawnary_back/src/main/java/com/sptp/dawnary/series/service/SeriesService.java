@@ -2,6 +2,8 @@ package com.sptp.dawnary.series.service;
 
 import com.sptp.dawnary.diary.dto.DiaryDto;
 import com.sptp.dawnary.diary.repository.DiaryRepository;
+import com.sptp.dawnary.elastic.document.SeriesDocument;
+import com.sptp.dawnary.elastic.repository.SeriesElasticRepository;
 import com.sptp.dawnary.global.exception.DiaryNotFoundException;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
 import com.sptp.dawnary.global.exception.SeriesNotFoundException;
@@ -32,6 +34,7 @@ public class SeriesService {
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
     private final SeriesDiaryRepository seriesDiaryRepository;
+    private final SeriesElasticRepository seriesElasticRepository;
 
     private final ModelMapper modelMapper;
 
@@ -83,6 +86,9 @@ public class SeriesService {
 
         saveSeriesDiaries(seriesFormDto, savedSeries);
 
+        //document에 저장
+        SeriesDocument sd = SeriesDocument.from(series);
+        seriesElasticRepository.save(sd);        
         return savedSeries;
     }
 
@@ -90,6 +96,8 @@ public class SeriesService {
     public boolean deleteSeries(Long seriesId) {
         if (seriesRepository.existsById(seriesId)) {
             seriesRepository.deleteById(seriesId);
+            //document에서 삭제
+            seriesElasticRepository.deleteById(seriesId);
             return true;
         }
         throw new SeriesNotFoundException("존재하지 않는 시리즈입니다.");

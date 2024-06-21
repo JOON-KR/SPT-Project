@@ -25,7 +25,7 @@ public interface MemberElasticRepository extends ElasticsearchRepository<MemberD
     @Query("{\"bool\": {\"should\": [{\"match\": {\"name\": \"?0\"}}, {\"match\": {\"email\": \"?0\"}}]}}")
     List<MemberDocument> findByNameOrEmail(String keyword);
     
-    @Query("{\"match_phrase_prefix\": {\"searchTerm.autocomplete\": {\"query\": \"?0\"}}}")
+    @Query("{\"bool\": {\"should\": [{\"match_phrase_prefix\": {\"name.autocomplete\": {\"query\": \"?0\"}}}, {\"match_phrase_prefix\": {\"email.autocomplete\": {\"query\": \"?0\"}}}]}}")
     List<MemberDocument> findByNameAutocomplete(String keyword);
 
 
