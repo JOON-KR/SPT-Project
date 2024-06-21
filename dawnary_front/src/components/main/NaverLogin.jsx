@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import queryString from "query-string";
 
 const NaverLogin = () => {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ const NaverLogin = () => {
     document.body.appendChild(script);
 
     // useEffect 클린업 함수에서 스크립트 제거하는 것도 고려해보세요.
-  }, [navigate, userData]);
+  }, [navigate]);
 
   return <div>로그인 중...</div>;
 };
