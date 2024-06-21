@@ -4,18 +4,37 @@ import axios from "axios";
 import queryString from "query-string";
 import base64 from "base-64";
 import utf8 from "utf8";
+import useUserStore from "../../stores/user";
 
 const NaverLogin = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({ email: "", name: "" });
+  // const [userData, setUserData] = useState({ email: "", name: "" });
   const password = "Abcdefg999!"; // 비밀번호는 변경되지 않는 것으로 가정
 
+  const { allUserEmail, setAllUserEmail } = useUserStore();
+
   useEffect(() => {
+    const fetchAllUserEmails = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/member/all");
+        if (response.status === 200) {
+          console.log(response.data.emails);
+          setAllUserEmail(response.data.emails);
+          console.log(allUserEmail);
+        }
+      } catch (error) {
+        console.error("Failed to fetch all user emails", error);
+      }
+    };
+
+    fetchAllUserEmails();
+
     const signUpAndLogin = async (email, name) => {
       try {
+        console.log(allUserEmail);
         //회원가입 전에 이미 등록되어있는지 체크 하기
-        const isExist = true;
-
+        const isExist = allUserEmail.includes(email);
+        console.log(isExist);
         if (!isExist) {
           // 회원가입 요청
           const signUpResponse = await axios.post(
@@ -104,7 +123,7 @@ const NaverLogin = () => {
             console.log(naverLogin.user);
             const userEmail = naverLogin.user.getEmail();
             const userName = naverLogin.user.getNickName();
-            setUserData({ email: userEmail, name: userName });
+            // setUserData({ email: userEmail, name: userName });
 
             const { access_token } = queryString.parse(
               window.location.hash.substring(1)
@@ -129,7 +148,7 @@ const NaverLogin = () => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [navigate]);
+  }, [navigate, setAllUserEmail, allUserEmail]);
 
   return <div>로그인 중...</div>;
 };

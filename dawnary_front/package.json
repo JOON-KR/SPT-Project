@@ -22,7 +22,8 @@
     "react-calendar": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
-    "utf8": "^3.0.0"
+    "utf8": "^3.0.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
