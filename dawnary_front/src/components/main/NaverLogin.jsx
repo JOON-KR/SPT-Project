@@ -8,10 +8,9 @@ import useUserStore from "../../stores/user";
 
 const NaverLogin = () => {
   const navigate = useNavigate();
-  // const [userData, setUserData] = useState({ email: "", name: "" });
   const password = "Abcdefg999!"; // 비밀번호는 변경되지 않는 것으로 가정
 
-  const { allUserEmail, setAllUserEmail } = useUserStore();
+  const { setAllUserEmail } = useUserStore();
 
   useEffect(() => {
     const fetchAllUserEmails = async () => {
@@ -20,7 +19,6 @@ const NaverLogin = () => {
         if (response.status === 200) {
           console.log(response.data.emails);
           setAllUserEmail(response.data.emails);
-          console.log(allUserEmail);
         }
       } catch (error) {
         console.error("Failed to fetch all user emails", error);
@@ -28,34 +26,29 @@ const NaverLogin = () => {
     };
 
     fetchAllUserEmails();
+  }, [setAllUserEmail]);
 
+  useEffect(() => {
     const signUpAndLogin = async (email, name) => {
       try {
+        const response = await axios.get("http://localhost:8080/member/all");
+        const allUserEmail = response.data.emails;
+
         console.log(allUserEmail);
-        //회원가입 전에 이미 등록되어있는지 체크 하기
         const isExist = allUserEmail.includes(email);
         console.log(isExist);
         if (!isExist) {
-          // 회원가입 요청
           const signUpResponse = await axios.post(
             "http://localhost:8080/member/signup",
-            {
-              email: email,
-              password,
-              name: name,
-            }
+            { email, password, name }
           );
 
           if (signUpResponse.status === 200) {
             console.log("회원가입이 성공적으로 완료되었습니다.");
 
-            // 로그인 요청
             const loginResponse = await axios.post(
               "http://localhost:8080/member/login",
-              {
-                email: email,
-                password,
-              }
+              { email, password }
             );
 
             if (loginResponse.status === 200) {
@@ -66,7 +59,6 @@ const NaverLogin = () => {
               );
               const dec = base64.decode(payload);
               const dec_utf8 = utf8.decode(dec);
-              //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
               sessionStorage.setItem("token", token);
               sessionStorage.setItem("loginUser", dec_utf8);
               alert("로그인이 성공적으로 완료되었습니다.");
@@ -74,14 +66,9 @@ const NaverLogin = () => {
             }
           }
         } else {
-          //이미 있는 회원인 경우 로그인만 요청
-          // 로그인 요청
           const loginResponse = await axios.post(
             "http://localhost:8080/member/login",
-            {
-              email: email,
-              password,
-            }
+            { email, password }
           );
 
           if (loginResponse.status === 200) {
@@ -92,7 +79,6 @@ const NaverLogin = () => {
             );
             const dec = base64.decode(payload);
             const dec_utf8 = utf8.decode(dec);
-            //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
             sessionStorage.setItem("token", token);
             sessionStorage.setItem("loginUser", dec_utf8);
             alert("로그인이 성공적으로 완료되었습니다.");
@@ -123,20 +109,17 @@ const NaverLogin = () => {
             console.log(naverLogin.user);
             const userEmail = naverLogin.user.getEmail();
             const userName = naverLogin.user.getNickName();
-            // setUserData({ email: userEmail, name: userName });
 
             const { access_token } = queryString.parse(
               window.location.hash.substring(1)
             );
-            // 세션 스토리지에 네이버 엑세스토큰, 소셜 로그인 정보 저장
             sessionStorage.setItem("access_token", access_token);
             sessionStorage.setItem("socialLogin", "naver");
 
-            // 네이버 로그인한 유저 회원가입 및 로그인
             signUpAndLogin(userEmail, userName);
           } else {
             console.error("네이버 로그인에 실패했습니다.");
-            navigate("/login"); // 로그인 페이지로 리디렉션
+            navigate("/login");
           }
         });
       }
@@ -144,11 +127,10 @@ const NaverLogin = () => {
 
     document.body.appendChild(script);
 
-    // useEffect 클린업 함수에서 스크립트 제거하는 것도 고려해보세요.
     return () => {
       document.body.removeChild(script);
     };
-  }, [navigate, setAllUserEmail, allUserEmail]);
+  }, [navigate]);
 
   return <div>로그인 중...</div>;
 };

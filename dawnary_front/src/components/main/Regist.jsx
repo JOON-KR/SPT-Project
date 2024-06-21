@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Regist.css";
@@ -10,6 +10,26 @@ const Regist = () => {
   const [message, setMessage] = useState("");
 
   const nav = useNavigate();
+
+  // 네이버 로그인 라이브러리를 스크립트로 삽입
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js";
+    script.async = true;
+    script.onload = () => {
+      // 네이버 로그인 버튼 생성
+      if (window.naver) {
+        const naverLogin = new window.naver.LoginWithNaverId({
+          clientId: import.meta.env.VITE_NAVER_CLIENT_ID,
+          callbackUrl: "http://localhost:5173/naverLogin",
+          isPopup: false,
+          loginButton: { color: "green", type: 3, height: "40" },
+        });
+        naverLogin.init();
+      }
+    };
+    document.body.appendChild(script);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,13 +51,13 @@ const Regist = () => {
     }
   };
 
-  const handleSocialRegist = (platform) => {
-    if (platform === "naver") {
-      // 네이버 소셜 로그인 처리
-    } else if (platform === "kakao") {
-      // 카카오 소셜 로그인 처리
-    }
-  };
+  // const handleSocialRegist = (platform) => {
+  //   if (platform === "naver") {
+  //     // 네이버 소셜 로그인 처리
+  //   } else if (platform === "kakao") {
+  //     // 카카오 소셜 로그인 처리
+  //   }
+  // };
 
   return (
     <div className="container">
@@ -80,10 +100,10 @@ const Regist = () => {
         <hr />
         <div>소셜 계정으로 간편 가입하기</div>
         <div className="social-regist">
-          <div className="kakao" onClick={() => handleSocialRegist("kakao")}>
+          {/* <div className="kakao" onClick={() => handleSocialRegist("kakao")}>
             카카오
-          </div>
-          <div className="naver" onClick={() => handleSocialRegist("naver")}>
+          </div> */}
+          <div className="naver" id="naverIdLogin">
             네이버
           </div>
         </div>

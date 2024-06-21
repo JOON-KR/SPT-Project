@@ -1,0 +1,14 @@
+.react-calendar__tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emotion-image {
+  position: absolute;
+  bottom: 2px;
+  right: 7px;
+  width: 35px;
+  height: 35px;
+}

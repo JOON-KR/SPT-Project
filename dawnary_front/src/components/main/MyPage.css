@@ -1,7 +1,23 @@
 .container {
   width: 100vh;
   height: 100vw;
+  display: flex;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.profile-box {
+  display: flex;
+  flex-direction: column;
+}
+.profile-sub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .following,
 .follower {
   position: fixed;
@@ -10,9 +26,10 @@
   bottom: 0;
   width: 20%; /* 너비를 20%로 설정하여 화면의 왼쪽 20%를 차지하도록 함 */
   height: 100%; /* 높이를 100%로 설정하여 화면 위 아래로 꽉 차게 함 */
-  background-color: white; /* 배경색 지정 */
+  background-color: #ffffff; /* 배경색 지정 */
   z-index: 1000; /* 다른 요소들보다 위에 나타나도록 z-index 설정 */
   transition: left 0.3s ease-out; /* 슬라이드 애니메이션 적용 */
+  box-shadow: 3px 0 15px rgba(0, 0, 0, 0.5); /* 오른쪽에 그림자 추가 */
 }
 
 .following.show,
@@ -20,9 +37,36 @@
   left: 0; /* 보여질 때 화면 왼쪽으로 슬라이드 */
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 반투명한 어두운 배경 */
+  z-index: 999; /* following, follower 아래에 위치 */
+  display: none; /* 초기에는 보이지 않도록 설정 */
+}
+
+.overlay.show {
+  display: block; /* 보여질 때 화면을 어둡게 */
+}
+
 .follow-box-close {
   position: absolute;
   top: 10px;
   right: 10px;
   cursor: pointer;
+}
+
+.feed {
+  width: 50%;
+  margin-left: 20px;
+}
+
+.follower-feed,
+.following-feed {
+  max-height: "350px";
+  overflow-y: "auto";
+  margin: 20px;
 }
