@@ -5,6 +5,7 @@ import com.sptp.dawnary.diary.dto.DiaryDto;
 import com.sptp.dawnary.diary.repository.DiaryRepository;
 import com.sptp.dawnary.global.exception.DiaryNotFoundException;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
+import com.sptp.dawnary.global.util.GcpUtil;
 import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.repository.MemberRepository;
@@ -26,11 +27,14 @@ public class DiaryService {
 
     private final MemberRepository memberRepository;
 
+    private final GcpUtil gcpUtil;
+
     // 다이어리 등록
     public Diary saveDiary(Diary diary) {
         diary.setMember(getMember());
+        diary.setSentiment(gcpUtil.getSentiment(diary.getContent()));
         return diaryRepository.save(diary);
-    };
+    }
 
     // 다이어리 수정
     public boolean updateDiary(Long diaryId, Diary diary) {
@@ -56,8 +60,17 @@ public class DiaryService {
 
     // 다이어리 목록 조회
     public List<DiaryDto> findAllDiaries(Long memberId) {
-        List<Diary> diaries = diaryRepository.findByMemberId(memberId);
-        return diaries.stream()
+        // 로그인 멤버 == 조회 멤버 시 공개 여부 상관 X
+        if(getMember().getId() == memberId) {
+            return diaryRepository.findByMemberId(memberId)
+                    .stream()
+                    .map(DiaryDto::toDto)
+                    .toList();
+        }
+
+        // 로그인 멤버 != 조회 멤버 시 공개글만
+        return diaryRepository.findOtherUserDiaries(memberId)
+                .stream()
                 .map(DiaryDto::toDto)
                 .toList();
     }
