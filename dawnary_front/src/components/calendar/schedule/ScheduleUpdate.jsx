@@ -2,44 +2,45 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import KakaoMap from "./KakaoMap";
 
-export default function ScheduleCreate({ date, onClose }) {
-  const [today, setToday] = useState(date ? date.toLocaleDateString() : "");
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedPlace, setSelectedPlace] = useState(null);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [time, setTime] = useState("");
+export default function ScheduleUpdate({ event, onClose }) {
+  const [today, setToday] = useState(event ? event.date : "");
+  const [searchValue, setSearchValue] = useState(event.location ? event.location.name : "");
+  const [selectedPlace, setSelectedPlace] = useState(event.location ? { place_name: event.location.name, y: event.location.latitude, x: event.location.longitude } : null);
+  const [title, setTitle] = useState(event.title);
+  const [content, setContent] = useState(event.content);
+  const [time, setTime] = useState(event.date ? new Date(event.date).toISOString().substring(11, 16) : "");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   useEffect(() => {
-    if (date) {
-      setToday(formatDate(date));
+    if (event) {
+      setToday(formatDate(new Date(event.start)));
     }
-  }, [date]);
+  }, [event]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const scheduleData = {
+      id: event.id,
       date: new Date(`${today} ${time}`),
       title: title,
       content: content,
       location: {
-        name: selectedPlace ? selectedPlace.place_name : "",
-        latitude: selectedPlace ? selectedPlace.y : null,
-        longitude: selectedPlace ? selectedPlace.x : null,
+          name: selectedPlace ? selectedPlace.place_name : "",
+          latitude: selectedPlace ? selectedPlace.y : null,
+          longitude: selectedPlace ? selectedPlace.x : null,
       }
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/schedule",
+      const response = await axios.put(
+        `http://localhost:8080/schedule/${event.id}`,
         scheduleData
       );
-      console.log("일정 등록 성공:", response.data);
+      console.log("일정 수정 성공:", response.data);
       onClose();
     } catch (error) {
-      console.error("일정 등록 실패:", error);
+      console.error("일정 수정 실패:", error);
       console.log(scheduleData);
     }
   };
@@ -65,7 +66,7 @@ export default function ScheduleCreate({ date, onClose }) {
 
   return (
     <div>
-      <h3>{today}의 일정 등록</h3>
+      <h3>{today}의 일정 수정</h3>
       <form onSubmit={handleSubmit}>
         <div>
           <label>일정 제목: </label>
@@ -102,7 +103,6 @@ export default function ScheduleCreate({ date, onClose }) {
             type="text"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            // required
           />
         </div>
         <div>
@@ -115,6 +115,7 @@ export default function ScheduleCreate({ date, onClose }) {
           />
         </div>
         <button type="submit">저장</button>
+        <button onClick={onClose}>취소</button>
       </form>
 
       {isPopoverOpen && (

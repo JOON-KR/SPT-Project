@@ -1,4 +1,9 @@
+import { useState } from 'react'
+import ScheduleUpdate from './ScheduleUpdate';
+
 const ScheduleDetails = ({ event, onClose }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  
   const formatDateTime = (dateStr) => {
     const date = new Date(dateStr);
     const options = {
@@ -12,12 +17,28 @@ const ScheduleDetails = ({ event, onClose }) => {
     return date.toLocaleString("ko-KR", options);
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleEditClose = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="event-detail-popup">
-      <h3>{event.title}</h3>
-      <p>{event.extendedProps.content}</p>
-      <p>{formatDateTime(event.startStr)}</p>
-      <button onClick={onClose}>닫기</button>
+      {!isEditing ? (
+        <>
+          <h3>{event.title}</h3>
+          <p>{formatDateTime(event.startStr)}</p>
+          <p>{event.extendedProps.location}</p>
+          <p>{event.extendedProps.content}</p>
+          <button onClick={onClose}>닫기</button>
+          <button onClick={handleEditClick}>수정</button>
+        </>
+      ) : (
+        <ScheduleUpdate event={event} onClose={handleEditClose} />
+      )}
     </div>
   );
 };
