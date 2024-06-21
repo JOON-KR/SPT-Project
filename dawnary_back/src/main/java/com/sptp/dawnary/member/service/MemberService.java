@@ -75,6 +75,7 @@ public class MemberService {
 			.email(originMember.get().getEmail())
 			.password(request.password())
 			.name(request.name())
+			.role(originMember.get().getRole())
 			.build();
 		return memberRepository.save(updateMember);
 	}

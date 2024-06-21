@@ -22,7 +22,7 @@ import lombok.Setter;
 public class MemberDocument {
 
     @Id
-    private long id;
+    private Long id;
     @MultiField(mainField = @Field(type = FieldType.Text, analyzer = "edge_ngram_analyzer"),
             otherFields = {
                 @InnerField(suffix = "exact", type = FieldType.Keyword),
