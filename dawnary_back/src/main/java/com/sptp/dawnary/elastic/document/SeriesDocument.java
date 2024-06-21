@@ -1,21 +1,11 @@
 package com.sptp.dawnary.elastic.document;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.InnerField;
-import org.springframework.data.elasticsearch.annotations.MultiField;
-
 import com.sptp.dawnary.series.domain.Series;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -26,7 +16,7 @@ import lombok.Setter;
 public class SeriesDocument {
 
     @Id
-    private long id;
+    private Long id;
     @MultiField(mainField = @Field(type = FieldType.Text, analyzer = "ngram"),
             otherFields = {
                 @InnerField(suffix = "exact", type = FieldType.Keyword),
