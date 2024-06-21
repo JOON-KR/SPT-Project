@@ -23,6 +23,8 @@ public class DiaryDto {
 
     private int status;
 
+    private Double sentiment;
+
     private String imagePath;
 
     private Long memberId;
@@ -34,6 +36,7 @@ public class DiaryDto {
                 .id(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())
+                .sentiment(diary.getSentiment())
                 .date(diary.getDate())
                 .weather(diary.getWeather())
                 .status(diary.getStatus())

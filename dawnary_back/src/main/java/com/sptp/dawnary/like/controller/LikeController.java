@@ -3,12 +3,9 @@ package com.sptp.dawnary.like.controller;
 import com.sptp.dawnary.like.dto.LikeFormDto;
 import com.sptp.dawnary.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

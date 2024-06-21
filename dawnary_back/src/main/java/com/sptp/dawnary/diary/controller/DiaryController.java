@@ -1,6 +1,5 @@
 package com.sptp.dawnary.diary.controller;
 
-import java.util.List;
 import com.sptp.dawnary.diary.domain.Diary;
 import com.sptp.dawnary.diary.dto.DiaryDto;
 import com.sptp.dawnary.diary.dto.DiaryFormDto;
@@ -10,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +39,6 @@ public class DiaryController {
     public ResponseEntity<?> saveDiary(@RequestBody DiaryFormDto diary) {
         Diary entity = modelMapper.map(diary, Diary.class);
         Diary result = diaryService.saveDiary(entity);
-
         if(result == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -48,7 +48,6 @@ public class DiaryController {
     public ResponseEntity<?> modifyDiary(@PathVariable("diaryId") Long diaryId, @RequestBody DiaryFormDto diary) {
         Diary entity = modelMapper.map(diary, Diary.class);
         boolean result = diaryService.updateDiary(diaryId, entity);
-
         if (result) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -57,7 +56,6 @@ public class DiaryController {
     @DeleteMapping("/{diaryId}")
     public ResponseEntity<?> removeDiary(@PathVariable("diaryId") Long diaryId) {
         boolean result = diaryService.deleteDiary(diaryId);
-
         if(result) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

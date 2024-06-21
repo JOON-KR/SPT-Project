@@ -1,18 +1,12 @@
 package com.sptp.dawnary.series.controller;
 
-import com.sptp.dawnary.diary.domain.Diary;
-import com.sptp.dawnary.diary.dto.DiaryDto;
 import com.sptp.dawnary.series.domain.Series;
 import com.sptp.dawnary.series.dto.SeriesFormDto;
 import com.sptp.dawnary.series.service.SeriesService;
-import com.sptp.dawnary.seriesDiary.service.SeriesDiaryService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +14,6 @@ import java.util.List;
 public class SeriesController {
 
     private final SeriesService seriesService;
-    private final SeriesDiaryService seriesDiaryService;
-
-    private final ModelMapper modelMapper;
 
     // 모든 시리즈 조회(최신 순)
     @GetMapping("/all")
@@ -62,23 +53,11 @@ public class SeriesController {
 
     // 시리즈 등록
     @PostMapping
-    public ResponseEntity<?> saveSeries(@RequestBody SeriesFormDto series) {
-        Series entity = modelMapper.map(series, Series.class);
-        Series result = seriesService.saveSeries(entity);
+    public ResponseEntity<?> saveSeries(@RequestBody SeriesFormDto seriesDto) {
+        Series series = seriesService.saveSeries(seriesDto);
 
-        if(result == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        if(seriesDiaryService.saveSeriesDiary(result, series.getDiaries()))
-            return new ResponseEntity<>(HttpStatus.OK);
-
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(series, HttpStatus.CREATED);
     }
-
-    // 시리즈 수정
-//    @PutMapping("/{seriesId}")
-//    public ResponseEntity<?> updateSeries(@PathVariable("seriesId") Long seriesId) {
-//
-//    }
 
     // 시리즈 삭제
     @DeleteMapping("/{seriesId}")
