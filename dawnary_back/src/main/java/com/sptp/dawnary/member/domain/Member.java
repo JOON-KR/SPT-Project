@@ -37,7 +37,6 @@ public class Member {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "member_id")
 	private Long id;
 
 	@Column(name = "email", length = 50, updatable = false, unique = true)
