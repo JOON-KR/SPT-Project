@@ -4,31 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.sptp.dawnary.member.dto.CustomUserInfoDto;
+import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Setter
-@Getter
-@RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
-
-	private final CustomUserInfoDto member;
+public record CustomUserDetails(CustomUserInfo member) implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<String> roles = new ArrayList<>();
-		log.info("meber.getRole {}", member.getRole());
-		log.info("meber.getRole.toString {}", member.getRole().toString());
-		roles.add("ROLE_" + member.getRole());
+		log.info("meber.getRole {}", member.role());
+		log.info("meber.getRole.toString {}", member.role().toString());
+		roles.add("ROLE_" + member.role());
 
 		return roles.stream()
 			.map(SimpleGrantedAuthority::new)
@@ -37,12 +29,12 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return member.getPassword();
+		return member.password();
 	}
 
 	@Override
 	public String getUsername() {
-		return member.getMemberId().toString();
+		return member.id().toString();
 	}
 
 	@Override

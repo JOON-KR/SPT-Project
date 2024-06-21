@@ -7,7 +7,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.sptp.dawnary.member.dto.CustomUserInfoDto;
+import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,7 +41,7 @@ public class JwtUtil {
 	 * @param member
 	 * @return Access Token String
 	 */
-	public String createAccessToken(CustomUserInfoDto member) {
+	public String createAccessToken(CustomUserInfo member) {
 		return createToken(member, accessTokenExpTime);
 	}
 
@@ -51,12 +51,12 @@ public class JwtUtil {
 	 * @param expireTime
 	 * @return JWT String
 	 */
-	private String createToken(CustomUserInfoDto member, long expireTime) {
+	private String createToken(CustomUserInfo member, long expireTime) {
 		Claims claims = Jwts.claims();
-		claims.put("memberId", member.getMemberId());
-		claims.put("email", member.getEmail());
-		claims.put("name", member.getName());
-		claims.put("role", member.getRole()); //USER, ADMIN
+		claims.put("memberId", member.id());
+		claims.put("email", member.email());
+		claims.put("name", member.name());
+		claims.put("role", member.role()); //USER, ADMIN
 
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime tokenValidity = now.plusSeconds(expireTime);
