@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sptp.dawnary.like.domain.Like;
 import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.series.dto.SeriesRequest;
 import com.sptp.dawnary.seriesDiary.domain.SeriesDiary;
 import jakarta.persistence.*;
 import lombok.*;
@@ -63,5 +64,14 @@ public class Series {
 	@PrePersist
 	protected void onCreate() {
 		regDate = LocalDateTime.now();
+	}
+
+	public static Series toEntity(SeriesRequest seriesRequest) {
+		return Series.builder()
+				.title(seriesRequest.title())
+				.imagePath(seriesRequest.imagePath())
+				.status(seriesRequest.status())
+//				.seriesDiaries()
+				.build();
 	}
 }

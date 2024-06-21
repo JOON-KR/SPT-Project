@@ -1,6 +1,7 @@
 package com.sptp.dawnary.location.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sptp.dawnary.location.dto.LocationRequest;
 import com.sptp.dawnary.schedule.domain.Schedule;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,4 +34,11 @@ public class Location {
     @Column(name = "name", nullable = true)
     private String name;
 
+    public static Location toEntity(LocationRequest locationRequest) {
+        return Location.builder()
+                .latitude(locationRequest.latitude())
+                .longitude(locationRequest.longitude())
+                .name(locationRequest.name())
+                .build();
+    }
 }
