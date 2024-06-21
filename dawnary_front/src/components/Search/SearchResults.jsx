@@ -1,18 +1,30 @@
-import PropTypes from "prop-types";
-import UserResults from "./UserResults.jsx";
-import SeriesResults from "./SeriesResults.jsx";
-import DiaryResults from "./DiaryResults.jsx";
+import { useState } from 'react';
+import MainHeader from './MainHeader';
+import UserSearchResults from './UserSearchResults';
+import DiaryResults from './DiaryResults';
+import SeriesSearchResults from './SeriesSearchResults';
+import "./SearchCss/Result.css"
 
-const SearchResults = ({ keyword }) => (
-  <div>
-    <UserResults keyword={keyword} />
-    <SeriesResults keyword={keyword} />
-    <DiaryResults keyword={keyword} />
-  </div>
-);
+const SearchResults = () => {
+  const [keyword, setKeyword] = useState('');
+  const [filter, setFilter] = useState('all');
 
-SearchResults.propTypes = {
-  keyword: PropTypes.string.isRequired,
+  const handleSearch = (searchTerm) => {
+    setKeyword(searchTerm);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
+
+  return (
+    <div>
+      <MainHeader onSearch={handleSearch} onFilterChange={handleFilterChange} />
+      {(filter === 'all' || filter === 'users') && <UserSearchResults keyword={keyword} />}
+      {(filter === 'all' || filter === 'diaries') && <DiaryResults keyword={keyword} />}
+      {(filter === 'all' || filter === 'series') && <SeriesSearchResults keyword={keyword} />}
+    </div>
+  );
 };
 
-export default SearchResults;
+export default SearchResults

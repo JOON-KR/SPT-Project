@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import EssayItem from "./EssayItem";
-import { fetchEssays } from "../RESTapi";
+import { getAllEssays } from "./RESTapi";
 
 const EssayList = () => {
   const [essays, setEssays] = useState([]);
 
   useEffect(() => {
     const getEssays = async () => {
-      const essaysData = await fetchEssays();
+      const essaysData = await getAllEssays();
       setEssays(essaysData);
     };
 
@@ -16,6 +16,7 @@ const EssayList = () => {
 
   return (
     <div className="essay-list">
+      <h1>에세이 목록</h1>
       {essays.map((essay, index) => (
         <EssayItem 
           key={index} 
