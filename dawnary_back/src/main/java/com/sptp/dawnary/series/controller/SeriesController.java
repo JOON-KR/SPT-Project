@@ -1,13 +1,14 @@
 package com.sptp.dawnary.series.controller;
 
-import com.sptp.dawnary.series.domain.Series;
-import com.sptp.dawnary.series.dto.SeriesFormDto;
+import com.sptp.dawnary.series.dto.SeriesRequest;
+import com.sptp.dawnary.series.dto.SeriesResponse;
 import com.sptp.dawnary.series.service.SeriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/series")
@@ -53,8 +54,8 @@ public class SeriesController {
 
     // 시리즈 등록
     @PostMapping
-    public ResponseEntity<?> saveSeries(@RequestBody SeriesFormDto seriesDto) {
-        Series series = seriesService.saveSeries(seriesDto);
+    public ResponseEntity<?> saveSeries(@RequestBody SeriesRequest seriesDto) {
+        SeriesResponse series = seriesService.saveSeries(seriesDto);
 
         return new ResponseEntity<>(series, HttpStatus.CREATED);
     }
@@ -62,10 +63,9 @@ public class SeriesController {
     // 시리즈 삭제
     @DeleteMapping("/{seriesId}")
     public ResponseEntity<?> removeSeries(@PathVariable("seriesId") Long seriesId) {
-        boolean result = seriesService.deleteSeries(seriesId);
+        seriesService.deleteSeries(seriesId);
 
-        if(result) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
