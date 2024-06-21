@@ -15,6 +15,7 @@ import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 import com.sptp.dawnary.member.dto.request.LoginRequest;
+import com.sptp.dawnary.member.dto.request.UpdateRequest;
 import com.sptp.dawnary.member.repository.MemberRepository;
 import com.sptp.dawnary.security.util.JwtUtil;
 
@@ -31,7 +32,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder encoder;
 
-	@Transactional
 	public String login(LoginRequest request) {
 		String email = request.email();
 		String password = request.password();
@@ -50,7 +50,6 @@ public class MemberService {
 		return jwtUtil.createAccessToken(info);
 	}
 
-	@Transactional
 	public Long signup(Member member) {
 		Optional<Member> validMember = memberRepository.findByEmail(member.getEmail());
 
@@ -63,6 +62,33 @@ public class MemberService {
 		log.info("member info {}", member);
 		memberRepository.save(member);
 		return member.getId();
+	}
+
+	public Member update(UpdateRequest request) {
+		Long memberId = MemberInfo.getMemberId();
+		Optional<Member> originMember = memberRepository.findById(memberId);
+		if(originMember.isEmpty()) {
+			throw new MemberNotFoundException();
+		}
+		Member updateMember = Member.builder()
+			.id(memberId)
+			.email(originMember.get().getEmail())
+			.password(request.password())
+			.name(request.name())
+			.role(originMember.get().getRole())
+			.build();
+		return memberRepository.save(updateMember);
+	}
+
+	public void delete() {
+		Long memberId = MemberInfo.getMemberId();
+		Optional<Member> originMember = memberRepository.findById(memberId);
+
+		if(originMember.isEmpty()) {
+			throw new MemberNotFoundException();
+		}
+
+		memberRepository.delete(originMember.get());
 	}
 
 	public Member getMember() {
