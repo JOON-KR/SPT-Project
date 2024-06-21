@@ -1,5 +1,6 @@
 package com.sptp.dawnary.diary.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.seriesDiary.domain.SeriesDiary;
 import jakarta.persistence.*;
@@ -26,6 +27,7 @@ public class Diary {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member member;
 
     @Column(name = "title", nullable = false, length = 50)
