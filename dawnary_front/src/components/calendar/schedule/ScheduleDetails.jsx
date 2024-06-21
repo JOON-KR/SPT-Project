@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import ScheduleUpdate from './ScheduleUpdate';
 
 const ScheduleDetails = ({ event, onClose }) => {
@@ -25,6 +26,16 @@ const ScheduleDetails = ({ event, onClose }) => {
     setIsEditing(false);
   };
 
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/schedule/${event.id}`);
+      console.log('일정 삭제 성공');
+      onClose(); // 팝업 닫기
+    } catch (error) {
+      console.error('일정 삭제 실패:', error);
+    }
+  };
+
   return (
     <div className="event-detail-popup">
       {!isEditing ? (
@@ -35,6 +46,7 @@ const ScheduleDetails = ({ event, onClose }) => {
           <p>{event.extendedProps.content}</p>
           <button onClick={onClose}>닫기</button>
           <button onClick={handleEditClick}>수정</button>
+          <button onClick={handleDelete}>삭제</button>
         </>
       ) : (
         <ScheduleUpdate event={event} onClose={handleEditClose} />
