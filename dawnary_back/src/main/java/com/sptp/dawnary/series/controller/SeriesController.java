@@ -59,12 +59,6 @@ public class SeriesController {
         return new ResponseEntity<>(series, HttpStatus.CREATED);
     }
 
-    // 시리즈 수정
-//    @PutMapping("/{seriesId}")
-//    public ResponseEntity<?> updateSeries(@PathVariable("seriesId") Long seriesId) {
-//
-//    }
-
     // 시리즈 삭제
     @DeleteMapping("/{seriesId}")
     public ResponseEntity<?> removeSeries(@PathVariable("seriesId") Long seriesId) {

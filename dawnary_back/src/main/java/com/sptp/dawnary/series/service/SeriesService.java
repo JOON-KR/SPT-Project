@@ -86,17 +86,6 @@ public class SeriesService {
         return savedSeries;
     }
 
-    // 시리즈 수정
-    public boolean updateSeries(Long seriesId, Series series) {
-        series.setMember(getMember());
-        if (seriesRepository.existsById(seriesId)) {
-            series.setId(seriesId);
-            seriesRepository.save(series);
-            return true;
-        }
-        throw new SeriesNotFoundException("존재하지 않는 시리즈입니다.");
-    }
-
     // 시리즈 삭제
     public boolean deleteSeries(Long seriesId) {
         if (seriesRepository.existsById(seriesId)) {
