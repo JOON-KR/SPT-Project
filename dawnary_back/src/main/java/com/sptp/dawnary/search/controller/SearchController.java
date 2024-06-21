@@ -28,40 +28,33 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin("*")
 public class SearchController {
 
-    private final SearchService ss;
+    private final SearchService searchService;
     
-    // 멤버 저장 API
-    @PostMapping
-    public ResponseEntity<?> saveMember(@RequestBody Member member) {
-        MemberDocument m = ss.saveMember(member);
-        return new ResponseEntity<>(m, HttpStatus.OK);
-    }
-
     // 이름으로 멤버 검색 API
     @GetMapping
     public ResponseEntity<?> findMembersByName(@RequestParam String name) {
-        List<MemberDocument> list = ss.findMembersByName(name);
+        List<MemberDocument> list = searchService.findMembersByName(name);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     // 모든 멤버 검색 API
     @GetMapping("/all")
     public ResponseEntity<?> findAllMembersByName() {
-        List<MemberDocument> list = ss.findAllMembers();
+        List<MemberDocument> list = searchService.findAllMembers();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     // 이메일로 멤버 검색 API
     @GetMapping("/email/{email}")
     public ResponseEntity<?> findMembersByEmail(@PathVariable("email")  String email) {
-        List<MemberDocument> list = ss.findMembersByEmail(email);
+        List<MemberDocument> list = searchService.findMembersByEmail(email);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     // 키워드로 멤버 검색 API (이름 또는 이메일)
     @GetMapping("/keyword/{keyword}")
     public ResponseEntity<?> findMembersByKeyword(@PathVariable("keyword")  String keyword) {
-        List<MemberDocument> list = ss.findMembersByNameAndEmail(keyword);
+        List<MemberDocument> list = searchService.findMembersByNameAndEmail(keyword);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     
@@ -69,22 +62,12 @@ public class SearchController {
     //자동완성 기능은 컨트롤러에서 키워드만 받아서 member와 series 양쪽으로 보낸 뒤 두 결과를 합쳐서 resultDto를 받아오는 방향으로 설계해야겠음.
     @GetMapping("/part/{partialName}")
     public ResponseEntity<?> findLive(@PathVariable("partialName") String partialName) {
-    	List<SeriesDocument>list = ss.findSeriesByMemberNameOrTitleStartingWith(partialName);
+    	List<SeriesDocument>list = searchService.findSeriesByMemberNameOrTitleStartingWith(partialName);
         return new ResponseEntity<>(list,  HttpStatus.OK);
-    }
-    
-    @PostMapping("/series")
-    public ResponseEntity<?> saveSeries(@RequestBody Series series) {
-        SeriesDocument s = ss.saveSeries(series);
-        return new ResponseEntity<>(s, HttpStatus.OK);
     }
     @GetMapping("/test/{partialName}")
     public ResponseEntity<?> Live(@PathVariable("partialName") String partialName) {
-    	List<SeriesDocument>list = ss.findSeriesByMemberNameOrTitleStartingWith(partialName);
+    	List<SeriesDocument>list = searchService.findSeriesByMemberNameOrTitleStartingWith(partialName);
         return new ResponseEntity<>(list,  HttpStatus.OK);
-    }
-    @GetMapping("/A")
-    public ResponseEntity<?> test() {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -10,8 +10,6 @@ import com.sptp.dawnary.series.domain.Series;
 
 public interface SearchService {
 
-	//후에 멤버 서비스에서 저장하기, 지금은 테스트
-	MemberDocument saveMember(Member member);
 
 	// 모든 멤버 조회
 	List<MemberDocument> findAllMembers();
@@ -27,8 +25,6 @@ public interface SearchService {
 	
 	//실시간 검색 (멤버)
 	List<MemberDocument> findMembersByNameOrEmailStartingWith(String keyword);
-	//후에 시리즈 서비스에서 저장, 지금은테스트
-	SeriesDocument saveSeries(Series series);
 
 	//모든 시리즈 조회
 	List<SeriesDocument> findAllSeries(); 

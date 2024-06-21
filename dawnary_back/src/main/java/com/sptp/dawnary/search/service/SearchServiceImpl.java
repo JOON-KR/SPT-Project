@@ -24,12 +24,6 @@ public class SearchServiceImpl implements SearchService {
     // 멤버 관련 메서드들
 
     @Override
-    public MemberDocument saveMember(Member member) {
-        MemberDocument md = MemberDocument.from(member);
-        return memberElasticRepository.save(md);
-    }
-
-    @Override
     public List<MemberDocument> findAllMembers() {
         return memberElasticRepository.findAll();
     }
@@ -51,12 +45,6 @@ public class SearchServiceImpl implements SearchService {
 
 
     // 시리즈 관련 메서드들
-
-    @Override
-    public SeriesDocument saveSeries(Series series) {
-        SeriesDocument sd = SeriesDocument.from(series);
-        return seriesElasticRepository.save(sd);
-    }
 
     @Override
     public List<SeriesDocument> findAllSeries() {
