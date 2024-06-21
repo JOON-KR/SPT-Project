@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.dto.request.LoginRequest;
 import com.sptp.dawnary.member.dto.request.MemberRequest;
 import com.sptp.dawnary.member.dto.request.UpdateRequest;
+import com.sptp.dawnary.member.dto.response.EmailListResponse;
 import com.sptp.dawnary.member.dto.response.UpdateResponse;
 import com.sptp.dawnary.member.service.MemberService;
 
@@ -57,5 +59,10 @@ public class MemberController {
 	public ResponseEntity<String> delete() {
 		memberService.delete();
 		return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
+	}
+
+	@GetMapping("all")
+	public ResponseEntity<EmailListResponse> getAllEmails() {
+		return ResponseEntity.status(HttpStatus.OK).body(memberService.getEmails());
 	}
 }
