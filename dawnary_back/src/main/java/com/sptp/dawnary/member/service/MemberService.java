@@ -1,5 +1,6 @@
 package com.sptp.dawnary.member.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +16,8 @@ import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 import com.sptp.dawnary.member.dto.request.LoginRequest;
+import com.sptp.dawnary.member.dto.request.UpdateRequest;
+import com.sptp.dawnary.member.dto.response.EmailListResponse;
 import com.sptp.dawnary.member.repository.MemberRepository;
 import com.sptp.dawnary.security.util.JwtUtil;
 
@@ -31,7 +34,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder encoder;
 
-	@Transactional
 	public String login(LoginRequest request) {
 		String email = request.email();
 		String password = request.password();
@@ -50,7 +52,6 @@ public class MemberService {
 		return jwtUtil.createAccessToken(info);
 	}
 
-	@Transactional
 	public Long signup(Member member) {
 		Optional<Member> validMember = memberRepository.findByEmail(member.getEmail());
 
@@ -65,6 +66,33 @@ public class MemberService {
 		return member.getId();
 	}
 
+	public Member update(UpdateRequest request) {
+		Long memberId = MemberInfo.getMemberId();
+		Optional<Member> originMember = memberRepository.findById(memberId);
+		if(originMember.isEmpty()) {
+			throw new MemberNotFoundException();
+		}
+		Member updateMember = Member.builder()
+			.id(memberId)
+			.email(originMember.get().getEmail())
+			.password(request.password())
+			.name(request.name())
+			.role(originMember.get().getRole())
+			.build();
+		return memberRepository.save(updateMember);
+	}
+
+	public void delete() {
+		Long memberId = MemberInfo.getMemberId();
+		Optional<Member> originMember = memberRepository.findById(memberId);
+
+		if(originMember.isEmpty()) {
+			throw new MemberNotFoundException();
+		}
+
+		memberRepository.delete(originMember.get());
+	}
+
 	public Member getMember() {
 		Long memberId = MemberInfo.getMemberId();
 		log.info("memberId {}", memberId);
@@ -76,6 +104,15 @@ public class MemberService {
 		return Optional.ofNullable(memberRepository.findById(memberId)
 			.orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않습니다.")));
 	}
+
+	public EmailListResponse getEmails() {
+		List<String> emails = memberRepository.findAll().stream()
+			.map(Member::getEmail)
+			.toList();
+
+		return EmailListResponse.builder().emails(emails).build();
+	}
+
 
 	public void sameUserCheck(Long memberId, Long othersMemberId) {
 		if (memberId.equals(othersMemberId)) throw new SameMemberException();

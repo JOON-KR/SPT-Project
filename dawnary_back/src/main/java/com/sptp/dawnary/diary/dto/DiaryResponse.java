@@ -6,33 +6,12 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class DiaryDto {
-    private Long id;
-    private String title;
+public record DiaryResponse(Long id, String title, String content, LocalDateTime date,
+                            Weather weather, int status, Double sentiment, String imagePath, Long memberId, String name) {
 
-    private String content;
-
-    private LocalDateTime date;
-
-    private Weather weather;
-
-    private int status;
-
-    private Double sentiment;
-
-    private String imagePath;
-
-    private Long memberId;
-
-    private String name;
-
-    public static DiaryDto toDto(Diary diary) {
-        return DiaryDto.builder()
+    public static DiaryResponse toResponse(Diary diary) {
+        return DiaryResponse.builder()
                 .id(diary.getId())
                 .title(diary.getTitle())
                 .content(diary.getContent())

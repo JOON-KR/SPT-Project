@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sptp.dawnary.location.domain.Location;
 import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.schedule.dto.ScheduleRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,5 +45,13 @@ public class Schedule {
     @JsonIgnore
     private Location location;
 
+    public static Schedule toEntity(ScheduleRequest scheduleRequest) {
+        return Schedule.builder()
+                .date(scheduleRequest.date())
+                .title(scheduleRequest.title())
+                .content(scheduleRequest.content())
+                .location(Location.toEntity(scheduleRequest.locationRequest()))
+                .build();
+    }
 
 }

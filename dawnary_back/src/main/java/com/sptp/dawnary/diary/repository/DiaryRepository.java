@@ -14,5 +14,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findOtherUserDiaries(Long memberId);
 
     @Query("SELECT d FROM Diary d, Follow f WHERE d.member.id = f.following.id AND f.follower.id = :memberId AND d.status = 1")
-    List<Diary> findFollowUserdiaries(Long memberId);
+    List<Diary> findFollowUserDiaries(Long memberId);
 }
