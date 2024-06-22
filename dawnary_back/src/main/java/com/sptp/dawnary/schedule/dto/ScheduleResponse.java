@@ -15,7 +15,7 @@ public record ScheduleResponse(Long id, LocalDateTime date, String title, String
                 .date(schedule.getDate())
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
-                .locationResponse(LocationResponse.toResponse(schedule.getLocation()))
+                .locationResponse(schedule.getLocation() != null ? LocationResponse.toResponse(schedule.getLocation()) : null)
                 .build();
     }
 }
