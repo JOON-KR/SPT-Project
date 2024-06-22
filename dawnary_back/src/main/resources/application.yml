@@ -1,22 +1,23 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/testdb
-    username: ssafy
+    username: root
     password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-logging.level:
-  org.hibernate.SQL: info
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: ssafy
 
-jwt:
-  expiration_time: 86400000
-  secret: RElBUllfQU5EX0NPTU1VTklUWV9QUk9KRUNUX0RBV05BUllfQURNSU5fU0VDUkVUX0tFWQ==
-
+logging:
+  level:
+    org.hibernate.SQL: info

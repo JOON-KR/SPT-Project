@@ -1,0 +1,28 @@
+.container {
+  width: 100vh;
+  height: 100vw;
+}
+.following,
+.follower {
+  position: fixed;
+  top: 0;
+  left: -100%; /* 초기에 화면 왼쪽 밖에 위치 */
+  bottom: 0;
+  width: 20%; /* 너비를 20%로 설정하여 화면의 왼쪽 20%를 차지하도록 함 */
+  height: 100%; /* 높이를 100%로 설정하여 화면 위 아래로 꽉 차게 함 */
+  background-color: white; /* 배경색 지정 */
+  z-index: 1000; /* 다른 요소들보다 위에 나타나도록 z-index 설정 */
+  transition: left 0.3s ease-out; /* 슬라이드 애니메이션 적용 */
+}
+
+.following.show,
+.follower.show {
+  left: 0; /* 보여질 때 화면 왼쪽으로 슬라이드 */
+}
+
+.follow-box-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}

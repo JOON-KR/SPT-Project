@@ -1,14 +1,13 @@
 package com.sptp.dawnary.diary.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.sptp.dawnary.diary.domain.Diary;
-import com.sptp.dawnary.diary.dto.DiaryDto;
-import com.sptp.dawnary.global.exception.DiaryNotFoundException;
+import com.sptp.dawnary.diary.dto.DiaryResponse;
+import com.sptp.dawnary.diary.dto.DiaryRequest;
 import com.sptp.dawnary.diary.repository.DiaryRepository;
+import com.sptp.dawnary.global.exception.DiaryNotFoundException;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
+import com.sptp.dawnary.global.exception.RegistFailedException;
+import com.sptp.dawnary.global.util.GcpUtil;
 import com.sptp.dawnary.global.util.MemberInfo;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.member.repository.MemberRepository;
@@ -17,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,60 +25,89 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
-
     private final MemberRepository memberRepository;
+    private final GcpUtil gcpUtil;
 
-    // 다이어리 등록
-    public Diary saveDiary(Diary diary) {
-        diary.setMember(getMember());
-        Diary result = diaryRepository.save(diary);
-        return result;
-    };
-
-    // 다이어리 수정
-    public boolean updateDiary(Long diaryId, Diary diary) {
-        diary.setMember(getMember());
-        if (diaryRepository.existsById(diaryId)) {
-            diary.setId(diaryId);
-            diaryRepository.save(diary);
-            return true;
-        }
-
-        return false;
-
+    public Diary saveDiary(DiaryRequest diaryDto) {
+        Diary diary = diaryRepository.save(toEntity(diaryDto));
+        validateSave(diary);
+        return diary;
     }
 
-    // 다이어리 삭제
+    public Diary updateDiary(Long diaryId, DiaryRequest diaryDto) {
+        validateExistence(diaryId);
+        Diary diary = toEntity(diaryDto);
+        diary.setId(diaryId);
+        diary.setMember(getMember());
+        Diary updatedDiary = diaryRepository.save(diary);
+        validateSave(updatedDiary);
+        return updatedDiary;
+    }
+
     public boolean deleteDiary(Long diaryId) {
         if (diaryRepository.existsById(diaryId)) {
             diaryRepository.deleteById(diaryId);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    // 다이어리 목록 조회
-    public List<DiaryDto> findAllDiaries(Long memberId) {
-        List<Diary> diaries = diaryRepository.findByMemberId(memberId);
-        return diaries.stream()
-                .map(DiaryDto::toDto)
-                .collect(Collectors.toList());
+    public List<DiaryResponse> findAllDiaries(Long memberId) {
+        if (isLoggedInUser(memberId)) {
+            return diaryRepository.findByMemberId(memberId)
+                    .stream()
+                    .map(DiaryResponse::toResponse)
+                    .toList();
+        }
+        return diaryRepository.findOtherUserDiaries(memberId)
+                .stream()
+                .map(DiaryResponse::toResponse)
+                .toList();
     }
 
-    // 특정 다이어리 조회
-    public DiaryDto findDiary(Long diaryId) {
-        Optional<Diary> diary = diaryRepository.findById(diaryId);
-        if(diary.isPresent()) {
-            return DiaryDto.toDto(diary.get());
-        }
-        throw new DiaryNotFoundException("존재하지 않는 다이어리 입니다.");
+    public DiaryResponse findDiary(Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(DiaryNotFoundException::new);
+        return DiaryResponse.toResponse(diary);
+    }
+
+    public List<DiaryResponse> findFollowDiary() {
+        return diaryRepository.findFollowUserDiaries(MemberInfo.getMemberId())
+                .stream()
+                .map(DiaryResponse::toResponse)
+                .toList();
+    }
+
+    private Diary toEntity(DiaryRequest diaryDto) {
+        return Diary.builder()
+                .member(getMember())
+                .title(diaryDto.title())
+                .content(diaryDto.content())
+                .date(diaryDto.date())
+                .weather(diaryDto.weather())
+                .sentiment(gcpUtil.getSentiment(diaryDto.content()))
+                .status(diaryDto.status())
+                .build();
     }
 
     private Member getMember() {
-        Long memberId = MemberInfo.getMemberId();
-        Optional<Member> member = memberRepository.findById(memberId);
-        if(member.isEmpty()) throw new MemberNotFoundException("멤버가 존재하지 않습니다.");
-        return member.get();
+        return memberRepository.findById(MemberInfo.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    private void validateSave(Diary diary) {
+        if (diary == null) {
+            throw new RegistFailedException();
+        }
+    }
+
+    private void validateExistence(Long diaryId) {
+        if (!diaryRepository.existsById(diaryId)) {
+            throw new DiaryNotFoundException();
+        }
+    }
+
+    private boolean isLoggedInUser(Long memberId) {
+        return getMember().getId().equals(memberId);
     }
 }

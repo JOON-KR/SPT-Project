@@ -1,13 +1,13 @@
 package com.sptp.dawnary.global.util;
 
-import com.sptp.dawnary.member.domain.Member;
-import com.sptp.dawnary.member.repository.MemberRepository;
-import com.sptp.dawnary.security.util.JwtUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class MemberInfo {
+
+    private MemberInfo(){}
 
     public static Long getMemberId() {
 
