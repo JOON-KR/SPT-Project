@@ -2,6 +2,7 @@ package com.sptp.dawnary.member.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 import com.sptp.dawnary.member.dto.request.LoginRequest;
+import com.sptp.dawnary.member.dto.request.LogoutRequest;
 import com.sptp.dawnary.member.dto.request.MemberRequest;
 import com.sptp.dawnary.member.dto.request.UpdateRequest;
 import com.sptp.dawnary.member.dto.response.EmailListResponse;
 import com.sptp.dawnary.member.dto.response.UpdateResponse;
 import com.sptp.dawnary.member.service.MemberService;
+import com.sptp.dawnary.redis.service.RedisService;
+import com.sptp.dawnary.security.dto.TokenResponse;
+import com.sptp.dawnary.security.util.JwtUtil;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +37,21 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 
 	private final MemberService memberService;
+	private final RedisService redisService;
+	private final JwtUtil jwtUtil;
 
 	@PostMapping("login")
-	public ResponseEntity<String> getMemberProfile(
-		@Valid @RequestBody LoginRequest request
-	) {
-		String token = memberService.login(request);
-		return ResponseEntity.status(HttpStatus.OK).body(token);
+	public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+		String accessToken = memberService.login(request);
+		CustomUserInfo userInfo = memberService.getUserInfo(request.email());
+		String refreshToken = jwtUtil.createRefreshToken(userInfo);
+		redisService.saveRefreshToken(request.email(), refreshToken);
+		return ResponseEntity.status(HttpStatus.OK).body(new TokenResponse(accessToken, refreshToken));
+	}
+
+	@PostMapping("/logout")
+	public void logout(@RequestBody LogoutRequest request) {
+		redisService.deleteRefreshToken(request.email());
 	}
 
 	@PostMapping("signup")
@@ -64,5 +78,17 @@ public class MemberController {
 	@GetMapping("all")
 	public ResponseEntity<EmailListResponse> getAllEmails() {
 		return ResponseEntity.status(HttpStatus.OK).body(memberService.getEmails());
+	}
+
+	@PostMapping("refresh")
+	public ResponseEntity<TokenResponse> refresh(@RequestBody String refreshToken) {
+		if (!jwtUtil.isValidToken(refreshToken)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		}
+		String email = jwtUtil.getUsernameFromToken(refreshToken);
+		Member member = memberService.getMemberByEmail(email).orElseThrow(() -> new UsernameNotFoundException("멤버가 존재하지 않습니다."));
+		CustomUserInfo info = CustomUserInfo.transfer(member);
+		String newAccessToken = jwtUtil.createAccessToken(info);
+		return ResponseEntity.status(HttpStatus.OK).body(new TokenResponse(newAccessToken, refreshToken));
 	}
 }
