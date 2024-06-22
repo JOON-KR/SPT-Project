@@ -6,9 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SeriesCustomRepository {
-    List<Series> findAllOrderByLatest();
-    List<Series> findAllOrderByLikes();
-    List<Series> findAllOrderByLikesByMonth(LocalDateTime startDate, LocalDateTime endDate);
-    List<Series> findMemberSeriesByLatest(Long memberId);
-    List<Series> findMemberSeriesByLikes(Long memberId);
+    List<Series> findAllOrderByLatest(Long loginMemberId);
+    List<Series> findAllOrderByLikes(Long loginMemberId);
+    List<Series> findAllOrderByLikesByMonth(Long loginMemberId, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<Series> findMemberSeriesByLatest(Long loginMemberId, Long memberId);
+    List<Series> findMemberSeriesByLikes(Long loginMemberId, Long memberId);
 }
