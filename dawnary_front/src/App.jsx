@@ -5,12 +5,12 @@ import Regist from "./components/main/Regist";
 import UserPage from "./components/main/UserPage";
 import KakaoLogin from "./components/main/KakaoLogin";
 import MainCalendar from "./components/calendar/MainCalendar";
-import Calendar from "./components/calendar/Calendar";
-import SideSlide from "./components/calendar/SideSlide";
-import SearchResult from "./components/Search/SearchResults";
-import EssayResult from "./components/Search/EssayResult";
 import { Routes, Route } from "react-router-dom";
-
+import NaverLogin from "./components/main/NaverLogin";
+import SearchResults from "./components/Search/SearchResults"
+import SeriesResult from "./components/Search/SeriesResult"
+import BestSeries from "./components/Search/BestSeries";
+import MonthlySeries from "./components/Search/MonthlySeries"
 
 function App() {
   return (
@@ -22,10 +22,11 @@ function App() {
       <Route path="/userPage" element={<UserPage />} />
       <Route path="/kakaoLogin" element={<KakaoLogin />} />
       <Route path="/mainCalendar" element={<MainCalendar />} />
-      <Route path="/calendar" element={<Calendar />} />
-      <Route path="/sideSlide" element={<SideSlide />} />
-      <Route path="/searchResult" element={<SearchResult />} />
-      <Route path="/essayResult" element={<EssayResult />} />
+      <Route path="/naverLogin" element={<NaverLogin />} />
+      <Route path="/searchResult" element={<SearchResults />} />
+      <Route path="/seriesResult" element={<SeriesResult />} />
+      <Route path="/bestSeries" element={<BestSeries />} />
+      <Route path="/monthlySeries" element={<MonthlySeries />} />
     </Routes>
   );
 }
