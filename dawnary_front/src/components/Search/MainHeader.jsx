@@ -13,16 +13,18 @@ const MainHeader = ({ onSearch, onFilterChange }) => {
 
   return (
     <header>
-      <input 
-        type="text" 
-        value={searchTerm} 
-        onChange={(e) => setSearchTerm(e.target.value)} 
-      />
-      <button onClick={handleSearch}>검색</button>
-      <Link to="/mainCalendar"><button>달력</button></Link>
-      <Link to="/myPage"><button>마이페이지</button></Link>
-      <hr/>
       <div className={barStyles.container}>
+        <input 
+          type="text" 
+          value={searchTerm} 
+          onChange={(e) => setSearchTerm(e.target.value)} 
+        />
+        <button onClick={handleSearch}>검색</button>
+        <Link to="/mainCalendar"><button className={barStyles.routeButton}>달력</button></Link>
+        <Link to="/myPage"><button className={barStyles.routeButton}>마이페이지</button></Link>
+      </div>
+      <hr/>
+      <div className={filterStyles.container}>
         <button className={filterStyles.buttons} onClick={() => onFilterChange("all")}>통합 검색</button>
         <button className={filterStyles.buttons} onClick={() => onFilterChange("users")}>유저 검색</button>
         <button className={filterStyles.buttons} onClick={() => onFilterChange("series")}>시리즈만</button>

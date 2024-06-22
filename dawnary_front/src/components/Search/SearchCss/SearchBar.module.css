@@ -5,5 +5,9 @@
 }
 
 input {
-  width : 59%;
+  width: 59%;
+}
+
+.routeButton {
+  margin-left: 15px;
 }
