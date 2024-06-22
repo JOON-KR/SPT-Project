@@ -38,6 +38,7 @@ public class MemberDocument {
     private String imagePath;
     public static MemberDocument from(Member member) {
         return MemberDocument.builder()
+        		.id(member.getId())
                 .name(member.getName())
                 .email(member.getEmail())
                 .imagePath(member.getImagePath())

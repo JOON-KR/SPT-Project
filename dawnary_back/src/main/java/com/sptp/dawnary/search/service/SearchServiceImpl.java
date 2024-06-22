@@ -41,8 +41,7 @@ public class SearchServiceImpl implements SearchService {
 					.id(series.getId())
 					.name(series.getMemberName())
 					.title(series.getTitle())
-					.imagePath(series.getImagePath())
-					.regDate(series.getRegDate()).build());
+					.imagePath(series.getImagePath()).build());
 		}
 		return result;
 	}
@@ -66,8 +65,7 @@ public class SearchServiceImpl implements SearchService {
 					.id(series.getId())
 					.name(series.getMemberName())
 					.title(series.getTitle())
-					.imagePath(series.getImagePath())
-					.regDate(series.getRegDate()).build());
+					.imagePath(series.getImagePath()).build());
 		}
 		return result;
 	}

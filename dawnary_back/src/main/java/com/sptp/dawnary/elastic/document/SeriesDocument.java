@@ -33,7 +33,6 @@ public class SeriesDocument {
     private String imagePath;
     private long viewCnt;
     @Field(type = FieldType.Date)
-    private LocalDateTime regDate;
     // 자동 완성을 위한 필드
 
     public static SeriesDocument from(Series series) {
@@ -45,7 +44,6 @@ public class SeriesDocument {
                 .status(series.getStatus())
                 .imagePath(series.getImagePath())
                 .viewCnt(series.getViewCnt())
-                .regDate(series.getRegDate())
                 .build();
     }
 }
