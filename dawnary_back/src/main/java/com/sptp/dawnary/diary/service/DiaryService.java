@@ -87,7 +87,6 @@ public class DiaryService {
                 .weather(diaryDto.weather())
                 .sentiment(gcpUtil.getSentiment(diaryDto.content()))
                 .status(diaryDto.status())
-                .imagePath(diaryDto.imagePath())
                 .build();
     }
 
