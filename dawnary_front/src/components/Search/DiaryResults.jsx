@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { getDiaryByKeyword } from "../RESTapi"
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { getDiaryByKeyword } from './RESTapi';
 
 const DiaryResults = ({ keyword }) => {
   const [diaries, setDiaries] = useState([]);
@@ -11,7 +11,7 @@ const DiaryResults = ({ keyword }) => {
         const diaryData = await getDiaryByKeyword(keyword);
         setDiaries(diaryData);
       } catch (error) {
-        console.error('검색에 실패하였습니다', error);
+        console.error('일기 검색에 실패하였습니다', error);
       }
     };
 
@@ -21,17 +21,21 @@ const DiaryResults = ({ keyword }) => {
   return (
     <div>
       <h3>일기 검색결과</h3>
-      <ul>
-        {diaries && Array.isArray(diaries) && diaries.map((entry, index) => (
-          <li key={index}>{entry.title}</li>
-        ))}
-      </ul>
+      {diaries && diaries.length > 0 ? (
+        <ul>
+          {diaries.map((entry) => (
+            <li key={entry.id}>{entry.title}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>일기 검색 결과가 없습니다.</p>
+      )}
     </div>
   );
 };
 
 DiaryResults.propTypes = {
-  keyword: PropTypes.string.isRequired
+  keyword: PropTypes.string.isRequired,
 };
 
 export default DiaryResults;
