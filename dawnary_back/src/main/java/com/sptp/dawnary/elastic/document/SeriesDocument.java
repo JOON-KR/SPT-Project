@@ -39,6 +39,7 @@ public class SeriesDocument {
     public static SeriesDocument from(Series series) {
     	System.out.println(series.getMember().toString());
         return SeriesDocument.builder()
+                .id(series.getId())
                 .memberName(series.getMember().getName())
                 .title(series.getTitle())
                 .status(series.getStatus())
