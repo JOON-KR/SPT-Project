@@ -57,9 +57,10 @@ public class MemberService {
 		return accessToken;
 	}
 
-	public void logout(String email) {
-		log.info("Logging out - Email: {}", email);
+	public void logout(String email, String accessToken) {
+		long remainingTime = jwtUtil.getRemainingTime(accessToken);
 		redisService.deleteRefreshToken(email);
+		redisService.addTokenToBlacklist(accessToken, remainingTime);
 	}
 
 	public Long signup(Member member) {

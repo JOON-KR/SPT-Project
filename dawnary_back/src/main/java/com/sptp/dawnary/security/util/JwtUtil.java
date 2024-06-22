@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -63,11 +61,8 @@ public class JwtUtil {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
-		} catch (ExpiredJwtException e) {
-			log.error("Expired JWT token: {}", e.getMessage());
-			throw e;  // 예외를 던집니다
-		} catch (JwtException | IllegalArgumentException e) {
-			log.error("Invalid JWT token: {}", e.getMessage());
+		} catch (Exception e) {
+			log.error("Invalid token: {}", e.getMessage());
 			return false;
 		}
 	}
@@ -77,8 +72,8 @@ public class JwtUtil {
 		return claims.getSubject();
 	}
 
-	public Long getUserId(String token) {
-		Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-		return claims.get("id", Long.class);
+	public long getRemainingTime(String token) {
+		Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration();
+		return expiration.getTime() - new Date().getTime();
 	}
 }

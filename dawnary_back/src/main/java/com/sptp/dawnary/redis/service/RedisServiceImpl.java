@@ -76,6 +76,16 @@ public class RedisServiceImpl implements RedisService {
 	}
 
 	@Override
+	public void addTokenToBlacklist(final String token, final long expirationTime) {
+		redisTemplate.opsForValue().set(token, "blacklisted", expirationTime, TimeUnit.MILLISECONDS);
+	}
+
+	@Override
+	public boolean isTokenBlacklisted(final String token) {
+		return redisTemplate.hasKey(token);
+	}
+
+	@Override
 	public void addRecentSearch(Long id, String keyword) {
 		String key = RECENT_SEARCH_KEY_PREFIX + id;
 		log.info("Adding recent search for ID: {} with keyword: {}", id, keyword);

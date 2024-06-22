@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,7 +42,9 @@ public class MemberController {
 	private final JwtUtil jwtUtil;
 
 	@PostMapping("login")
-	public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+	public ResponseEntity<TokenResponse> login(
+		@Valid @RequestBody LoginRequest request
+	) {
 		String accessToken = memberService.login(request);
 		CustomUserInfo userInfo = memberService.getUserInfo(request.email());
 		String refreshToken = jwtUtil.createRefreshToken(userInfo);
@@ -50,8 +53,9 @@ public class MemberController {
 	}
 
 	@PostMapping("/logout")
-	public void logout(@RequestBody LogoutRequest request) {
-		redisService.deleteRefreshToken(request.email());
+	public ResponseEntity<Void> logout(@RequestBody LogoutRequest request, @RequestHeader("Authorization") String accessToken) {
+		memberService.logout(request.email(), accessToken.substring(7));
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@PostMapping("signup")
@@ -82,11 +86,17 @@ public class MemberController {
 
 	@PostMapping("refresh")
 	public ResponseEntity<TokenResponse> refresh(@RequestBody String refreshToken) {
-		if (!jwtUtil.isValidToken(refreshToken)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		if (redisService.isTokenBlacklisted(refreshToken)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new TokenResponse(null, "블랙리스트에 등록된 토큰입니다."));
 		}
+
+		if (!jwtUtil.isValidToken(refreshToken)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new TokenResponse(null, "유효하지 않은 토큰입니다."));
+		}
+
 		String email = jwtUtil.getUsernameFromToken(refreshToken);
-		Member member = memberService.getMemberByEmail(email).orElseThrow(() -> new UsernameNotFoundException("멤버가 존재하지 않습니다."));
+		Member member = memberService.getMemberByEmail(email)
+			.orElseThrow(() -> new UsernameNotFoundException("멤버가 존재하지 않습니다."));
 		CustomUserInfo info = CustomUserInfo.transfer(member);
 		String newAccessToken = jwtUtil.createAccessToken(info);
 		return ResponseEntity.status(HttpStatus.OK).body(new TokenResponse(newAccessToken, refreshToken));
