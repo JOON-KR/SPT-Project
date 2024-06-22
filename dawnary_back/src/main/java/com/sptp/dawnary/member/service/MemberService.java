@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sptp.dawnary.elastic.document.MemberDocument;
+import com.sptp.dawnary.elastic.repository.MemberElasticRepository;
 import com.sptp.dawnary.global.exception.MemberNotFoundException;
 import com.sptp.dawnary.global.exception.SameMemberException;
 import com.sptp.dawnary.global.exception.ValidateMemberException;
@@ -33,6 +35,7 @@ public class MemberService {
 
 	private final JwtUtil jwtUtil;
 	private final MemberRepository memberRepository;
+	private final MemberElasticRepository memberElasticRepository;
 	private final PasswordEncoder encoder;
 	private final RedisService redisService;
 
@@ -73,6 +76,8 @@ public class MemberService {
 		member.updatePassword(encoder.encode(member.getPassword()));
 		log.info("member info {}", member);
 		memberRepository.save(member);
+		MemberDocument memberDocument = MemberDocument.from(member);
+		memberElasticRepository.save(memberDocument);
 		return member.getId();
 	}
 
