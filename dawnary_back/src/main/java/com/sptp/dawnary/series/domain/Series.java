@@ -26,6 +26,8 @@ import static jakarta.persistence.GenerationType.*;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Series {
 
+	private final static String DEFAULT_IMAGE_PATH = "default.png";
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id")
@@ -69,7 +71,7 @@ public class Series {
 	public static Series toEntity(SeriesRequest seriesRequest) {
 		return Series.builder()
 				.title(seriesRequest.title())
-				.imagePath(seriesRequest.imagePath())
+				.imagePath(seriesRequest.imagePath() != null ? seriesRequest.imagePath() : DEFAULT_IMAGE_PATH)
 				.status(seriesRequest.status())
 //				.seriesDiaries()
 				.build();

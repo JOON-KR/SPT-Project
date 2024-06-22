@@ -50,7 +50,6 @@ public class Schedule {
                 .date(scheduleRequest.date())
                 .title(scheduleRequest.title())
                 .content(scheduleRequest.content())
-                .location(Location.toEntity(scheduleRequest.locationRequest()))
                 .build();
     }
 
