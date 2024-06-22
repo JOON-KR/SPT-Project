@@ -14,6 +14,7 @@ public record CustomUserInfo(Long id, String email, String password, String name
 	public static CustomUserInfo transfer(Member member) {
 		return CustomUserInfo.builder()
 			.id(member.getId())
+			.email(member.getEmail())
 			.password(member.getPassword())
 			.name(member.getName())
 			.role(member.getRole())

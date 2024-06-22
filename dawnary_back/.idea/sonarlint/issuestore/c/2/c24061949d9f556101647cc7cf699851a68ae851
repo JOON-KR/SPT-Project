@@ -1,0 +1,6 @@
+
+[	java:S1124"FDefine and throw a dedicated exception instead of using a generic one.(ìºŸž
+f	java:S116"QRename this field "APIKEY" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á—ª›
+h	java:S116"NRename this field "URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›§îíýÿÿÿÿ
+<
+java:S1170"!Make this final field static too.(›§îíýÿÿÿÿ
