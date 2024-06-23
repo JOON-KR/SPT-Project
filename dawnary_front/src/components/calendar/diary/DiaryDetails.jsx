@@ -5,6 +5,7 @@ import DiaryUpdate from "./DiaryUpdate";
 export default function DiaryDetails({ diaryId, onClose }) {
   const [diary, setDiary] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
 
   const token = sessionStorage.getItem("token");
 
@@ -20,8 +21,29 @@ export default function DiaryDetails({ diaryId, onClose }) {
           }
         );
         setDiary(response.data);
+        if (response.data.imagePath) {
+          fetchImage(response.data.imagePath);
+        }
       } catch (error) {
         console.error("Error fetching diary details:", error);
+      }
+    };
+
+    const fetchImage = async (imagePath) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:80/images/`+encodeURIComponent(imagePath),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: 'blob'
+          }
+        );
+        const url = URL.createObjectURL(response.data);
+        setImageUrl(url);
+      } catch (error) {
+        console.error("Error fetching image:", error);
       }
     };
 
@@ -45,10 +67,10 @@ export default function DiaryDetails({ diaryId, onClose }) {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("일정 삭제 성공");
+        console.log("일기 삭제 성공");
         onClose(); // 팝업 닫기
       } catch (error) {
-        console.error("일정 삭제 실패:", error);
+        console.error("일기 삭제 실패:", error);
       }
     }
   };
@@ -59,6 +81,7 @@ export default function DiaryDetails({ diaryId, onClose }) {
         !isEditing ? (
           <>
             <h2>{diary.title}</h2>
+            {imageUrl && <img src={imageUrl} alt="Diary" />}
             <p>날씨 : {diary.weather}</p>
             <p>내용 : {diary.content}</p>
             <p>기분 : {diary.sentiment}</p>
