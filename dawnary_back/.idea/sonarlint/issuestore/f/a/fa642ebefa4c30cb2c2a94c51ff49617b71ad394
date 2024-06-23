@@ -1,7 +1,0 @@
-
-k
-java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(É­‹üÿÿÿÿ
-
-java:S6204+"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ª™¨¹
-V
-java:S1128"@Remove this unused import 'com.sptp.dawnary.diary.domain.Diary'.(©é–À
