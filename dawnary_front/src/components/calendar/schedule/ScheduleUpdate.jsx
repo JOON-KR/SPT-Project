@@ -4,8 +4,8 @@ import KakaoMap from "./KakaoMap";
 
 export default function ScheduleUpdate({ event, onClose }) {
   const [today, setToday] = useState(event ? event.date : "");
-  const [searchValue, setSearchValue] = useState(event.location ? event.location.name : "");
-  const [selectedPlace, setSelectedPlace] = useState(event.location ? { place_name: event.location.name, y: event.location.latitude, x: event.location.longitude } : null);
+  const [searchValue, setSearchValue] = useState(event.locationResponse ? event.locationResponse.name : "");
+  const [selectedPlace, setSelectedPlace] = useState(event.locationResponse ? { place_name: event.locationResponse.name, y: event.locationResponse.latitude, x: event.locationResponse.longitude } : null);
   const [title, setTitle] = useState(event.title);
   const [content, setContent] = useState(event.content);
   const [time, setTime] = useState(event.date ? new Date(event.date).toLocaleString().substring(11, 16) : "");
@@ -16,7 +16,6 @@ export default function ScheduleUpdate({ event, onClose }) {
   useEffect(() => {
     if (event) {
       setToday(formatDate(new Date(event.date)));
-      console.log(event)
     }
   }, [event]);
 
@@ -24,12 +23,14 @@ export default function ScheduleUpdate({ event, onClose }) {
     e.preventDefault();
 
     const combinedDateTime = formatCombinedDateTime(today, time);
+    const locationId = event ? event.locationResponse.id : null;
 
     const scheduleData = {
       date: combinedDateTime,
       title: title,
       content: content,
       locationRequest: selectedPlace ? {
+        id: locationId,
         name: selectedPlace.place_name,
         latitude: selectedPlace.y,
         longitude: selectedPlace.x
