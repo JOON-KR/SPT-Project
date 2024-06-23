@@ -7,6 +7,20 @@ const BASE_URL = 'http://localhost:8080'
 
 
 // const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqdW5odWs5NzAzQG5hdmVyLmNvbSIsImlkIjoxLCJuYW1lIjoi6rmA7KSA7ZiBIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkxMTAwMzEsImV4cCI6MTcyNTExMDAzMX0.xCiKPxZq9n8p0c1V9Gw3lFQyTjrayrWont2jNCzSVVc';
+
+export const AutoSearch = async (keyword) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/search/auto/${keyword}`);
+
+    console.log(response.data)
+    return response.data
+  
+  } catch (error) {
+    console.error('검색에 실패하였습니다', error);
+    throw error;
+  }
+}
+
 export const SearchMemberByKeyword = async (keyword) => {
   try {
     const response = await axios.get(`${BASE_URL}/search/all/${keyword}`);
@@ -40,12 +54,12 @@ export const SearchSeriesByKeyword = async (keyword) => {
 
 
 // 에세이 목록 불러오는 api 호출 영역
-export const getAllEssays = async () => {
+export const getAllSeries = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/essays`);
+    const response = await axios.get(`${BASE_URL}/series/all`);
     return response.data;
   } catch (error) {
-    console.error('에세이 불러오기 실패:', error);
+    console.error('시리즈 불러오기 실패:', error);
     throw error;
   }
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import { SearchByKeyword } from "../RESTapi"
+import { SearchSeriesByKeyword } from "./RESTapi"
 
 const SeriesResults = ({ keyword }) => {
   const [series, setSeries] = useState([])
@@ -8,7 +8,7 @@ const SeriesResults = ({ keyword }) => {
   useEffect(() => {
     const fetchSeries = async () => {
       try {
-        const seriesData = await SearchByKeyword(keyword)
+        const seriesData = await SearchSeriesByKeyword(keyword)
         setSeries(seriesData)
       } catch (error) {
         console.error('검색에 실패하였습니다', error)
