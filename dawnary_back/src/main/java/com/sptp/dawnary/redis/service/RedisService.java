@@ -23,7 +23,7 @@ public interface RedisService {
 
 	boolean isTokenBlacklisted(String token);
 
-	void addRecentSearch(Long id, String keyword);
+	void addRecentSearch(RedisDto redisDto);
 
-	List<Object> getRecentSearches(Long id);
+	List<Object> getRecentSearches(RedisDto redisDto);
 }

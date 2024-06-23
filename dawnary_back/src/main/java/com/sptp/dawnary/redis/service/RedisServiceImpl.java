@@ -86,17 +86,28 @@ public class RedisServiceImpl implements RedisService {
 	}
 
 	@Override
-	public void addRecentSearch(Long id, String keyword) {
-		String key = RECENT_SEARCH_KEY_PREFIX + id;
-		log.info("Adding recent search for ID: {} with keyword: {}", id, keyword);
-		ListOperations<String, Object> listOperations = redisTemplate.opsForList();
-		listOperations.leftPush(key, keyword);
+	public void addRecentSearch(RedisDto redisDto) {
+	    String key = RECENT_SEARCH_KEY_PREFIX + redisDto.getKey();
+	    ListOperations<String, Object> listOperations = redisTemplate.opsForList();
+	    
+	    // 리스트의 현재 크기 확인
+	    long currentSize = listOperations.size(key);
+	    
+	    // 리스트의 최대 크기를 5로 설정
+	    int maxSize = 5;
+	    
+	    // 현재 리스트 크기가 최대 크기보다 큰 경우, 가장 오래된 요소를 삭제
+	    if (currentSize >= maxSize) {
+	        listOperations.rightPop(key);  // 오른쪽 끝(가장 오래된 요소)을 삭제
+	    }
+	    
+	    // 새 요소를 리스트의 왼쪽에 추가
+	    listOperations.leftPush(key, redisDto.getValue());
 	}
 
 	@Override
-	public List<Object> getRecentSearches(Long id) {
-		String key = RECENT_SEARCH_KEY_PREFIX + id;
-		log.info("Retrieving recent searches for ID: {}", id);
+	public List<Object> getRecentSearches(RedisDto redisDto) {
+		String key = RECENT_SEARCH_KEY_PREFIX + redisDto.getKey();
 		ListOperations<String, Object> listOperations = redisTemplate.opsForList();
 		return listOperations.range(key, 0, -1);
 	}

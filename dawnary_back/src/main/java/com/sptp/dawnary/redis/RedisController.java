@@ -1,5 +1,7 @@
 package com.sptp.dawnary.redis;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +35,18 @@ public class RedisController {
 	@GetMapping
 	public ResponseEntity<String> get( RedisDto redisDto){
 		String res = redisService.getValue(redisDto);
+		return new ResponseEntity<>(res,HttpStatus.OK);
+	}
+	
+	@PostMapping("r")
+	public ResponseEntity<String> recentTest (@RequestBody RedisDto redisDto){
+		log.info("redis : {}",redisDto.toString());
+		redisService.addRecentSearch(redisDto);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	@GetMapping("r")
+	public ResponseEntity<?> getRecent( RedisDto redisDto){
+		List<Object>res = redisService.getRecentSearches(redisDto);
 		return new ResponseEntity<>(res,HttpStatus.OK);
 	}
 }
