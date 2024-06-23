@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sptp.dawnary.global.util.MemberInfo;
+import com.sptp.dawnary.redis.dto.RedisDto;
 import com.sptp.dawnary.search.dto.SearchDto;
 import com.sptp.dawnary.search.service.SearchService;
 
@@ -32,6 +34,12 @@ public class SearchController {
     @GetMapping("/auto/{keyword}")
     public ResponseEntity<?> findAutoByKeyword(@PathVariable("keyword")  String keyword) {
     	List<SearchDto> list = searchService.getAutoComplete(keyword);
+    	return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @GetMapping("/recent")
+    public ResponseEntity<?> findRecentById() {
+    	RedisDto redisDto = RedisDto.builder().key(MemberInfo.getMemberId()+"").build();
+    	List<Object> list = searchService.getRecentSearch(redisDto);
     	return new ResponseEntity<>(list, HttpStatus.OK);
     }
 //    // 멤버 저장 API
