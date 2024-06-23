@@ -90,7 +90,7 @@ export default function DiaryDetails({ diaryId, onClose }) {
             <button onClick={handleDelete}>삭제</button>
           </>
         ) : (
-          <DiaryUpdate event={diary} onClose={handleEditClose} />
+          <DiaryUpdate diary={diary} onClose={handleEditClose} />
         )
       ) : (
         <p>Loading...</p>
