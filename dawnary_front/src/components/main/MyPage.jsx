@@ -70,7 +70,6 @@ const MyPage = () => {
     { date: "2024-06-03", emotion: "soso" },
     { date: "2024-06-04", emotion: "bad" },
     { date: "2024-06-05", emotion: "upset" },
-    { date: "2024-06-07", emotion: "sad" },
     // 나머지 날짜와 감정 추가
   ];
 
@@ -86,8 +85,6 @@ const MyPage = () => {
         return "src/assets/bad.png"; // 해당 이미지 경로
       case "upset":
         return "src/assets/upset.png"; // 해당 이미지 경로
-      case "sad":
-        return "src/assets/sad.png"; // 해당 이미지 경로
       default:
         return null;
     }

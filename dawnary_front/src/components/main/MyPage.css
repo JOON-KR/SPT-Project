@@ -70,3 +70,7 @@
   overflow-y: "auto";
   margin: 20px;
 }
+
+button {
+  color: white;
+}

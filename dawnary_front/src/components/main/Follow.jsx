@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 const Follow = ({ items, cName }) => {
   const nav = useNavigate();
 
-  const goUserPage = (memberId) => {
-    // nav(`/userPage/${memberId}`); // 유저의 ID를 이용해 URL을 생성하여 이동
-    nav("/userPage"); // 유저의 ID를 이용해 URL을 생성하여 이동
+  const goUserPage = (member) => {
+    nav(`/userPage/${member.id}`, { state: { member } }); // 유저의 ID를 이용해 URL을 생성하여 이동
   };
 
   return (
@@ -23,7 +22,7 @@ const Follow = ({ items, cName }) => {
           <ListGroup.Item
             key={index}
             className={cName}
-            onClick={() => goUserPage(item.id)} // 함수 참조 형태로 전달
+            onClick={() => goUserPage(item)} // 함수 참조 형태로 전달
             style={{ textAlign: "center", cursor: "pointer" }}
           >
             {item.nickName}
