@@ -1,19 +1,29 @@
 package com.sptp.dawnary.redis.service;
 
-import java.time.Duration;
-
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import com.sptp.dawnary.redis.dto.RedisDto;
 
-@Service
 public interface RedisService {
+	void saveRefreshToken(String username, String refreshToken);
 
-    void setValues(RedisDto redisDto);                       // 값 등록 / 수정
+	String getRefreshToken(String username);
 
-    void setValuesAddTime(RedisDto redisDto);    // 값 등록 / 수정
+	void deleteRefreshToken(String username);
 
-    String getValue(RedisDto redisDto);                                    // 값 조회
+	void setValue(RedisDto redisDto);
 
-    void deleteValue(RedisDto redisDto);                                   // 값 삭제
+	void setValueWithTimeout(RedisDto redisDto);
+
+	String getValue(RedisDto redisDto);
+
+	void deleteValue(RedisDto redisDto);
+
+	void addTokenToBlacklist(String token, long expirationTime);
+
+	boolean isTokenBlacklisted(String token);
+
+	void addRecentSearch(Long id, String keyword);
+
+	List<Object> getRecentSearches(Long id);
 }

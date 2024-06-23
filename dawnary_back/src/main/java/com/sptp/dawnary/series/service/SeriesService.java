@@ -85,7 +85,7 @@ public class SeriesService {
 
         seriesRepository.save(series);
 
-        saveSeriesDiaries(seriesFormDto, series);
+       // saveSeriesDiaries(seriesFormDto, series);
 
         //document에 저장
         SeriesDocument sd = SeriesDocument.from(series);

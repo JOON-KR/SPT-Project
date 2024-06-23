@@ -23,10 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 
 	@Override
-	public UserDetails loadUserByUsername(final String id) throws UsernameNotFoundException {
-		Optional<Member> member = memberRepository.findById(Long.parseLong(id));
+	public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+		Optional<Member> member = memberRepository.findByEmail(email);
 		if (member.isEmpty()) {
-			throw new UsernameNotFoundException("해당하는 유저가 없습니다.");
+			throw new UsernameNotFoundException("User not found with email: " + email);
 		}
 
 		CustomUserInfo dto = CustomUserInfo.transfer(member.get());

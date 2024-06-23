@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+input {
+  width: 59%;
+}
+
+.routeButton {
+  margin-left: 15px;
+}

@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.IMAGE_JPEG;
 @RequestMapping("/images")
 public class ImageController {
 
-    private ImageService imageService;
+    private final ImageService imageService;
 
     @PostMapping
     public ResponseEntity<?> uploadFile(@RequestParam("imageFile") MultipartFile imageFile) {
