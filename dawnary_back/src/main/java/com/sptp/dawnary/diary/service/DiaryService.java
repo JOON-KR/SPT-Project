@@ -28,20 +28,24 @@ public class DiaryService {
     private final MemberRepository memberRepository;
     private final GcpUtil gcpUtil;
 
-    public Diary saveDiary(DiaryRequest diaryDto) {
-        Diary diary = diaryRepository.save(toEntity(diaryDto));
+    public DiaryResponse saveDiary(DiaryRequest diaryDto) {
+        Diary diary = Diary.toEntity(diaryDto);
+        diary.setMember(getMember());
+        diary.setSentiment(gcpUtil.getSentiment(diaryDto.content()));
+        diaryRepository.save(diary);
         validateSave(diary);
-        return diary;
+        return DiaryResponse.toResponse(diary);
     }
 
-    public Diary updateDiary(Long diaryId, DiaryRequest diaryDto) {
+    public DiaryResponse updateDiary(Long diaryId, DiaryRequest diaryDto) {
         validateExistence(diaryId);
-        Diary diary = toEntity(diaryDto);
+        Diary diary = Diary.toEntity(diaryDto);
         diary.setId(diaryId);
         diary.setMember(getMember());
-        Diary updatedDiary = diaryRepository.save(diary);
-        validateSave(updatedDiary);
-        return updatedDiary;
+        diary.setSentiment(gcpUtil.getSentiment(diaryDto.content()));
+        diaryRepository.save(diary);
+        validateSave(diary);
+        return DiaryResponse.toResponse(diary);
     }
 
     public boolean deleteDiary(Long diaryId) {
@@ -78,17 +82,7 @@ public class DiaryService {
                 .toList();
     }
 
-    private Diary toEntity(DiaryRequest diaryDto) {
-        return Diary.builder()
-                .member(getMember())
-                .title(diaryDto.title())
-                .content(diaryDto.content())
-                .date(diaryDto.date())
-                .weather(diaryDto.weather())
-                .sentiment(gcpUtil.getSentiment(diaryDto.content()))
-                .status(diaryDto.status())
-                .build();
-    }
+
 
     private Member getMember() {
         return memberRepository.findById(MemberInfo.getMemberId())
