@@ -28,21 +28,22 @@ public class DiaryService {
     private final MemberRepository memberRepository;
     private final GcpUtil gcpUtil;
 
-    public DiaryResponse saveDiary(DiaryRequest diaryDto) {
-        Diary diary = Diary.toEntity(diaryDto);
+    public DiaryResponse saveDiary(DiaryRequest diaryRequest) {
+        Diary diary = Diary.toEntity(diaryRequest);
         diary.setMember(getMember());
-        diary.setSentiment(gcpUtil.getSentiment(diaryDto.content()));
+        diary.setSentiment(gcpUtil.getSentiment(diaryRequest.content()));
         diaryRepository.save(diary);
         validateSave(diary);
         return DiaryResponse.toResponse(diary);
     }
 
-    public DiaryResponse updateDiary(Long diaryId, DiaryRequest diaryDto) {
+    public DiaryResponse updateDiary(Long diaryId, DiaryRequest diaryRequest) {
         validateExistence(diaryId);
-        Diary diary = Diary.toEntity(diaryDto);
-        diary.setId(diaryId);
-        diary.setMember(getMember());
-        diary.setSentiment(gcpUtil.getSentiment(diaryDto.content()));
+        Diary diary = diaryRepository.findById(diaryId).get();
+        if(diary.getMember().getId() != MemberInfo.getMemberId()) throw new DiaryNotFoundException();
+        diary.setTitle(diaryRequest.title());
+        diary.setContent(diaryRequest.content());
+        diary.setSentiment(gcpUtil.getSentiment(diaryRequest.content()));
         diaryRepository.save(diary);
         validateSave(diary);
         return DiaryResponse.toResponse(diary);
