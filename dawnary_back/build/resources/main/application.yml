@@ -13,5 +13,11 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-logging.level:
-  org.hibernate.SQL: info
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: ssafy
+
+logging:
+  level:
+    org.hibernate.SQL: info

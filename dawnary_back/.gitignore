@@ -4,4 +4,7 @@
 .gradle
 .classpath
 .project
+*.class
+/build
 /src/main/generated
+
