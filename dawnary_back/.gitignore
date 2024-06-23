@@ -5,6 +5,8 @@
 .classpath
 .project
 *.class
-/build
+*.pb
+.idea
+build
 /src/main/generated
 
