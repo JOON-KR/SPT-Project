@@ -5,21 +5,30 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 import ScheduleDetails from "./schedule/ScheduleDetails";
-// import DiaryCreate from "./diary/DiaryCreate";
+import DiaryDetails from "./diary/DiaryDetails";
 import "./Calendar.css";
 
 export default function Calendar({ onDateClick }) {
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEventId, setSelectedEventId] = useState(null);
+  const [selectedDiaryId, setSelectedDiaryId] = useState(null);
   const [events, setEvents] = useState([]);
+
+  const token = sessionStorage.getItem('token');
+  const memberId = JSON.parse(sessionStorage.getItem("loginUser")).memberId;
 
   // 이벤트 클릭 시 팝업 표시
   const handleEventClick = (clickInfo) => {
-    setSelectedEvent(clickInfo.event);
+    if (clickInfo.event.allDay) {
+      setSelectedDiaryId(clickInfo.event.id);
+    } else {
+      setSelectedEventId(clickInfo.event.id);
+    }
   };
 
   // 팝업 닫기
   const closePopup = () => {
-    setSelectedEvent(null);
+    setSelectedEventId(null);
+    setSelectedDiaryId(null);
   };
 
   // 날짜 클릭 시 처리
@@ -27,26 +36,38 @@ export default function Calendar({ onDateClick }) {
     onDateClick(dateClickInfo.date);
   };
 
-  let eventsArr = [
-    { title: "event 0", start: new Date("2024-05-15"), content: "TEST" },
-    { title: "event 1", start: new Date("2024-06-15"), content: "TEST" },
-    { title: "event 1-1", start: new Date("2024-06-15"), content: "TEST" },
-    { title: "event 2", start: new Date("2024-06-16 14:00:00"), content: "TEST" },
-    { title: "event 3", start: new Date("2024-06-18 15:00:00"), content: "TEST" },
-  ];
-
-  async function getEvents() {
+  async function fetchEventsAndDiaries() {
     try {
-      const response = await axios.get("http://localhost:8080/schedule");
-      setEvents(response.data);
+      const [eventsResponse, diaryResponse] = await Promise.all([
+        axios.get("http://localhost:8080/schedule", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        axios.get(`http://localhost:8080/diary/member/${memberId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      const combinedEvents = [
+        ...eventsResponse.data,
+        ...diaryResponse.data.map(diary => ({
+          ...diary,
+          allDay: true, // 다이어리 항목은 allDay로 설정
+        }))
+      ];
+
+      setEvents(combinedEvents);
     } catch (error) {
-      console.error("Error fetching events:", error);
+      console.error("Error fetching events and diaries:", error);
     }
   }
 
   // 컴포넌트가 마운트될 때 이벤트 데이터를 가져옴
   useEffect(() => {
-    getEvents();
+    fetchEventsAndDiaries();
   }, []);
 
   return (
@@ -57,7 +78,7 @@ export default function Calendar({ onDateClick }) {
           locale="kr"
           plugins={[dayGridPlugin, interactionPlugin]}
           defaultView="dayGridMonth"
-          events={eventsArr}
+          events={events}
           headerToolbar={{
             left: "prev",
             center: "title",
@@ -70,8 +91,11 @@ export default function Calendar({ onDateClick }) {
       </div>
 
       {/* 선택된 이벤트가 있을 때 팝업 표시 */}
-      {selectedEvent && (
-        <ScheduleDetails event={selectedEvent} onClose={closePopup} />
+      {selectedEventId && (
+        <ScheduleDetails eventId={selectedEventId} onClose={closePopup} />
+      )}
+      {selectedDiaryId && (
+        <DiaryDetails diaryId={selectedDiaryId} onClose={closePopup} />
       )}
     </>
   );
