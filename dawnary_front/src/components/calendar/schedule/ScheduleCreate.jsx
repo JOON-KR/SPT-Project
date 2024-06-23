@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import KakaoMap from "./KakaoMap";
+import { formatDate, formatCombinedDateTime } from '../../../utils/dateUtils';
 
 export default function ScheduleCreate({ date, onClose }) {
   const [today, setToday] = useState(date ? date.toLocaleDateString() : "");
@@ -11,6 +12,8 @@ export default function ScheduleCreate({ date, onClose }) {
   const [time, setTime] = useState("");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
+  const token = sessionStorage.getItem("token");
+
   useEffect(() => {
     if (date) {
       setToday(formatDate(date));
@@ -20,21 +23,29 @@ export default function ScheduleCreate({ date, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const combinedDateTime = formatCombinedDateTime(today, time);
+
     const scheduleData = {
-      date: new Date(`${today} ${time}`),
+      date: combinedDateTime,
       title: title,
       content: content,
-      location: {
-        name: selectedPlace ? selectedPlace.place_name : "",
-        latitude: selectedPlace ? selectedPlace.y : null,
-        longitude: selectedPlace ? selectedPlace.x : null,
-      }
+      locationRequest: selectedPlace ? {
+        name: selectedPlace.place_name,
+        latitude: selectedPlace.y,
+        longitude: selectedPlace.x
+      } : null
     };
 
     try {
       const response = await axios.post(
         "http://localhost:8080/schedule",
-        scheduleData
+        scheduleData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 인증 헤더 추가
+            'Content-Type': "application/json", // 콘텐츠 타입 설정
+          },
+        }
       );
       console.log("일정 등록 성공:", response.data);
       onClose();
@@ -54,13 +65,6 @@ export default function ScheduleCreate({ date, onClose }) {
 
   const handleConfirmPlace = () => {
     setIsPopoverOpen(false);
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}. ${month}. ${day}`;
   };
 
   return (

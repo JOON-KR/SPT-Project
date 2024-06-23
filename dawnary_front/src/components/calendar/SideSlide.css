@@ -1,8 +1,8 @@
 .slide {
     position: fixed;
     top: 0;
-    right: -400px; /* 초기에는 화면 밖으로 이동 */
-    width: 400px;
+    right: -600px; /* 초기에는 화면 밖으로 이동 */
+    width: 600px;
     height: 100%;
     background-color: white;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
