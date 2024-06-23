@@ -41,14 +41,14 @@ public class SeriesService {
 
     // 전체 시리즈 조회
     public List<SeriesResponse> findAllSeriesByLatest() {
-        return seriesRepository.findAllOrderByLatest().stream()
+        return seriesRepository.findAllOrderByLatest(MemberInfo.getMemberId()).stream()
                 .map(series -> SeriesResponse.toResponse(series, getDiaries(series.getId())))
                 .toList();
     }
 
     // 명예의 전당(좋아요 많은 순 조회)
     public List<SeriesResponse> findAllSeriesByLikes() {
-        return seriesRepository.findAllOrderByLikes().stream()
+        return seriesRepository.findAllOrderByLikes(MemberInfo.getMemberId()).stream()
                 .map(series -> SeriesResponse.toResponse(series, getDiaries(series.getId())))
                 .toList();
     }
@@ -59,21 +59,21 @@ public class SeriesService {
         LocalDateTime startDate = currentMonth.atDay(1).atStartOfDay();
         LocalDateTime endDate = currentMonth.atEndOfMonth().atTime(23, 59, 59);
 
-        return seriesRepository.findAllOrderByLikesByMonth(startDate, endDate).stream()
+        return seriesRepository.findAllOrderByLikesByMonth(MemberInfo.getMemberId(), startDate, endDate).stream()
                 .map(series -> SeriesResponse.toResponse(series, getDiaries(series.getId())))
                 .toList();
     }
 
     // 멤버 시리즈 최신순
     public List<SeriesResponse> findMemberSeriesByLatest(Long memberId) {
-        return seriesRepository.findMemberSeriesByLatest(memberId).stream()
+        return seriesRepository.findMemberSeriesByLatest(MemberInfo.getMemberId(), memberId).stream()
                 .map(series -> SeriesResponse.toResponse(series, getDiaries(series.getId())))
                 .toList();
     }
 
     // 멤버 시리즈 좋아요순
     public List<SeriesResponse> findMemberSeriesByLikes(Long memberId) {
-        return seriesRepository.findMemberSeriesByLikes(memberId).stream()
+        return seriesRepository.findMemberSeriesByLikes(MemberInfo.getMemberId(), memberId).stream()
                 .map(series -> SeriesResponse.toResponse(series, getDiaries(series.getId())))
                 .toList();
     }
@@ -85,7 +85,7 @@ public class SeriesService {
 
         seriesRepository.save(series);
 
-        saveSeriesDiaries(seriesFormDto, series);
+       // saveSeriesDiaries(seriesFormDto, series);
 
         //document에 저장
         SeriesDocument sd = SeriesDocument.from(series);
@@ -116,6 +116,7 @@ public class SeriesService {
     }
 
     private void saveSeriesDiaries(SeriesRequest seriesRequest, Series series) {
+
         seriesRequest.diaries().forEach(diaryId -> {
 
             log.info("diaryId = {}", diaryId);

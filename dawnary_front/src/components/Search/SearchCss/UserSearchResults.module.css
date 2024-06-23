@@ -1,0 +1,21 @@
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+}
+
+.pagination li {
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination .active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.pagination .disabled {
+  pointer-events: none;
+  color: grey;
+}

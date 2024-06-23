@@ -7,6 +7,10 @@ import KakaoLogin from "./components/main/KakaoLogin";
 import MainCalendar from "./components/calendar/MainCalendar";
 import { Routes, Route } from "react-router-dom";
 import NaverLogin from "./components/main/NaverLogin";
+import SearchResults from "./components/Search/SearchResults"
+import SeriesResult from "./components/Search/SeriesResult"
+import BestSeries from "./components/Search/BestSeries";
+import MonthlySeries from "./components/Search/MonthlySeries"
 
 function App() {
   return (
@@ -19,6 +23,10 @@ function App() {
       <Route path="/kakaoLogin" element={<KakaoLogin />} />
       <Route path="/mainCalendar" element={<MainCalendar />} />
       <Route path="/naverLogin" element={<NaverLogin />} />
+      <Route path="/searchResult" element={<SearchResults />} />
+      <Route path="/seriesResult" element={<SeriesResult />} />
+      <Route path="/bestSeries" element={<BestSeries />} />
+      <Route path="/monthlySeries" element={<MonthlySeries />} />
     </Routes>
   );
 }

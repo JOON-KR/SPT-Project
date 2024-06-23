@@ -1,0 +1,25 @@
+.autocompleteResults {
+  list-style: none;
+  margin-left: 290px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10; /* 다른 요소들 위에 위치하도록 설정 */
+  width: 59%; /* input과 같은 폭을 갖도록 */
+}
+
+
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background-color: #f1f1f1;
+}

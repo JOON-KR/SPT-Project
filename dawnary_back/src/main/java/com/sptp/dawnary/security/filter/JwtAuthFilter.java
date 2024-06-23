@@ -7,9 +7,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.sptp.dawnary.member.dto.info.CustomUserInfo;
+import com.sptp.dawnary.redis.service.RedisService;
+import com.sptp.dawnary.security.details.CustomUserDetails;
 import com.sptp.dawnary.security.service.CustomUserDetailsService;
 import com.sptp.dawnary.security.util.JwtUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,39 +25,55 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 	private final CustomUserDetailsService customUserDetailsService;
 	private final JwtUtil jwtUtil;
+	private final RedisService redisService;
 
-	/**
-	 * JWT 검증 필터 수행
-	 */
 	@Override
-	protected void doFilterInternal(final HttpServletRequest request,
-		final HttpServletResponse response,
-		final FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+		throws ServletException, IOException {
 		String authorizationHeader = request.getHeader("Authorization");
+		String refreshTokenHeader = request.getHeader("RefreshToken");
 
-		//JWT 헤더가 있을 경우
-		if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 			String token = authorizationHeader.substring(7);
-			//JWT 유효성 검증
-			if (jwtUtil.isValidToken(token)) {
-				Long userId = jwtUtil.getUserId(token);
+			try {
+				if (redisService.isTokenBlacklisted(token)) {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					return;
+				}
 
-				//유저와 토큰 일치 시 userDetails 생성
-				UserDetails userDetails = customUserDetailsService.loadUserByUsername(
-					userId.toString());
+				if (jwtUtil.isValidToken(token)) {
+					String email = jwtUtil.getUsernameFromToken(token);
 
-				if (userDetails != null) {
-					//UserDetails, Password, Role -> 접근 권한 인증 Token 생성
-					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
+					UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
-					//현재 Request의 Security Context에 접근 권한 설정
-					SecurityContextHolder.getContext()
-						.setAuthentication(usernamePasswordAuthenticationToken);
+					if (userDetails != null) {
+						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+						SecurityContextHolder.getContext().setAuthentication(authentication);
+					}
+				}
+			} catch (ExpiredJwtException e) {
+				if (refreshTokenHeader != null && refreshTokenHeader.startsWith("Bearer ")) {
+					String refreshToken = refreshTokenHeader.substring(7);
+					if (jwtUtil.isValidToken(refreshToken) && refreshToken.equals(redisService.getRefreshToken(jwtUtil.getUsernameFromToken(refreshToken)))) {
+						String email = jwtUtil.getUsernameFromToken(refreshToken);
+						UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+						if (userDetails != null) {
+							CustomUserInfo userInfo = ((CustomUserDetails) userDetails).getUserInfo();
+							String newAccessToken = jwtUtil.createAccessToken(userInfo);
+							response.setHeader("Authorization", "Bearer " + newAccessToken);
+						}
+					} else {
+						response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+						return;
+					}
+				} else {
+					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					return;
 				}
 			}
 		}
 
-		filterChain.doFilter(request, response); //다음 필터로 넘김
+		filterChain.doFilter(request, response);
 	}
 }

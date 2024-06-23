@@ -36,12 +36,14 @@ public class ScheduleService {
         schedule.setLocation(null);
 
         scheduleRepository.save(schedule);
-
+        if(scheduleRequest.locationRequest() == null) {
+            return ScheduleResponse.toResponse(schedule);
+        }
         Location location = Location.toEntity(scheduleRequest.locationRequest());
         location.setSchedule(schedule);
 
-        Location savedLocation = locationRepository.save(location);
-        schedule.setLocation(savedLocation);
+        locationRepository.save(location);
+        schedule.setLocation(location);
         scheduleRepository.save(schedule);
 
         return ScheduleResponse.toResponse(schedule);
@@ -55,7 +57,18 @@ public class ScheduleService {
 
         if (scheduleRepository.existsById(scheduleId)) {
             schedule.setId(scheduleId);
+
+            if(scheduleRequest.locationRequest() == null) {
+                return ScheduleResponse.toResponse(schedule);
+            }
+            Location location = Location.toEntity(scheduleRequest.locationRequest());
+            location.setId(scheduleRequest.locationRequest().id());
+            location.setSchedule(schedule);
+
+            locationRepository.save(location);
+            schedule.setLocation(location);
             scheduleRepository.save(schedule);
+
             return ScheduleResponse.toResponse(schedule);
         }
 
