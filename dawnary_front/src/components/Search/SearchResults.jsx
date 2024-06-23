@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import MainHeader from './MainHeader';
 import UserSearchResults from './UserSearchResults';
-import DiaryResults from './DiaryResults';
 import SeriesSearchResults from './SeriesSearchResults';
 import "./SearchCss/Result.css"
 
@@ -21,7 +20,6 @@ const SearchResults = () => {
     <div>
       <MainHeader onSearch={handleSearch} onFilterChange={handleFilterChange} />
       {(filter === 'all' || filter === 'users') && <UserSearchResults keyword={keyword} />}
-      {(filter === 'all' || filter === 'diaries') && <DiaryResults keyword={keyword} />}
       {(filter === 'all' || filter === 'series') && <SeriesSearchResults keyword={keyword} />}
     </div>
   );
