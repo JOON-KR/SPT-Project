@@ -3,12 +3,19 @@ import _ from 'lodash';
 
 const BASE_URL = 'http://localhost:8080'
 
-const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0Bnb29nbGUuY29tIiwiaWQiOjIzLCJuYW1lIjoi6rmA66-86528Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkyMjQwMjQsImV4cCI6MTcyNTIyNDAyNH0.NmrdTENnyKmlFNdVUuVXbV1WNncWk6j9dOrKQc3BNvA'
+const ACCESS_TOKEN = sessionStorage.getItem("token")
 
 // elasticSearch DB에 존재하는 키워드와 일치하는 유저 자동완성
 export const AutoSearchUser = async (keyword) => {
   try {
-    const response = await axios.get(`${BASE_URL}/search/auto/${keyword}`);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    };
+
+    const response = await axios.get(`${BASE_URL}/search/auto/${keyword}` , config);
 
     const groupedData = _.groupBy(response.data, 'type');
     
@@ -25,7 +32,12 @@ export const AutoSearchUser = async (keyword) => {
 // elasticSearch DB에 존재하는 키워드와 일치하는 시리즈 자동완성
 export const AutoSearchSeries = async (keyword) => {
   try {
-    const response = await axios.get(`${BASE_URL}/search/auto/${keyword}`);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    };
+    const response = await axios.get(`${BASE_URL}/search/auto/${keyword}` , config);
 
     const groupedData = _.groupBy(response.data, 'type');
     
@@ -44,7 +56,7 @@ export const AutoRecentSearch = async () => {
   try {
     const config = {
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0Bnb29nbGUuY29tIiwiaWQiOjIzLCJuYW1lIjoi6rmA66-86528Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkyMjQwMjQsImV4cCI6MTcyNTIyNDAyNH0.NmrdTENnyKmlFNdVUuVXbV1WNncWk6j9dOrKQc3BNvA',
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
       },
     };
 
