@@ -85,9 +85,11 @@ export default function DiaryDetails({ diaryId, onClose }) {
             <p>날씨 : {diary.weather}</p>
             <p>내용 : {diary.content}</p>
             <p>기분 : {diary.sentiment}</p>
-            <button onClick={onClose}>닫기</button>
-            <button onClick={handleEditClick}>수정</button>
-            <button onClick={handleDelete}>삭제</button>
+            <div>
+              <button onClick={onClose}>닫기</button>
+              <button onClick={handleEditClick}>수정</button>
+              <button onClick={handleDelete}>삭제</button>
+            </div>
           </>
         ) : (
           <DiaryUpdate diary={diary} onClose={handleEditClose} />

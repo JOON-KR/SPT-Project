@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ScheduleUpdate from './ScheduleUpdate';
 import { formatDateTime } from '../../../utils/dateUtils';
+import './Schedule.css'; 
 
 const ScheduleDetails = ({ eventId, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -18,7 +19,6 @@ const ScheduleDetails = ({ eventId, onClose }) => {
           },
         });
         setEvent(response.data);
-
       } catch (error) {
         console.error('Error fetching event details:', error);
       }
@@ -56,13 +56,15 @@ const ScheduleDetails = ({ eventId, onClose }) => {
     <div className="event-detail-popup">
       {!isEditing ? (
         <>
-          <h3>{event?.title}</h3>
+          <h2>{event?.title}</h2>
           <p>{event && formatDateTime(event.date)}</p>
-          {event?.locationResponse && <p>{event.locationResponse.name}</p>}
+          {event?.locationResponse && <p>장소 : {event.locationResponse.name}</p>}
           <p>{event?.content}</p>
-          <button onClick={onClose}>닫기</button>
-          <button onClick={handleEditClick}>수정</button>
-          <button onClick={handleDelete}>삭제</button>
+          <div className="button-container">
+            <button onClick={onClose}>닫기</button>
+            <button onClick={handleEditClick}>수정</button>
+            <button onClick={handleDelete}>삭제</button>
+          </div>
         </>
       ) : (
         <ScheduleUpdate event={event} onClose={handleEditClose} />

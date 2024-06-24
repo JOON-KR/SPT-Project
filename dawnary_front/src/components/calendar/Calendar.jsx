@@ -14,7 +14,7 @@ export default function Calendar({ onDateClick }) {
   const [events, setEvents] = useState([]);
 
   const token = sessionStorage.getItem('token');
-  const memberId = JSON.parse(sessionStorage.getItem("loginUser")).memberId;
+  const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
 
   // 이벤트 클릭 시 팝업 표시
   const handleEventClick = (clickInfo) => {
@@ -52,10 +52,14 @@ export default function Calendar({ onDateClick }) {
       ]);
 
       const combinedEvents = [
-        ...eventsResponse.data,
+        ...eventsResponse.data.map(event => ({
+          ...event,
+          color: 'red'
+        })),
         ...diaryResponse.data.map(diary => ({
           ...diary,
           allDay: true, // 다이어리 항목은 allDay로 설정
+          color: 'orange'
         }))
       ];
 
