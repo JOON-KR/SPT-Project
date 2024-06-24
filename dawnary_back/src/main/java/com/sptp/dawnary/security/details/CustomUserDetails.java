@@ -15,10 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public record CustomUserDetails(CustomUserInfo member) implements UserDetails {
 
-	public CustomUserInfo getUserInfo() {
-		return member;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<String> roles = new ArrayList<>();
@@ -59,5 +55,9 @@ public record CustomUserDetails(CustomUserInfo member) implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public CustomUserInfo getUserInfo() {
+		return member;
 	}
 }

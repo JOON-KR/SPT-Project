@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class JwtUtil {
-
 	private final Key key;
 	private final long accessTokenExpTime;
 	private final long refreshTokenExpTime;
@@ -45,7 +44,6 @@ public class JwtUtil {
 		claims.put("id", member.id());
 		claims.put("name", member.name());
 		claims.put("role", member.role());
-
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + expireTime * 1000);
 
