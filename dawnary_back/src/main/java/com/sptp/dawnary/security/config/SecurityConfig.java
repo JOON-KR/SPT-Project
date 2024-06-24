@@ -3,7 +3,6 @@ package com.sptp.dawnary.security.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,7 +21,6 @@ import lombok.AllArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
 
@@ -40,7 +38,8 @@ public class SecurityConfig {
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.cors(Customizer.withDefaults());
 
-		http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.sessionManagement(sessionManagement -> sessionManagement
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		http.formLogin(AbstractHttpConfigurer::disable);
 		http.httpBasic(AbstractHttpConfigurer::disable);
@@ -49,7 +48,9 @@ public class SecurityConfig {
 		http.addFilterBefore(new JwtAuthFilter(customUserDetailsService, jwtUtil, redisService),
 			UsernamePasswordAuthenticationFilter.class);
 
-		http.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
+		http.exceptionHandling(exceptionHandling -> exceptionHandling
+				.authenticationEntryPoint(authenticationEntryPoint)
+				.accessDeniedHandler(accessDeniedHandler));
 
 		http.authorizeHttpRequests(authorize -> authorize
 			.requestMatchers(AUTH_WHITELIST).permitAll()
