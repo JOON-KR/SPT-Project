@@ -33,18 +33,17 @@ public class SeriesDocument {
     private String imagePath;
     private long viewCnt;
     @Field(type = FieldType.Date)
-    private LocalDateTime regDate;
     // 자동 완성을 위한 필드
 
     public static SeriesDocument from(Series series) {
     	System.out.println(series.getMember().toString());
         return SeriesDocument.builder()
+                .id(series.getId())
                 .memberName(series.getMember().getName())
                 .title(series.getTitle())
                 .status(series.getStatus())
                 .imagePath(series.getImagePath())
                 .viewCnt(series.getViewCnt())
-                .regDate(series.getRegDate())
                 .build();
     }
 }

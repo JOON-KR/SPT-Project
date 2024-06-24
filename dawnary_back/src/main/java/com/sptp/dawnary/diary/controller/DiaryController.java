@@ -37,14 +37,14 @@ public class DiaryController {
     // 다이어리 등록
     @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequest diaryDto) {
-        Diary diary = diaryService.saveDiary(diaryDto);
+        DiaryResponse diary = diaryService.saveDiary(diaryDto);
         return new ResponseEntity<>(diary, CREATED);
     }
 
     // 다이어리 수정
     @PutMapping("/{diaryId}")
     public ResponseEntity<?> modifyDiary(@PathVariable("diaryId") Long diaryId, @RequestBody DiaryRequest diaryRequest) {
-        Diary diary = diaryService.updateDiary(diaryId, diaryRequest);
+        DiaryResponse diary = diaryService.updateDiary(diaryId, diaryRequest);
         return new ResponseEntity<>(diary, OK);
     }
 

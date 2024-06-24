@@ -1,6 +1,7 @@
 package com.sptp.dawnary.diary.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sptp.dawnary.diary.dto.DiaryRequest;
 import com.sptp.dawnary.member.domain.Member;
 import com.sptp.dawnary.seriesDiary.domain.SeriesDiary;
 import jakarta.persistence.*;
@@ -55,5 +56,16 @@ public class Diary {
 
     @OneToMany(mappedBy = "diary", fetch = LAZY, cascade = CascadeType.ALL)
     private List<SeriesDiary> seriesDiaries;
+
+    public static Diary toEntity(DiaryRequest diaryDto) {
+        return Diary.builder()
+                .title(diaryDto.title())
+                .content(diaryDto.content())
+                .date(diaryDto.date())
+                .weather(diaryDto.weather())
+                .status(diaryDto.status())
+                .imagePath(diaryDto.imagePath())
+                .build();
+    }
 
 }

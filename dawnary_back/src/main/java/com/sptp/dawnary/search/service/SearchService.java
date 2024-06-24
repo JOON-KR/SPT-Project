@@ -3,6 +3,7 @@ package com.sptp.dawnary.search.service;
 
 import java.util.List;
 
+import com.sptp.dawnary.redis.dto.RedisDto;
 import com.sptp.dawnary.search.dto.SearchDto;
 
 public interface SearchService {
@@ -46,4 +47,7 @@ public interface SearchService {
 	
 	//검색 결과
 	List<SearchDto> getSearchResult(String keyword);
+	
+	//최근검색
+	List<Object> getRecentSearch(RedisDto redisDto);
 }

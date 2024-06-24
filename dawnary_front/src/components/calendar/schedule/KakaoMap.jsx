@@ -86,9 +86,11 @@ export default function KakaoMap({
   return (
     <div className="map-popover-overlay">
       <div className="map-popover">
-        <button className="close-button" onClick={onClose}>
-          X
-        </button>
+        <div className="close-button-container">
+          <button className="close-button" onClick={onClose}>
+            X
+          </button>
+        </div>
         <div>
           <input
             type="text"

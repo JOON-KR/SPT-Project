@@ -4,44 +4,54 @@ import KakaoMap from "./KakaoMap";
 
 export default function ScheduleUpdate({ event, onClose }) {
   const [today, setToday] = useState(event ? event.date : "");
-  const [searchValue, setSearchValue] = useState(event.location ? event.location.name : "");
-  const [selectedPlace, setSelectedPlace] = useState(event.location ? { place_name: event.location.name, y: event.location.latitude, x: event.location.longitude } : null);
+  const [searchValue, setSearchValue] = useState(event.locationResponse ? event.locationResponse.name : "");
+  const [selectedPlace, setSelectedPlace] = useState(event.locationResponse ? { place_name: event.locationResponse.name, y: event.locationResponse.latitude, x: event.locationResponse.longitude } : null);
   const [title, setTitle] = useState(event.title);
   const [content, setContent] = useState(event.content);
-  const [time, setTime] = useState(event.date ? new Date(event.date).toISOString().substring(11, 16) : "");
+  const [time, setTime] = useState(event.date ? new Date(event.date).toLocaleString().substring(11, 16) : "");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const token = sessionStorage.getItem('token');
 
   useEffect(() => {
     if (event) {
-      setToday(formatDate(new Date(event.start)));
+      setToday(formatDate(new Date(event.date)));
     }
   }, [event]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const combinedDateTime = formatCombinedDateTime(today, time);
+    const locationId = event ? event.locationResponse.id : null;
+
     const scheduleData = {
-      id: event.id,
-      date: new Date(`${today} ${time}`),
+      date: combinedDateTime,
       title: title,
       content: content,
-      location: {
-          name: selectedPlace ? selectedPlace.place_name : "",
-          latitude: selectedPlace ? selectedPlace.y : null,
-          longitude: selectedPlace ? selectedPlace.x : null,
-      }
+      locationRequest: selectedPlace ? {
+        id: locationId,
+        name: selectedPlace.place_name,
+        latitude: selectedPlace.y,
+        longitude: selectedPlace.x
+      } : null
     };
 
     try {
       const response = await axios.put(
         `http://localhost:8080/schedule/${event.id}`,
-        scheduleData
+        scheduleData, {
+          headers: {
+            Authorization: `Bearer ${token}`, // 인증 헤더 추가
+            'Content-Type': "application/json", // 콘텐츠 타입 설정
+          },
+        }
       );
       console.log("일정 수정 성공:", response.data);
       onClose();
     } catch (error) {
       console.error("일정 수정 실패:", error);
-      console.log(scheduleData);
+      console.log(scheduleData)
     }
   };
 
@@ -61,7 +71,11 @@ export default function ScheduleUpdate({ event, onClose }) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
-    return `${year}. ${month}. ${day}`;
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatCombinedDateTime = (date, time) => {
+    return `${date}T${time}:00`;
   };
 
   return (
@@ -86,12 +100,12 @@ export default function ScheduleUpdate({ event, onClose }) {
               onChange={(e) => setSearchValue(e.target.value)}
               style={{ flex: 1 }}
               placeholder="장소를 입력하세요"
-            />
-            <button
+              />
+              <button
               type="button"
               onClick={handleSearch}
               style={{ marginLeft: "8px" }}
-            >
+              >
               🔍
             </button>
           </div>

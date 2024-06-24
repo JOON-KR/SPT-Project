@@ -10,11 +10,11 @@ import com.sptp.dawnary.elastic.document.MemberDocument;
 import com.sptp.dawnary.elastic.document.SeriesDocument;
 import com.sptp.dawnary.elastic.repository.MemberElasticRepository;
 import com.sptp.dawnary.elastic.repository.SeriesElasticRepository;
-import com.sptp.dawnary.member.domain.Member;
+import com.sptp.dawnary.global.util.MemberInfo;
+import com.sptp.dawnary.redis.dto.RedisDto;
+import com.sptp.dawnary.redis.service.RedisService;
 import com.sptp.dawnary.search.dto.SearchDto;
-import com.sptp.dawnary.series.domain.Series;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ public class SearchServiceImpl implements SearchService {
 
     private final MemberElasticRepository memberElasticRepository;
     private final SeriesElasticRepository seriesElasticRepository;
+    private final RedisService redisService;
 	@Override
 	public List<SearchDto> getAutoComplete(String keyword) {
 		List<SeriesDocument> seriesList = seriesElasticRepository.findByMemberNameStartingWithOrTitleStartingWith(keyword, keyword);
@@ -41,8 +42,7 @@ public class SearchServiceImpl implements SearchService {
 					.id(series.getId())
 					.name(series.getMemberName())
 					.title(series.getTitle())
-					.imagePath(series.getImagePath())
-					.regDate(series.getRegDate()).build());
+					.imagePath(series.getImagePath()).build());
 		}
 		return result;
 	}
@@ -50,7 +50,11 @@ public class SearchServiceImpl implements SearchService {
 	public List<SearchDto> getSearchResult(String keyword) {
 		List<SeriesDocument> seriesList = seriesElasticRepository.findByKeyword(keyword);
 		List<MemberDocument> memberList =  memberElasticRepository.findByNameOrEmail(keyword);
-		
+		RedisDto redisDto = RedisDto.builder()
+				.key(MemberInfo.getMemberId()+"")
+				.value(keyword)
+				.build();
+		redisService.addRecentSearch(redisDto);
 		List<SearchDto>result = new ArrayList<>();
 		for(MemberDocument member : memberList) {
 			result.add(SearchDto.builder()
@@ -66,9 +70,13 @@ public class SearchServiceImpl implements SearchService {
 					.id(series.getId())
 					.name(series.getMemberName())
 					.title(series.getTitle())
-					.imagePath(series.getImagePath())
-					.regDate(series.getRegDate()).build());
+					.imagePath(series.getImagePath()).build());
 		}
+		return result;
+	}
+	@Override
+	public List<Object> getRecentSearch(RedisDto redisDto) {
+		List<Object> result = redisService.getRecentSearches(redisDto);
 		return result;
 	}
 

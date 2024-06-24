@@ -1,7 +1,6 @@
 package com.sptp.dawnary.security.util;
 
 import java.security.Key;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,11 +9,8 @@ import org.springframework.stereotype.Component;
 import com.sptp.dawnary.member.dto.info.CustomUserInfo;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -22,98 +18,60 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class JwtUtil {
-
 	private final Key key;
 	private final long accessTokenExpTime;
+	private final long refreshTokenExpTime;
 
-	public JwtUtil(
-		@Value("${jwt.secret}") final String secretKey,
-		@Value("${jwt.expiration_time}") final long accessTokenExpTime)
-	{
+	public JwtUtil(@Value("${jwt.secret}") String secretKey,
+		@Value("${jwt.expiration_time}") long accessTokenExpTime,
+		@Value("${jwt.refresh_expiration_time}") long refreshTokenExpTime) {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 		this.accessTokenExpTime = accessTokenExpTime;
+		this.refreshTokenExpTime = refreshTokenExpTime;
 	}
 
-	/**
-	 * Access Token 생성
-	 *
-	 * @param member
-	 * @return Access Token String
-	 */
 	public String createAccessToken(CustomUserInfo member) {
 		return createToken(member, accessTokenExpTime);
 	}
 
-	/**
-	 * JWT 생성
-	 * @ param member
-	 * @param expireTime
-	 * @return JWT String
-	 */
-	private String createToken(CustomUserInfo member, long expireTime) {
-		Claims claims = Jwts.claims();
-		claims.put("memberId", member.id());
-		claims.put("email", member.email());
-		claims.put("name", member.name());
-		claims.put("role", member.role()); //USER, ADMIN
+	public String createRefreshToken(CustomUserInfo member) {
+		return createToken(member, refreshTokenExpTime);
+	}
 
-		ZonedDateTime now = ZonedDateTime.now();
-		ZonedDateTime tokenValidity = now.plusSeconds(expireTime);
+	private String createToken(CustomUserInfo member, long expireTime) {
+		Claims claims = Jwts.claims().setSubject(member.email());
+		claims.put("id", member.id());
+		claims.put("name", member.name());
+		claims.put("role", member.role());
+		Date now = new Date();
+		Date validity = new Date(now.getTime() + expireTime * 1000);
 
 		return Jwts.builder()
 			.setClaims(claims)
-			.setIssuedAt(Date.from(now.toInstant()))
-			.setExpiration(Date.from(tokenValidity.toInstant()))
+			.setIssuedAt(now)
+			.setExpiration(validity)
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 	}
 
-	/**
-	 * Token에서 User ID 추출
-	 *
-	 * @param token
-	 * @return User ID
-	 */
-	public Long getUserId(String token) {
-		return parseClaims(token).get("memberId", Long.class);
-	}
-
-	/**
-	 * JWT 검증
-	 * @param token
-	 * @return IsValidate
-	 */
 	public boolean isValidToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
-		} catch (SecurityException | MalformedJwtException e) {
-			log.info("Invalid JWT", e);
-		} catch (ExpiredJwtException e) {
-			log.info("Expired JWT", e);
-		} catch (UnsupportedJwtException e) {
-			log.info("Unsupported JWT", e);
-		} catch (IllegalArgumentException e) {
-			log.info("JWT claims string is empty", e);
+		} catch (Exception e) {
+			log.error("Invalid token: {}", e.getMessage());
+			return false;
 		}
-		return false;
 	}
 
-	/**
-	 * JWT Claims 추출
-	 * @param accessToken
-	 * @return JWT Claims
-	 */
-	public Claims parseClaims(String accessToken) {
-		try {
-			return Jwts.parserBuilder()
-				.setSigningKey(key)
-				.build()
-				.parseClaimsJws(accessToken)
-				.getBody();
-		} catch (ExpiredJwtException e) {
-			return e.getClaims();
-		}
+	public String getUsernameFromToken(String token) {
+		Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+		return claims.getSubject();
+	}
+
+	public long getRemainingTime(String token) {
+		Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration();
+		return expiration.getTime() - new Date().getTime();
 	}
 }
