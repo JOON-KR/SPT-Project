@@ -1,5 +1,15 @@
 .feed-box {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.list-box {
+  width: 40%;
+}
+
+.page-title {
+  margin-left: 10.5%;
+  margin-top: 20px;
 }

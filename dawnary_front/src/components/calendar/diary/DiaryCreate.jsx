@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "./Diary.css"; 
 
 export default function DiaryCreate({ date, onClose }) {
   const [title, setTitle] = useState("");
@@ -115,13 +116,14 @@ export default function DiaryCreate({ date, onClose }) {
       Wind: "WINDY",
       Clouds: "CLOUDY",
       Rain: "RAINING",
+      Thunderstorm: "RAINING", // 머임 ;; 
       Snow: "SNOWING",
     };
     return weatherEnumMap[weather] || "UNKNOWN";
   };
 
   return (
-    <div>
+    <div className="diary-create-form">
       <button className="close-button" onClick={onClose}>
         X
       </button>
@@ -149,27 +151,17 @@ export default function DiaryCreate({ date, onClose }) {
           <label>사진 업로드</label>
           <input type="file" onChange={handleFileChange} accept="image/*" />
         </div>
-        <div>
-          <label>공개</label>
-          <div>
-            <label>
-              <input
-                type="radio"
-                name="visibility"
-                checked={isPublic}
-                onChange={() => setIsPublic(true)}
-              />
-              <span>공개</span>
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="visibility"
-                checked={!isPublic}
-                onChange={() => setIsPublic(false)}
-              />
-              <span>비공개</span>
-            </label>
+        <div className="toggle-switch-container">
+          <label>공개 여부</label>
+          <div className="toggle-switch">
+            <input
+              type="checkbox"
+              id="visibility-toggle"
+              checked={isPublic}
+              onChange={() => setIsPublic(!isPublic)}
+            />
+            <label htmlFor="visibility-toggle">Toggle</label>
+            <span>{isPublic ? "공개" : "비공개"}</span>
           </div>
         </div>
         <button type="submit">저장</button>

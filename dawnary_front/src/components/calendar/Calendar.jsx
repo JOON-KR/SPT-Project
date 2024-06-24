@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -14,7 +14,7 @@ export default function Calendar({ onDateClick }) {
   const [events, setEvents] = useState([]);
 
   const token = sessionStorage.getItem('token');
-  const memberId = JSON.parse(sessionStorage.getItem("loginUser")).memberId;
+  const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
 
   // 이벤트 클릭 시 팝업 표시
   const handleEventClick = (clickInfo) => {
@@ -29,6 +29,7 @@ export default function Calendar({ onDateClick }) {
   const closePopup = () => {
     setSelectedEventId(null);
     setSelectedDiaryId(null);
+    fetchEventsAndDiaries(); // 팝업 닫을 때 리스트 새로 고침
   };
 
   // 날짜 클릭 시 처리
@@ -36,7 +37,7 @@ export default function Calendar({ onDateClick }) {
     onDateClick(dateClickInfo.date);
   };
 
-  async function fetchEventsAndDiaries() {
+  const fetchEventsAndDiaries = useCallback(async () => {
     try {
       const [eventsResponse, diaryResponse] = await Promise.all([
         axios.get("http://localhost:8080/schedule", {
@@ -52,10 +53,14 @@ export default function Calendar({ onDateClick }) {
       ]);
 
       const combinedEvents = [
-        ...eventsResponse.data,
+        ...eventsResponse.data.map(event => ({
+          ...event,
+          color: 'red'
+        })),
         ...diaryResponse.data.map(diary => ({
           ...diary,
           allDay: true, // 다이어리 항목은 allDay로 설정
+          color: 'orange'
         }))
       ];
 
@@ -63,12 +68,12 @@ export default function Calendar({ onDateClick }) {
     } catch (error) {
       console.error("Error fetching events and diaries:", error);
     }
-  }
+  }, [token, memberId]);
 
   // 컴포넌트가 마운트될 때 이벤트 데이터를 가져옴
   useEffect(() => {
     fetchEventsAndDiaries();
-  }, []);
+  }, [fetchEventsAndDiaries]);
 
   return (
     <>

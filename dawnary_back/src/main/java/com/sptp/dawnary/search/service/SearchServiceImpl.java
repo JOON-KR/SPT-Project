@@ -77,7 +77,7 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public List<Object> getRecentSearch(RedisDto redisDto) {
 		List<Object> result = redisService.getRecentSearches(redisDto);
-		return null;
+		return result;
 	}
 
     // 멤버 관련 메서드들

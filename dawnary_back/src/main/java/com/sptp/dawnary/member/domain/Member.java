@@ -48,7 +48,7 @@ public class Member {
 	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "image_path")
+	@Column(name = "image_path", nullable = true)
 	private String imagePath;
 
 	@Enumerated(EnumType.STRING)

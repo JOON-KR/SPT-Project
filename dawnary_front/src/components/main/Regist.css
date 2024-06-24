@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
 }
-.login-box {
+.regist-box {
   width: 350px;
   display: flex;
   flex-direction: column;

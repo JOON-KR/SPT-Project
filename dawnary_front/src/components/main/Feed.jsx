@@ -1,14 +1,22 @@
 import React from "react";
+import { ListGroup } from "react-bootstrap";
 
 const Feed = ({ items }) => {
   return (
-    <div style={{ maxHeight: "400px", overflowY: "auto" }}>
-      <ul>
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-    </div>
+    <>
+      {items.map((item, index) => (
+        <ListGroup.Item
+          as="li"
+          className="d-flex justify-content-between align-items-start"
+          key={index}
+        >
+          <div className="ms-2 me-auto">
+            <div className="fw-bold">{item.title}</div>
+            {item.author}
+          </div>
+        </ListGroup.Item>
+      ))}
+    </>
   );
 };
 

@@ -27,6 +27,11 @@
     border: none;
     font-size: 1.2em;
     cursor: pointer;
+    color: black;
+  }
+
+  .close-button:hover {
+    background-color: white;
   }
   
   .slide-create {
@@ -35,10 +40,12 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    text-align: center;
   }
   
   .slide-create h3 {
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
+    text-align: center;
   }
   
   .btn-set {

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FloatingLabel, Form } from "react-bootstrap";
 import axios from "axios";
+import base64 from "base-64";
+import utf8 from "utf8";
 import "./Login.css";
 
 const Login = () => {
@@ -21,7 +24,12 @@ const Login = () => {
           clientId: import.meta.env.VITE_NAVER_CLIENT_ID,
           callbackUrl: "http://localhost:5173/naverLogin",
           isPopup: false,
-          loginButton: { color: "green", type: 3, height: "40" },
+          loginButton: {
+            color: "green",
+            type: 3,
+            height: "50",
+            // width: "266",
+          },
         });
         naverLogin.init();
       }
@@ -39,6 +47,20 @@ const Login = () => {
       });
 
       if (response.status === 200) {
+        const token = response.data.accessToken;
+        const refreshToken = response.data.refreshToken;
+        const payload = token.substring(
+          token.indexOf(".") + 1,
+          token.lastIndexOf(".")
+        );
+        const dec = base64.decode(payload);
+        const dec_utf8 = utf8.decode(dec);
+        //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("loginUser", dec_utf8);
+        sessionStorage.setItem("socialLogin", "none");
+        //리프레쉬토큰 저장
+        sessionStorage.setItem("refresh_token", refreshToken);
         alert("로그인이 성공적으로 완료되었습니다.");
         nav("/mainCalendar"); // 로그인 후 이동할 페이지로 이동합니다.
       }
@@ -52,41 +74,63 @@ const Login = () => {
     <div className="container">
       <div className="login-box">
         <div>
-          <h1>로그인</h1>
+          <h1 className="mb-4">로그인</h1>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email">이메일</label>
-            <input
-              type="text"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <button type="submit">로그인</button>
-          </div>
-        </form>
+
+        <FloatingLabel
+          controlId="email"
+          label="Email"
+          className="mb-3"
+          style={{ width: "70%" }}
+        >
+          <Form.Control
+            type="email"
+            id="email"
+            placeholder="name@example.com"
+            className="input-box"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </FloatingLabel>
+
+        <FloatingLabel
+          controlId="password"
+          label="Password"
+          style={{ width: "70%" }}
+        >
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            className="input-box"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="off"
+            required
+          />
+        </FloatingLabel>
+
+        <div style={{ width: "70%" }}>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            style={{ width: "100%", margin: "20px 0" }}
+          >
+            로그인
+          </button>
+        </div>
         {message && <p>{message}</p>}
         <div>
-          계정이 없으신가요? <Link to={"/regist"}>회원가입</Link>
+          계정이 없으신가요?{" "}
+          <Link to={"/regist"} className="link">
+            회원가입
+          </Link>
         </div>
         <hr />
         <div>소셜 계정으로 간편 로그인</div>
         <div className="social-login">
-          <div className="kakao">카카오</div>
+          {/* <div className="kakao">카카오</div> */}
           <div id="naverIdLogin" className="naver">
             네이버
           </div>

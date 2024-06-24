@@ -11,7 +11,7 @@ import SearchResults from "./components/Search/SearchResults"
 import SeriesResult from "./components/Search/SeriesResult"
 import BestSeries from "./components/Search/BestSeries";
 import MonthlySeries from "./components/Search/MonthlySeries"
-
+import SeriesDetail from "./components/Search/SeriesDetail"
 function App() {
   return (
     <Routes>
@@ -27,6 +27,7 @@ function App() {
       <Route path="/seriesResult" element={<SeriesResult />} />
       <Route path="/bestSeries" element={<BestSeries />} />
       <Route path="/monthlySeries" element={<MonthlySeries />} />
+      <Route path="/series/:id" element={<SeriesDetail />} />
     </Routes>
   );
 }
