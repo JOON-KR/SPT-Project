@@ -85,7 +85,7 @@ public class SeriesService {
 
         seriesRepository.save(series);
 
-       // saveSeriesDiaries(seriesFormDto, series);
+        saveSeriesDiaries(seriesFormDto, series);
 
         //document에 저장
         SeriesDocument sd = SeriesDocument.from(series);
@@ -111,6 +111,7 @@ public class SeriesService {
         if(series.isEmpty()) throw new SeriesNotFoundException();
 
         List<DiaryResponse> diaries = getDiaries(series.get().getId());
+
 
         return SeriesResponse.toResponse(series.get(), diaries);
     }
