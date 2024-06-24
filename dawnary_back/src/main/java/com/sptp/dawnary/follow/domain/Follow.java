@@ -2,7 +2,6 @@ package com.sptp.dawnary.follow.domain;
 
 import com.sptp.dawnary.member.domain.Member;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "FOLLOW",
-	indexes = {@Index(name = "follower__index__member_id", columnList = "follower_member_id")
-		, @Index(name = "following__index__post_id", columnList = "following_member_id")})
+	indexes = {@Index(name = "follower__index__id", columnList = "follower_id")
+		, @Index(name = "following__index__post_id", columnList = "following_id")})
 public class Follow {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
