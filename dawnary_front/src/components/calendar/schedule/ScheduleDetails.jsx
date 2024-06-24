@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ScheduleUpdate from './ScheduleUpdate';
 import { formatDateTime } from '../../../utils/dateUtils';
@@ -9,23 +9,23 @@ const ScheduleDetails = ({ eventId, onClose }) => {
   const [event, setEvent] = useState(null);
 
   const token = sessionStorage.getItem('token');
-  
-  useEffect(() => {
-    const fetchEventDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/schedule/${eventId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setEvent(response.data);
-      } catch (error) {
-        console.error('Error fetching event details:', error);
-      }
-    };
 
-    fetchEventDetails();
+  const fetchEventDetails = useCallback(async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/schedule/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setEvent(response.data);
+    } catch (error) {
+      console.error('Error fetching event details:', error);
+    }
   }, [eventId, token]);
+
+  useEffect(() => {
+    fetchEventDetails();
+  }, [fetchEventDetails]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -33,6 +33,7 @@ const ScheduleDetails = ({ eventId, onClose }) => {
 
   const handleEditClose = () => {
     setIsEditing(false);
+    fetchEventDetails(); // 업데이트 후 일정 상세 정보 다시 가져오기
   };
 
   const handleDelete = async () => {

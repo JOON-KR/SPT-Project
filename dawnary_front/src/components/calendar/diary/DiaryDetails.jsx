@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import DiaryUpdate from "./DiaryUpdate";
 
@@ -9,46 +9,46 @@ export default function DiaryDetails({ diaryId, onClose }) {
 
   const token = sessionStorage.getItem("token");
 
-  useEffect(() => {
-    const fetchDiaryDetails = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/diary/${diaryId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setDiary(response.data);
-        if (response.data.imagePath) {
-          fetchImage(response.data.imagePath);
+  const fetchDiaryDetails = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/diary/${diaryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (error) {
-        console.error("Error fetching diary details:", error);
+      );
+      setDiary(response.data);
+      if (response.data.imagePath) {
+        fetchImage(response.data.imagePath);
       }
-    };
-
-    const fetchImage = async (imagePath) => {
-      try {
-        const response = await axios.get(
-          `http://localhost:80/images/`+encodeURIComponent(imagePath),
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            responseType: 'blob'
-          }
-        );
-        const url = URL.createObjectURL(response.data);
-        setImageUrl(url);
-      } catch (error) {
-        console.error("Error fetching image:", error);
-      }
-    };
-
-    fetchDiaryDetails();
+    } catch (error) {
+      console.error("Error fetching diary details:", error);
+    }
   }, [diaryId, token]);
+
+  const fetchImage = async (imagePath) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:80/images/` + encodeURIComponent(imagePath),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob'
+        }
+      );
+      const url = URL.createObjectURL(response.data);
+      setImageUrl(url);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDiaryDetails();
+  }, [fetchDiaryDetails]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -56,6 +56,7 @@ export default function DiaryDetails({ diaryId, onClose }) {
 
   const handleEditClose = () => {
     setIsEditing(false);
+    fetchDiaryDetails(); // 업데이트 후 다이어리 상세 정보 다시 가져오기
   };
 
   const handleDelete = async () => {
