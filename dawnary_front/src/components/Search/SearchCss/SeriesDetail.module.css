@@ -1,0 +1,43 @@
+.seriesDetailContainer {
+  padding: 20px;
+  /* background-color: #f8f8f8; */
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.seriesTitle {
+  margin-left: 280px;
+  font-size: 24px;
+  margin-bottom: 10px;
+  
+}
+
+.seriesThumbnail {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: 280px;
+}
+
+.diaryList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.diaryItem {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.diaryItem h4 {
+  margin: 0 0 10px;
+}
+
+.diaryItem p {
+  margin: 0;
+}

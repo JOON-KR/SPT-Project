@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import AutoComplete from './AutoComplete';
+import UserAutoComplete from './UserAutoComplete';
+import SeriesAutoComplete from './SeriesAutoComplete';
 import filterStyles from './SearchCss/SearchFilter.module.css';
 import barStyles from './SearchCss/SearchBar.module.css';
+import RecentAutoComplete from './RecentAutoComplete';
 
 const MainHeader = ({ onSearch, onFilterChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0Bnb29nbGUuY29tIiwiaWQiOjIzLCJuYW1lIjoi6rmA66-86528Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkyMjQwMjQsImV4cCI6MTcyNTIyNDAyNH0.NmrdTENnyKmlFNdVUuVXbV1WNncWk6j9dOrKQc3BNvA'; // Replace with the true logic for accessToken retrieval
 
   const handleSearch = () => {
     onSearch(searchTerm);
@@ -14,8 +17,8 @@ const MainHeader = ({ onSearch, onFilterChange }) => {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    onSearch(suggestion);
+    setSearchTerm(suggestion.title);
+    onSearch(suggestion.title);
     clearSearchTerm();
   };
 
@@ -47,8 +50,17 @@ const MainHeader = ({ onSearch, onFilterChange }) => {
           <button className={barStyles.routeButton}>마이페이지</button>
         </Link>
       </div>
-      <AutoComplete
+      <UserAutoComplete
         searchTerm={searchTerm}
+        onSuggestionClick={handleSuggestionClick}
+      />
+      <SeriesAutoComplete
+        searchTerm={searchTerm}
+        onSuggestionClick={handleSuggestionClick}
+      />
+      <RecentAutoComplete
+        accessToken={accessToken}
+        searchTerm={searchTerm} // searchTerm을 RecentAutoComplete에 전달
         onSuggestionClick={handleSuggestionClick}
       />
       <div className={filterStyles.container}>

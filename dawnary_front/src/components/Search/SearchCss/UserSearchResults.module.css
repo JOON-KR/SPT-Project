@@ -19,3 +19,21 @@
   pointer-events: none;
   color: grey;
 }
+
+.userSearchContainer {
+  width: 72%;
+  margin-left: 255px;
+  color: white;
+}
+
+.userItem {
+  color: white;
+}
+
+.userSearchTitle {
+  padding-left: 323px;
+}
+
+.noneResult {
+  padding-left: 30px;
+}
