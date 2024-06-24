@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import KakaoMap from "./KakaoMap";
 import { formatDate, formatCombinedDateTime } from '../../../utils/dateUtils';
+import "./Schedule.css";
 
 export default function ScheduleCreate({ date, onClose }) {
   const [today, setToday] = useState(date ? date.toLocaleDateString() : "");
@@ -68,8 +69,8 @@ export default function ScheduleCreate({ date, onClose }) {
   };
 
   return (
-    <div>
-      <h3>{today}의 일정 등록</h3>
+    <div className="schedule-form">
+      <h2>{today}의 일정 등록</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>일정 제목: </label>

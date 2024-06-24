@@ -21,3 +21,9 @@
     z-index: 1000;
 }
 
+.event-detail-popup img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+  }

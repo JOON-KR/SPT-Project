@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import "./Diary.css";
 
 export default function DiaryUpdate({ diary, onClose }) {
   const [title, setTitle] = useState(diary.title);
@@ -25,7 +26,7 @@ export default function DiaryUpdate({ diary, onClose }) {
         updatedDiary,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -50,7 +51,7 @@ export default function DiaryUpdate({ diary, onClose }) {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`, // 인증 헤더 추가
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -74,7 +75,7 @@ export default function DiaryUpdate({ diary, onClose }) {
   return (
     <div className="diary-update-form">
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label>제목</label>
           <input
             type="text"
@@ -83,7 +84,7 @@ export default function DiaryUpdate({ diary, onClose }) {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>내용</label>
           <textarea
             value={content}
@@ -92,12 +93,14 @@ export default function DiaryUpdate({ diary, onClose }) {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>사진 업로드</label>
           <input type="file" onChange={handleFileChange} accept="image/*" />
         </div>
-        <button type="submit">저장</button>
-        <button type="button" onClick={onClose}>취소</button>
+        <div className="button-group">
+          <button type="submit" className="save-button">저장</button>
+          <button type="button" className="cancel-button" onClick={onClose}>취소</button>
+        </div>
       </form>
     </div>
   );

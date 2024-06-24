@@ -1,0 +1,104 @@
+.schedule-form {
+  width: 80%; /* 폼의 너비를 80%로 설정 */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.schedule-form h2 {
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.schedule-form form div {
+  margin-bottom: 15px;
+}
+
+.schedule-form label {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.schedule-form input[type="text"],
+.schedule-form input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.schedule-form button {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.schedule-form button:hover {
+  background-color: #45a049;
+}
+
+.event-detail-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px; /* 원하는 최대 너비 설정 */
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-detail-popup h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.event-detail-popup p {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+.event-detail-popup .button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 300ㅔㅌ;
+}
+
+.event-detail-popup button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.event-detail-popup button:hover {
+  background-color: #45a049;
+}
+
+.event-detail-popup button:nth-of-type(2) {
+  background-color: #2196f3;
+}
+
+.event-detail-popup button:nth-of-type(2):hover {
+  background-color: #1976d2;
+}
+
+.event-detail-popup button:nth-of-type(3) {
+  background-color: #f44336;
+}
+
+.event-detail-popup button:nth-of-type(3):hover {
+  background-color: #d32f2f;
+}
