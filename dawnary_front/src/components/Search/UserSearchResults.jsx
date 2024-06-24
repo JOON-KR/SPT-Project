@@ -15,6 +15,7 @@ const UserSearchResults = ({ keyword }) => {
       try {
         const userData = await SearchMemberByKeyword(keyword);
         setUsers(userData);
+        console.log(users)
       } catch (error) {
         console.error('유저 검색에 실패하였습니다', error);
       }
@@ -31,21 +32,18 @@ const UserSearchResults = ({ keyword }) => {
     _.includes(user.name, keyword)
   );
 
-  
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem); // 페이지네이션된 필터된 유저
-
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   // 데이터 확인용
-  // console.log(filteredUsers)
-  // console.log(currentUsers)
+  console.log(filteredUsers)
+  console.log(currentUsers)
 
   return (
     <div className={styles.userSearchContainer}>
-      <h3>유저 검색결과</h3>
+      <h3 className={styles.userSearchTitle}>유저 검색결과</h3>
       {currentUsers.length > 0 ? (
         <>
           <ul className={styles.userList}>
@@ -81,7 +79,7 @@ const UserSearchResults = ({ keyword }) => {
           </div>
         </>
       ) : (
-        <p>유저 검색 결과가 없습니다.</p>
+        <p className={styles.noneResult}>유저 검색 결과가 없습니다.</p>
       )}
     </div>
   );

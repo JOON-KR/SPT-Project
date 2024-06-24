@@ -1,32 +1,50 @@
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getSeriesDetail } from './RESTapi'; 
+import styles from './SearchCss/SeriesDetail.module.css';
 
 const SeriesDetail = () => {
-  const { seriesId } = useParams(); // 시리즈 ID 파라미터 가져오기
+  const { id } = useParams();
+  const [seriesDetail, setSeriesDetail] = useState(null);
 
-  // 가정한 시리즈 데이터
-  const seriesData = {
-    title: "시리즈 제목",
-    background: "대표 배경 이미지 URL",
-    diaries: [
-      { id: 1, content: "일기 내용 1" },
-      { id: 2, content: "일기 내용 2" },
-      { id: 3, content: "일기 내용 3" },
-      // 여러 개의 일기 데이터
-    ],
-  };
+  useEffect(() => {
+    const fetchSeriesDetail = async () => {
+      try {
+        const detailData = await getSeriesDetail(id);
+        setSeriesDetail(detailData);
+      } catch (error) {
+        console.error('시리즈 세부 정보를 불러오는데 실패했습니다.', error);
+      }
+    };
+
+    fetchSeriesDetail();
+  }, [id]);
+
+  if (!seriesDetail) {
+    return <p>세부 정보를 불러오는 중...</p>;
+  }
 
   return (
-    <div>
-      <div style={{ backgroundImage: `url(${seriesData.background})`, backgroundSize: "cover", height: "200px" }}>
-        <h1>{seriesData.title}</h1>
-      </div>
-      <div style={{ maxHeight: "400px", overflowY: "auto" }}>
-        {seriesData.diaries.map((diary) => (
-          <div key={diary.id} style={{ border: "1px solid #ccc", padding: "10px", margin: "10px"}}>
-            <p>{diary.content}</p>
-          </div>
-        ))}
-      </div>
+    <div className={styles.seriesDetailContainer}>
+      <h2 className={styles.seriesTitle}>{seriesDetail.title}</h2>
+      <img src={seriesDetail.imagePath} alt="썸네일 입니다" className={styles.seriesThumbnail} />
+      <p>작성자: {seriesDetail.name}</p>
+      <p>등록일: {new Date(seriesDetail.regDate).toLocaleDateString()}</p>
+      <p>조회수: {seriesDetail.viewCnt}</p>
+
+      <h3>일기 목록</h3>
+      <ul className={styles.diaryList}>
+        {seriesDetail.diaries.length > 0 ? (
+          seriesDetail.diaries.map((diary) => (
+            <li key={diary.id} className={styles.diaryItem}>
+              <h4>{diary.title}</h4>
+              <p>{diary.contents}</p>
+            </li>
+          ))
+        ) : (
+          <p>일기가 없습니다.</p>
+        )}
+      </ul>
     </div>
   );
 };

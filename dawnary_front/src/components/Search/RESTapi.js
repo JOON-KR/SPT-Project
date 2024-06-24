@@ -2,18 +2,19 @@ import axios from 'axios'
 import _ from 'lodash';
 
 const BASE_URL = 'http://localhost:8080'
-// 통합 검색 api 호출 영역
 
+const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0Bnb29nbGUuY29tIiwiaWQiOjIzLCJuYW1lIjoi6rmA66-86528Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkyMjQwMjQsImV4cCI6MTcyNTIyNDAyNH0.NmrdTENnyKmlFNdVUuVXbV1WNncWk6j9dOrKQc3BNvA'
 
-
-// const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqdW5odWs5NzAzQG5hdmVyLmNvbSIsImlkIjoxLCJuYW1lIjoi6rmA7KSA7ZiBIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkxMTAwMzEsImV4cCI6MTcyNTExMDAzMX0.xCiKPxZq9n8p0c1V9Gw3lFQyTjrayrWont2jNCzSVVc';
-
-export const AutoSearch = async (keyword) => {
+// elasticSearch DB에 존재하는 키워드와 일치하는 유저 자동완성
+export const AutoSearchUser = async (keyword) => {
   try {
     const response = await axios.get(`${BASE_URL}/search/auto/${keyword}`);
 
-    console.log(response.data)
-    return response.data
+    const groupedData = _.groupBy(response.data, 'type');
+    
+    const memberResults = groupedData['member'] || [];
+    console.log(memberResults);
+    return memberResults;
   
   } catch (error) {
     console.error('검색에 실패하였습니다', error);
@@ -21,39 +22,90 @@ export const AutoSearch = async (keyword) => {
   }
 }
 
+// elasticSearch DB에 존재하는 키워드와 일치하는 시리즈 자동완성
+export const AutoSearchSeries = async (keyword) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/search/auto/${keyword}`);
+
+    const groupedData = _.groupBy(response.data, 'type');
+    
+    const memberResults = groupedData['series'] || [];
+    console.log(memberResults);
+    return memberResults;
+  
+  } catch (error) {
+    console.error('검색에 실패하였습니다', error);
+    throw error;
+  }
+}
+
+// 토큰값에 저장된 최근 검색어 목록을 불러와서 보여줌
+export const AutoRecentSearch = async () => {
+  try {
+    const config = {
+      headers: {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0Bnb29nbGUuY29tIiwiaWQiOjIzLCJuYW1lIjoi6rmA66-86528Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTkyMjQwMjQsImV4cCI6MTcyNTIyNDAyNH0.NmrdTENnyKmlFNdVUuVXbV1WNncWk6j9dOrKQc3BNvA',
+      },
+    };
+
+    const response = await axios.get(`${BASE_URL}/search/recent` , config);
+    
+    console.log(response.data)
+    return response.data; 
+
+  } catch (error) {
+    console.error('최근검색어 로딩에 실패하였습니다', error);
+    throw error;
+  }
+}
+
+// Keyword로 검색된 멤버를 컴포넌트로 뿌려주는 함수
 export const SearchMemberByKeyword = async (keyword) => {
   try {
-    const response = await axios.get(`${BASE_URL}/search/all/${keyword}`);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    };
+    
+    const response = await axios.get(`${BASE_URL}/search/all/${keyword}`, config);
     
     const groupedData = _.groupBy(response.data, 'type');
     
-    const memberResults = groupedData['member'] || []; // 'member' 타입의 데이터 배열
-
+    const memberResults = groupedData['member'] || [];
+    console.log(memberResults);
     return memberResults;
   } catch (error) {
-    console.error('검색에 실패하였습니다', error);
+    console.error('멤버 검색에 실패하였습니다', error);
     throw error;
   }
-}
+};
 
+// Keyword로 검색된 series를 컴포넌트로 뿌려주는 함수
 export const SearchSeriesByKeyword = async (keyword) => {
   try {
-    const response = await axios.get(`${BASE_URL}/search/all/${keyword}`);
-    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    };
+
+    const response = await axios.get(`${BASE_URL}/search/all/${keyword}`, config);
+
     const groupedData = _.groupBy(response.data, 'type');
-    
-    const seriesResults = groupedData['series'] || []; // 'series' 타입의 데이터 배열
 
-    return seriesResults;
+    const seriesResults = groupedData['series'] || [];
   
+    return seriesResults;
+
   } catch (error) {
-    console.error('검색에 실패하였습니다' , error)
-    throw error
+    console.error('시리즈 검색에 실패하였습니다', error);
+    throw error;
   }
-}
+};
 
 
-// 에세이 목록 불러오는 api 호출 영역
+// 시리즈 목록 불러오는 api 호출 영역
 export const getAllSeries = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/series/all`);
@@ -64,6 +116,7 @@ export const getAllSeries = async () => {
   }
 };
 
+// 명예의전당에 등록된 시리즈 불러오는 api 호출 영역
 export const getBestSeries = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/series/best`);
@@ -74,6 +127,7 @@ export const getBestSeries = async () => {
   }
 };
 
+// 이달의 시리즈 불러오는 api 호출 영역
 export const getMonthlySeries = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/series/month`);
@@ -83,3 +137,14 @@ export const getMonthlySeries = async () => {
     throw error;
   }
 };
+
+
+export const getSeriesDetail = async (seriesId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/series/${seriesId}`)
+    return response.data
+  } catch (error) {
+    console.error('시리즈 디테일 불러오기 실패' , error)
+    throw error
+  }
+}

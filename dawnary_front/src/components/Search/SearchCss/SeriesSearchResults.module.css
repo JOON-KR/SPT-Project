@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   padding: 10px 0;
+  color: white;
 }
 
 .series-thumbnail {
@@ -24,21 +25,37 @@
 
 .pagination {
   display: flex;
-  justify-content: center;
   list-style: none;
   padding: 0;
+  justify-content: center;
 }
 
 .pagination li {
-  cursor: pointer;
   margin: 0 5px;
-  padding: 5px 10px;
-  background-color: #f1f1f1;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  cursor: pointer;
 }
 
-.pagination li:hover {
-  background-color: #e0e0e0;
+.pagination .active {
+  font-weight: bold;
+  text-decoration: underline;
 }
 
+.pagination .disabled {
+  pointer-events: none;
+  color: grey;
+}
+
+.seriesSearchContainer {
+  width: 72%;
+  margin-left: 255px;
+  color: white;
+}
+
+
+.seriesSearchTitle {
+  padding-left: 323px;
+}
+
+.noneResult {
+  padding-left: 30px;
+}
