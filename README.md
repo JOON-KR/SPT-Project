@@ -15,35 +15,35 @@
 - **일정 관리 기능**: 개인 일정 관리 및 기록
 
 ## 사용 기술 / 환경
-### 프론트엔드 다운 / 윤주 / 준혁 :
+### 프론트엔드 ##다운 / 윤주 / 준혁 :
 - 언어: JavaScript
 - 프레임워크: React.js / VITE
 - 라이브러리: axios , react-router-dom , lodash , react bootstrap , fullCalendar , zustand
 
-### 백엔드 여준 / 창호 / 서현 :
+### 백엔드 ##여준 / 창호 / 서현 :
 - 언어: JAVA
 - 프레임워크: Spring Boot , 
 - 데이터베이스: MySql , redis , 
 
 ## Dawnary 프로젝트를 진행하며 얻은 교훈 / 좋았던점
-### Front - End
-** 다운 ** : 
-** 윤주 ** :
-** 준혁 ** :
-### Back - End
-** 여준 ** :
-** 창호 ** :
-** 서현 ** :
+### Front - End -
+ 다운  : 
+ 윤주  :
+ 준혁  :
+### Back - End -
+ 여준  :
+ 창호  :
+ 서현  :
 
 ## Dawnary 프로젝트를 진행하며 아쉬운점 / 개선점
-### Front - End
-** 다운 ** : 
-** 윤주 ** :
-** 준혁 ** :
-### Back - End
-** 여준 ** :
-** 창호 ** :
-** 서현 ** :
+### Front - End -
+ 다운  : 
+ 윤주  :
+ 준혁  :
+### Back - End -
+ 여준  :
+ 창호  :
+ 서현  :
 
 ## 결론
 **[Dawnary]** 프로젝트를 통해 ...
