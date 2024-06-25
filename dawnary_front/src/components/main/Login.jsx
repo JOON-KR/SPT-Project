@@ -37,6 +37,7 @@ const Login = () => {
     document.body.appendChild(script);
   }, []);
 
+  //일반 로그인
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -67,6 +68,13 @@ const Login = () => {
     } catch (error) {
       setMessage("로그인 중 오류가 발생했습니다.");
       console.error("There was an error!", error);
+    }
+  };
+
+  //비밀번호 입력 후 enter 키 뗄 때 로그인 실행
+  const handleKeyup = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
     }
   };
 
@@ -106,6 +114,7 @@ const Login = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyUp={handleKeyup}
             autoComplete="off"
             required
           />
