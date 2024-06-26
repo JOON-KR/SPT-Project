@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "@/utils/axiosInstance";
 import KakaoMap from "./KakaoMap";
 import { formatDate, formatCombinedDateTime } from '../../../utils/dateUtils';
 import "./Schedule.css";
@@ -12,8 +12,6 @@ export default function ScheduleCreate({ date, onClose }) {
   const [content, setContent] = useState("");
   const [time, setTime] = useState("");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     if (date) {
@@ -40,13 +38,7 @@ export default function ScheduleCreate({ date, onClose }) {
     try {
       const response = await axios.post(
         "http://localhost:8080/schedule",
-        scheduleData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
-            'Content-Type': "application/json", // 콘텐츠 타입 설정
-          },
-        }
+        scheduleData
       );
       console.log("일정 등록 성공:", response.data);
       onClose();

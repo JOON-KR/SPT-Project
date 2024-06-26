@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axios from "@/utils/axiosInstance";
 import "./Diary.css";
 
 export default function DiaryUpdate({ diary, onClose }) {
   const [title, setTitle] = useState(diary.title);
   const [content, setContent] = useState(diary.content);
   const [imagePath, setImagePath] = useState(diary.imagePath);
-
-  const token = sessionStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,12 +21,7 @@ export default function DiaryUpdate({ diary, onClose }) {
     try {
       const response = await axios.put(
         `http://localhost:8080/diary/${diary.id}`,
-        updatedDiary,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        updatedDiary
       );
       console.log('Diary update success:', response.data);
       onClose();
@@ -47,13 +40,7 @@ export default function DiaryUpdate({ diary, onClose }) {
         formData.append("imageFile", file);
         const response = await axios.post(
           "http://localhost:8080/images",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          formData
         );
         console.log("파일 업로드 성공:", response.data);
         setImagePath(response.data);

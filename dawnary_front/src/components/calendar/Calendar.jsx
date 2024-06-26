@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -8,12 +7,13 @@ import ScheduleDetails from "./schedule/ScheduleDetails";
 import DiaryDetails from "./diary/DiaryDetails";
 import "./Calendar.css";
 
+import axios from "@/utils/axiosInstance";
+
 export default function Calendar({ onDateClick }) {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [selectedDiaryId, setSelectedDiaryId] = useState(null);
   const [events, setEvents] = useState([]);
 
-  const token = sessionStorage.getItem('token');
   const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
 
   // 이벤트 클릭 시 팝업 표시
@@ -40,16 +40,8 @@ export default function Calendar({ onDateClick }) {
   const fetchEventsAndDiaries = useCallback(async () => {
     try {
       const [eventsResponse, diaryResponse] = await Promise.all([
-        axios.get("http://localhost:8080/schedule", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        axios.get(`http://localhost:8080/diary/member/${memberId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
+        axios.get("http://localhost:8080/schedule"),
+        axios.get(`http://localhost:8080/diary/member/${memberId}`),
       ]);
 
       const combinedEvents = [
@@ -68,7 +60,7 @@ export default function Calendar({ onDateClick }) {
     } catch (error) {
       console.error("Error fetching events and diaries:", error);
     }
-  }, [token, memberId]);
+  }, [memberId]);
 
   // 컴포넌트가 마운트될 때 이벤트 데이터를 가져옴
   useEffect(() => {
