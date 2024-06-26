@@ -39,5 +39,11 @@
 }
 
 .diaryItem p {
+  color: black;
   margin: 0;
 }
+
+.diaryTitle {
+  color: black;
+}
+

@@ -1,46 +1,31 @@
 import PropTypes from 'prop-types';
-import styles from './SearchCss/SeriesItem.module.css';
+import styles from "./SearchCss/SeriesList.module.css";
 
-const SeriesItem = ({ series, className }) => {
-
-  console.log(series)
-
-  if (!series) {
-    return <div className={`${styles.essayItem} ${className}`}>시리즈가 존재하지 않습니다.</div>;
-  }
-
-
-  // 날짜를 문자열 형식으로 변환
-  const formattedDate = series.date.toISOString().split('T')[0];
-
+const SeriesItem = ({ series }) => {
   return (
-    <div className={`${styles.essayItem} ${className}`}>     
-      <h3>{series.title}</h3>
-      <p>{series.content}</p>
-      {series.thumbnail && <img src={series.thumbnail} alt={`${series.title} thumbnail`} className={styles.thumbnail} />}
-    <div className={`${styles.essayInfo}`}>
-      <div>{series.writer}</div>
-      <div>👍 {series.likes} 좋아요</div>
-      <div>📅 {formattedDate}</div>
-    </div>
-    </div>
+    <li className={styles.seriesItem}>
+      <h2>{series.title}</h2>
+      <p>작성자: {series.name}</p>
+      <p>등록일: {new Date(series.regDate).toLocaleString()}</p>
+      {series.imagePath && <img src={series.imagePath} alt={series.title} style={{ width: '100px', height: '100px' }} />}
+      <p>상태: {series.status === 1 ? '공개' : '비공개'}</p>
+      <p>조회수: {series.viewCnt}</p>
+      <p>다이어리: {series.diaries.length} 건</p>
+    </li>
   );
 };
 
 SeriesItem.propTypes = {
   series: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    writer: PropTypes.string.isRequired,
-    likes: PropTypes.number.isRequired,
-    thumbnail: PropTypes.string, // 이 속성은 선택적입니다.
-    date: PropTypes.instanceOf(Date).isRequired // Date 객체로 설정
+    name: PropTypes.string.isRequired,
+    regDate: PropTypes.string.isRequired,
+    imagePath: PropTypes.string,
+    status: PropTypes.number.isRequired,
+    viewCnt: PropTypes.number.isRequired,
+    diaries: PropTypes.array.isRequired,
   }).isRequired,
-  className: PropTypes.string
-};
-
-SeriesItem.defaultProps = {
-  className: ''
 };
 
 export default SeriesItem;
