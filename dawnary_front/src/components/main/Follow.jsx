@@ -15,7 +15,7 @@ const Follow = ({ items, cName, type }) => {
         className={`follow-list-title ${cName}`}
         style={{ textAlign: "center" }}
       >
-        {type} 목록
+        {type === "following" ? "팔로잉" : "팔로워"}
       </h2>
       <ListGroup variant="flush" className={`follow-list-items ${cName} `}>
         {items.map((item, index) => (

@@ -82,7 +82,7 @@ const Login = () => {
     <div className="container">
       <div className="login-box">
         <div>
-          <h1 className="mb-4">로그인</h1>
+          <h2 className="mb-4">로그인</h2>
         </div>
 
         <FloatingLabel

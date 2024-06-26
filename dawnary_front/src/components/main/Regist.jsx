@@ -63,7 +63,7 @@ const Regist = () => {
   return (
     <div className="container">
       <div className="login-box">
-        <h1 className="mb-4">회원가입</h1>
+        <h2 className="mb-4">회원가입</h2>
         <FloatingLabel
           controlId="email"
           label="Email"
