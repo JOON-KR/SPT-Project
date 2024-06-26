@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import axios from "@/utils/axiosInstance";
 import DiaryUpdate from "./DiaryUpdate";
 
 export default function DiaryDetails({ diaryId, onClose }) {
@@ -7,17 +7,10 @@ export default function DiaryDetails({ diaryId, onClose }) {
   const [isEditing, setIsEditing] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
-  const token = sessionStorage.getItem("token");
-
   const fetchDiaryDetails = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/diary/${diaryId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `http://localhost:8080/diary/${diaryId}`
       );
       setDiary(response.data);
       if (response.data.imagePath) {
@@ -26,17 +19,14 @@ export default function DiaryDetails({ diaryId, onClose }) {
     } catch (error) {
       console.error("Error fetching diary details:", error);
     }
-  }, [diaryId, token]);
+  }, [diaryId]);
 
   const fetchImage = async (imagePath) => {
     try {
       const response = await axios.get(
         `http://localhost:80/images/` + encodeURIComponent(imagePath),
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          responseType: 'blob'
+          responseType: "blob",
         }
       );
       const url = URL.createObjectURL(response.data);
@@ -63,11 +53,7 @@ export default function DiaryDetails({ diaryId, onClose }) {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:8080/diary/${diary.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await axios.delete(`http://localhost:8080/diary/${diary.id}`);
         console.log("일기 삭제 성공");
         onClose(); // 팝업 닫기
       } catch (error) {
