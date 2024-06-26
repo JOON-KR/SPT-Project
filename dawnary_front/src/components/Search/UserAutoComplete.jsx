@@ -19,7 +19,7 @@ const AutoComplete = ({ searchTerm, onSuggestionClick }) => {
             console.error('Invalid response structure', response);
           }
         } catch (error) {
-          console.error('자동완성 검색 오류:', error);
+          console.error('유저 자동완성 검색 오류:', error);
           setSuggestions([]);
         }
       } else {
