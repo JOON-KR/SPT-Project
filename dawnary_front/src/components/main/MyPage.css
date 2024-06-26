@@ -18,6 +18,16 @@
   align-items: center;
 }
 
+.profile-btn-box {
+  margin-top: 30px;
+}
+
+.nickname {
+  font-weight: bold;
+  font-size: 35px;
+  margin-bottom: 30px;
+}
+
 .following,
 .follower {
   position: fixed;
@@ -69,6 +79,7 @@
   max-height: "350px";
   overflow-y: "auto";
   margin: 20px;
+  cursor: pointer;
 }
 
 .feed-title {

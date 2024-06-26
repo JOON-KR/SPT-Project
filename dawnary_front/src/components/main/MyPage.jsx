@@ -173,7 +173,6 @@ const MyPage = () => {
 
     fetchDiaryFeeds();
     fetchDiarys();
-    console.log(diarys);
   }, [memberId]);
 
   const getEmotionImage = (emotion) => {
@@ -268,15 +267,19 @@ const MyPage = () => {
       });
   };
 
+  const goSetting = () => {
+    nav("/setting");
+  };
+
   return (
     <div className="container" onClick={handleOutsideClick}>
       <div
         className={`overlay ${showFollowing || showFollowers ? "show" : ""}`}
       />
-      <Card className="profile-box p-5 h-75">
-        <h2>MyPage</h2>
+      <Card className="profile-box p-5 h-70">
+        {/* <h2>마이페이지</h2> */}
         <div className="profile-sub m-5">
-          <h4>{nickName}</h4>
+          <h4 className="nickname">{nickName}</h4>
           <div className="d-flex">
             <div className="clickable" onClick={toggleFollowing}>
               <span>팔로잉</span>
@@ -292,8 +295,8 @@ const MyPage = () => {
               </Badge>
             </div>
           </div>
-          <div>
-            <Button variant="dark" className="my-3">
+          <div className="profile-btn-box">
+            <Button variant="dark" onClick={goSetting}>
               설정
             </Button>
             <Button variant="outline-secondary" onClick={logout}>
@@ -326,21 +329,21 @@ const MyPage = () => {
       </div>
 
       <div className="feed">
-        <h4 className="feed-title">일기 Feed</h4>
+        <h4 className="feed-title">일기 피드</h4>
         <ListGroup
           as="ul"
           className="diary-feed"
           style={{ maxHeight: "280px", overflowY: "auto" }}
         >
-          <Feed items={diaryFeeds} />
+          <Feed items={diaryFeeds} type={"diary"} />
         </ListGroup>
-        <h4 className="feed-title">시리즈 Feed</h4>
+        <h4 className="feed-title">시리즈 피드</h4>
         <ListGroup
           as="ul"
           className="series-feed"
           style={{ maxHeight: "280px", overflowY: "auto" }}
         >
-          <Feed items={feeds} />
+          <Feed items={feeds} type={"series"} />
         </ListGroup>
       </div>
       {selectedDiaryId && (
