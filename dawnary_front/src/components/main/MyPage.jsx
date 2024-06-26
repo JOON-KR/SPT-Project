@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Badge, Card, ListGroup } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Feed from "./Feed";
 import Follow from "./Follow";
 import "./MyPage.css";
@@ -8,14 +8,26 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import "./emotion-calendar.css"; // 커스텀 CSS 임포트
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import DiaryDetails from "../calendar/diary/DiaryDetails";
 
 const MyPage = () => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [value, onChange] = useState(new Date());
+  const [diaryFeeds, setDiaryFeeds] = useState([]);
+  const [diarys, setDiarys] = useState([]);
+  const [selectedDiaryId, setSelectedDiaryId] = useState(null);
 
   const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
   const nickName = loginUser.name;
+  const memberId = loginUser.id;
+  const nav = useNavigate();
+
+  const [followings, setFollowings] = useState([]);
+
+  const [followers, setFollowers] = useState([]);
 
   const [feeds, setFeeds] = useState([
     { title: "첫 번째 아이템", author: "작성자1" },
@@ -32,46 +44,137 @@ const MyPage = () => {
     { title: "열두 번째 아이템", author: "작성자12" },
   ]);
 
-  const [followings, setFollowings] = useState([
-    { nickName: "팔로잉1", id: 1 },
-    { nickName: "팔로잉2", id: 2 },
-    { nickName: "팔로잉3", id: 3 },
-    { nickName: "팔로잉4", id: 4 },
-    { nickName: "팔로잉5", id: 5 },
-    { nickName: "팔로잉6", id: 6 },
-    { nickName: "팔로잉7", id: 7 },
-    { nickName: "팔로잉8", id: 8 },
-    { nickName: "팔로잉9", id: 9 },
-    { nickName: "팔로잉10", id: 10 },
-    { nickName: "팔로잉11", id: 11 },
-    { nickName: "팔로잉12", id: 12 },
-    // 추가적인 팔로잉들
-  ]);
+  useEffect(() => {
+    const fetchFollowingData = async () => {
+      const access_token = "Bearer " + sessionStorage.getItem("token");
 
-  const [followers, setFollowers] = useState([
-    { nickName: "팔로워1", id: 101 },
-    { nickName: "팔로워2", id: 102 },
-    { nickName: "팔로워3", id: 103 },
-    { nickName: "팔로워4", id: 104 },
-    { nickName: "팔로워5", id: 105 },
-    { nickName: "팔로워6", id: 106 },
-    { nickName: "팔로워7", id: 107 },
-    { nickName: "팔로워8", id: 108 },
-    { nickName: "팔로워9", id: 109 },
-    { nickName: "팔로워10", id: 110 },
-    { nickName: "팔로워11", id: 111 },
-    { nickName: "팔로워12", id: 112 },
-    // 추가적인 팔로워들
-  ]);
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/follow/following",
+          {
+            headers: {
+              Authorization: access_token,
+            },
+          }
+        );
 
-  const emotions = [
-    { date: "2024-06-01", emotion: "happy" },
-    { date: "2024-06-02", emotion: "good" },
-    { date: "2024-06-03", emotion: "soso" },
-    { date: "2024-06-04", emotion: "bad" },
-    { date: "2024-06-05", emotion: "upset" },
-    // 나머지 날짜와 감정 추가
-  ];
+        const followingsList = response.data.followMemberList;
+        setFollowings(followingsList);
+      } catch (error) {
+        console.error("팔로잉 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    const fetchFollowerData = async () => {
+      const access_token = "Bearer " + sessionStorage.getItem("token");
+
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/follow/follower",
+          {
+            headers: {
+              Authorization: access_token,
+            },
+          }
+        );
+
+        const followersList = response.data.followMemberList;
+        setFollowers(followersList);
+      } catch (error) {
+        console.error("팔로워 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchFollowingData();
+    fetchFollowerData();
+  }, [memberId]);
+
+  //달력 날짜 선택했을 때 실행되는 함수
+  const handleCalendarChange = (date) => {
+    // date를 moment로 변환하여 YYYY-MM-DD 형식의 문자열로 가져옵니다
+    const selectedDate = moment(date).format("YYYY-MM-DD");
+
+    // diarys 배열에서 선택된 날짜에 해당하는 일기의 id를 찾습니다
+    const diary = diarys.find((diary) => diary.date === selectedDate);
+
+    // 일기가 있으면 해당 일기의 id를 selectedDiaryId로 설정합니다
+    if (diary) {
+      setSelectedDiaryId(diary.id);
+    } else {
+      // 선택된 날짜에 일기가 없으면 selectedDiaryId를 초기화합니다
+      setSelectedDiaryId(null);
+    }
+  };
+
+  // 팝업 닫기
+  const closePopup = () => {
+    setSelectedDiaryId(null);
+  };
+
+  useEffect(() => {
+    const fetchDiaryFeeds = async () => {
+      const access_token = "Bearer " + sessionStorage.getItem("token");
+
+      try {
+        const response = await axios.get("http://localhost:8080/diary/follow", {
+          headers: {
+            Authorization: access_token,
+          },
+        });
+
+        const sortedFeeds = response.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+
+        setDiaryFeeds(sortedFeeds);
+      } catch (error) {
+        console.error("일기 데이터를 가져오는데 오류가 발생했습니다:", error);
+      }
+    };
+
+    const fetchDiarys = async () => {
+      const access_token = "Bearer " + sessionStorage.getItem("token");
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/diary/member/${memberId}`,
+          {
+            headers: {
+              Authorization: access_token,
+            },
+          }
+        );
+
+        const updatedDiarys = response.data.map((diary) => {
+          let emotion = "";
+          if (diary.sentiment >= -1 && diary.sentiment < -0.6) {
+            emotion = "upset";
+          } else if (diary.sentiment >= -0.6 && diary.sentiment < -0.2) {
+            emotion = "bad";
+          } else if (diary.sentiment >= -0.2 && diary.sentiment < 0.2) {
+            emotion = "soso";
+          } else if (diary.sentiment >= 0.2 && diary.sentiment < 0.6) {
+            emotion = "good";
+          } else if (diary.sentiment >= 0.6 && diary.sentiment <= 1) {
+            emotion = "happy";
+          }
+          return {
+            ...diary,
+            date: moment(diary.date).format("YYYY-MM-DD"),
+            emotion: emotion,
+          };
+        });
+
+        setDiarys(updatedDiarys);
+      } catch (error) {
+        console.error("일기 데이터를 가져오는데 오류가 발생했습니다:", error);
+      }
+    };
+
+    fetchDiaryFeeds();
+    fetchDiarys();
+    console.log(diarys);
+  }, [memberId]);
 
   const getEmotionImage = (emotion) => {
     switch (emotion) {
@@ -92,14 +195,14 @@ const MyPage = () => {
 
   const renderTileContent = ({ date, view }) => {
     if (view === "month") {
-      const emotion = emotions.find((emotion) =>
-        moment(emotion.date).isSame(date, "day")
+      const emotionDiary = diarys.find((diary) =>
+        moment(diary.date).isSame(date, "day")
       );
-      if (emotion) {
+      if (emotionDiary) {
         return (
           <img
-            src={getEmotionImage(emotion.emotion)}
-            alt={emotion.emotion}
+            src={getEmotionImage(emotionDiary.emotion)}
+            alt={emotionDiary.emotion}
             className="emotion-image"
           />
         );
@@ -139,6 +242,32 @@ const MyPage = () => {
     setShowFollowers(false);
   };
 
+  const logout = () => {
+    const access_token = "Bearer " + sessionStorage.getItem("token");
+    const email = JSON.parse(sessionStorage.getItem("loginUser")).sub;
+
+    axios
+      .post(
+        "http://localhost:8080/member/logout",
+        { email: email },
+        {
+          headers: {
+            Authorization: access_token,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Logout successful:", response);
+        sessionStorage.clear();
+        alert("로그아웃 되었습니다.");
+        nav("/login");
+      })
+      .catch((error) => {
+        console.error("There was an error logging out:", error);
+      });
+  };
+
   return (
     <div className="container" onClick={handleOutsideClick}>
       <div
@@ -148,25 +277,33 @@ const MyPage = () => {
         <h2>MyPage</h2>
         <div className="profile-sub m-5">
           <h4>{nickName}</h4>
-          <div className="clickable">
-            <span onClick={toggleFollowing}>팔로잉</span>
-            <Badge bg="secondary" className="mx-2">
-              0
-            </Badge>
-            <span onClick={toggleFollowers}>팔로워</span>
-            <Badge bg="secondary" className="mx-2">
-              0
-            </Badge>
+          <div className="d-flex">
+            <div className="clickable" onClick={toggleFollowing}>
+              <span>팔로잉</span>
+              <Badge bg="secondary" className="mx-2">
+                {followings.length}
+              </Badge>
+            </div>
+            <div>|</div>
+            <div className="clickable" onClick={toggleFollowers}>
+              <span className="ms-2">팔로워</span>
+              <Badge bg="secondary" className="mx-2">
+                {followers.length}
+              </Badge>
+            </div>
           </div>
           <div>
             <Button variant="dark" className="my-3">
               설정
             </Button>
+            <Button variant="outline-secondary" onClick={logout}>
+              로그아웃
+            </Button>
           </div>
         </div>
         <div className="emo-calendar">
           <Calendar
-            onChange={onChange}
+            onChange={handleCalendarChange}
             value={value}
             formatDay={(locale, date) => moment(date).format("D")}
             tileContent={renderTileContent}
@@ -178,32 +315,37 @@ const MyPage = () => {
         <div className="follow-box-close" onClick={closeBox}>
           X
         </div>
-        <Follow items={followings} cName={cName} />
+        <Follow items={followings} cName={cName} type="following" />
       </div>
 
       <div className={`follower ${showFollowers ? "show" : ""}`}>
         <div className="follow-box-close" onClick={closeBox}>
           X
         </div>
-        <Follow items={followers} cName={cName} />
+        <Follow items={followers} cName={cName} type="follower" />
       </div>
 
       <div className="feed">
+        <h4 className="feed-title">일기 Feed</h4>
         <ListGroup
           as="ul"
-          className="following-feed"
-          style={{ maxHeight: "350px", overflowY: "auto" }}
+          className="diary-feed"
+          style={{ maxHeight: "280px", overflowY: "auto" }}
         >
-          <Feed items={feeds} />
+          <Feed items={diaryFeeds} />
         </ListGroup>
+        <h4 className="feed-title">시리즈 Feed</h4>
         <ListGroup
           as="ul"
-          className="follower-feed"
-          style={{ maxHeight: "350px", overflowY: "auto" }}
+          className="series-feed"
+          style={{ maxHeight: "280px", overflowY: "auto" }}
         >
           <Feed items={feeds} />
         </ListGroup>
       </div>
+      {selectedDiaryId && (
+        <DiaryDetails diaryId={selectedDiaryId} onClose={closePopup} />
+      )}
     </div>
   );
 };

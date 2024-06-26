@@ -64,11 +64,16 @@
   margin-left: 20px;
 }
 
-.follower-feed,
-.following-feed {
+.diary-feed,
+.series-feed {
   max-height: "350px";
   overflow-y: "auto";
   margin: 20px;
+}
+
+.feed-title {
+  margin-left: 20px;
+  color: white;
 }
 
 button {

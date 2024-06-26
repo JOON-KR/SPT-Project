@@ -34,7 +34,7 @@ const UserPage = () => {
           <h4 className="ms-3 mt-3">Series</h4>
           <ListGroup
             as="ul"
-            className="dairy-feed m-3"
+            className="diary-feed m-3"
             style={{ maxHeight: "700px", overflowY: "auto" }}
           >
             <UserFeed items={feeds} />
