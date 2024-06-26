@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInst from "@/utils/axiosInstance";
 import "./Diary.css"; 
 
 export default function DiaryCreate({ date, onClose }) {
@@ -9,8 +10,6 @@ export default function DiaryCreate({ date, onClose }) {
   const [formattedDate, setFormattedDate] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [imagePath, setImagePath] = useState("");
-
-  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     if (date) {
@@ -58,14 +57,9 @@ export default function DiaryCreate({ date, onClose }) {
     };
 
     try {
-      const response = await axios.post(
+      const response = await axiosInst.post(
         "http://localhost:8080/diary",
-        diaryData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
-          },
-        }
+        diaryData
       );
       console.log("일기 등록 성공:", response.data);
       onClose();
@@ -83,15 +77,9 @@ export default function DiaryCreate({ date, onClose }) {
       try {
         const formData = new FormData();
         formData.append("imageFile", file);
-        const response = await axios.post(
+        const response = await axiosInst.post(
           "http://localhost:8080/images",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`, // 인증 헤더 추가
-            },
-          }
+          formData
         );
         console.log("파일 업로드 성공:", response.data);
         setImagePath(response.data);

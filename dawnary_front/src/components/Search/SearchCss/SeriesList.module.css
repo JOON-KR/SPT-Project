@@ -1,7 +1,24 @@
-.essayList {
+/* SeriesList.module.css */
+
+.seriesContainer {
   padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(850px, 1fr)); 
-  gap: 20px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
+.errorMessage {
+  color: red;
+}
+
+.seriesList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.seriesItem {
+  margin-left: 0px;
+  margin-right: 20px;
+}
