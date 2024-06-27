@@ -19,6 +19,7 @@ const MyPage = () => {
   const [diaryFeeds, setDiaryFeeds] = useState([]);
   const [diarys, setDiarys] = useState([]);
   const [selectedDiaryId, setSelectedDiaryId] = useState(null);
+  const [mySeries, setMySeries] = useState([]);
 
   const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
   const nickName = loginUser.name;
@@ -171,8 +172,34 @@ const MyPage = () => {
       }
     };
 
+    const GetMyseries = async () => {
+      const userJson = sessionStorage.getItem("loginUser"); // "loginUser" 키로 저장된 값을 가져옴
+      const user = JSON.parse(userJson);
+      const memberId = user.id;
+      const access_token = "Bearer " + sessionStorage.getItem("token");
+
+      try {
+        const config = {
+          headers: {
+            Authorization: access_token,
+          },
+        };
+
+        const response = await axios.get(
+          `http://localhost:8080/series/member/${memberId}`,
+          config
+        );
+        setMySeries(response.data);
+        console.log(mySeries);
+      } catch (error) {
+        console.error("나의 시리즈 가져오기 실패:", error);
+        throw error;
+      }
+    };
+
     fetchDiaryFeeds();
     fetchDiarys();
+    GetMyseries();
   }, [memberId]);
 
   const getEmotionImage = (emotion) => {
@@ -330,11 +357,20 @@ const MyPage = () => {
       </div>
 
       <div className="feed">
+        <h4 className="feed-title">나의 시리즈 피드</h4>
+        <ListGroup
+          as="ul"
+          className="my-series-feed"
+          style={{ maxHeight: "200px", overflowY: "auto" }}
+        >
+          <Feed items={mySeries} type={"series"} />
+        </ListGroup>
+
         <h4 className="feed-title">일기 피드</h4>
         <ListGroup
           as="ul"
           className="diary-feed"
-          style={{ maxHeight: "280px", overflowY: "auto" }}
+          style={{ maxHeight: "200px", overflowY: "auto" }}
         >
           <Feed items={diaryFeeds} type={"diary"} />
         </ListGroup>
@@ -342,7 +378,7 @@ const MyPage = () => {
         <ListGroup
           as="ul"
           className="series-feed"
-          style={{ maxHeight: "280px", overflowY: "auto" }}
+          style={{ maxHeight: "200px", overflowY: "auto" }}
         >
           <Feed items={feeds} type={"series"} />
         </ListGroup>

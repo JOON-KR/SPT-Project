@@ -3,7 +3,6 @@ import Login from "./components/main/Login";
 import MyPage from "./components/main/MyPage";
 import Regist from "./components/main/Regist";
 import UserPage from "./components/main/UserPage";
-import KakaoLogin from "./components/main/KakaoLogin";
 import MainCalendar from "./components/calendar/MainCalendar";
 import { Routes, Route } from "react-router-dom";
 import NaverLogin from "./components/main/NaverLogin";
@@ -24,7 +23,6 @@ function App() {
       <Route path="/regist" element={<Regist />} />
       <Route path="/myPage" element={<MyPage />} />
       <Route path="/userPage/:id" element={<UserPage />} />
-      <Route path="/kakaoLogin" element={<KakaoLogin />} />
       <Route path="/mainCalendar" element={<MainCalendar />} />
       <Route path="/naverLogin" element={<NaverLogin />} />
       <Route path="/searchResult" element={<SearchResults />} />
