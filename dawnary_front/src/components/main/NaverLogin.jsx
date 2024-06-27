@@ -81,7 +81,7 @@ const NaverLogin = () => {
               token.indexOf(".") + 1,
               token.lastIndexOf(".")
             );
-            const dec = base64.decode(payload);
+            const dec = base64.decode(payload.trim());
             const dec_utf8 = utf8.decode(dec);
             //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
             sessionStorage.setItem("token", token);
