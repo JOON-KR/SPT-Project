@@ -244,11 +244,12 @@ const MyPage = () => {
   const logout = () => {
     const access_token = "Bearer " + sessionStorage.getItem("token");
     const email = JSON.parse(sessionStorage.getItem("loginUser")).sub;
+    const refresh_token = sessionStorage.getItem("refresh_token");
 
     axios
       .post(
         "http://localhost:8080/member/logout",
-        { email: email },
+        { email: email, refreshToken: refresh_token },
         {
           headers: {
             Authorization: access_token,

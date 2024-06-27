@@ -77,17 +77,22 @@ const NaverLogin = () => {
           );
 
           if (loginResponse.status === 200) {
-            const token = loginResponse.data;
+            const token = loginResponse.data.accessToken;
+            const refreshToken = loginResponse.data.refreshToken;
             const payload = token.substring(
               token.indexOf(".") + 1,
               token.lastIndexOf(".")
             );
             const dec = base64.decode(payload);
             const dec_utf8 = utf8.decode(dec);
+            //세션스토리지에 백엔드 서버에서 받아온 토큰(원본), 토큰 디코딩해서 로그인유저 정보 저장
             sessionStorage.setItem("token", token);
             sessionStorage.setItem("loginUser", dec_utf8);
+            sessionStorage.setItem("socialLogin", "none");
+            //리프레쉬토큰 저장
+            sessionStorage.setItem("refresh_token", refreshToken);
             alert("로그인이 성공적으로 완료되었습니다.");
-            navigate("/mainCalendar");
+            navigate("/mainCalendar"); // 로그인 후 이동할 페이지로 이동합니다.
           }
         }
       } catch (error) {
@@ -118,7 +123,7 @@ const NaverLogin = () => {
             const { access_token } = queryString.parse(
               window.location.hash.substring(1)
             );
-            sessionStorage.setItem("access_token", access_token);
+            sessionStorage.setItem("naver_access_token", access_token);
             sessionStorage.setItem("socialLogin", "naver");
 
             signUpAndLogin(userEmail, userName);
