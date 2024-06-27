@@ -66,8 +66,11 @@ const Login = () => {
         nav("/mainCalendar"); // 로그인 후 이동할 페이지로 이동합니다.
       }
     } catch (error) {
-      setMessage("로그인 중 오류가 발생했습니다.");
-      console.error("There was an error!", error);
+      if (error.response.status === 401) {
+        setMessage(error.response.data.message);
+      } else {
+        console.error("There was an error!", error);
+      }
     }
   };
 
@@ -93,7 +96,6 @@ const Login = () => {
         >
           <Form.Control
             type="email"
-            id="email"
             placeholder="name@example.com"
             className="input-box"
             value={email}
@@ -111,7 +113,6 @@ const Login = () => {
             type="password"
             placeholder="Password"
             className="input-box"
-            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyUp={handleKeyup}
@@ -129,7 +130,7 @@ const Login = () => {
             로그인
           </button>
         </div>
-        {message && <p>{message}</p>}
+        {message && <p className="login-msg">{message}</p>}
         <div>
           계정이 없으신가요?{" "}
           <Link to={"/regist"} className="link">
