@@ -60,11 +60,13 @@ public class MemberService {
 		return accessToken;
 	}
 
-	public void logout(String email, String accessToken) {
-		long remainingTime = jwtUtil.getRemainingTime(accessToken);
+	public void logout(String email, String refreshToken) {
+		// 리프레시 토큰을 블랙리스트에 추가
+		long remainingTime = jwtUtil.getRemainingTime(refreshToken);
+		redisService.addTokenToBlacklist(refreshToken, remainingTime);
 		redisService.deleteRefreshToken(email);
-		redisService.addTokenToBlacklist(accessToken, remainingTime);
 	}
+
 
 	public Long signup(Member member) {
 		Optional<Member> validMember = memberRepository.findByEmail(member.getEmail());
