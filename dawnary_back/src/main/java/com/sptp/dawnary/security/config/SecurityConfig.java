@@ -30,7 +30,7 @@ public class SecurityConfig {
 	private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 	private final RedisService redisService;
 
-	private static final String[] AUTH_WHITELIST = {"/member/login", "/member/signup",
+	private static final String[] AUTH_WHITELIST = {"/member/login", "/member/signup", "/member/all",
 		"/swagger-ui/**", "/api-docs", "swagger-ui-custom.html"};
 
 	@Bean

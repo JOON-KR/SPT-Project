@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,10 +52,13 @@ public class MemberController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(@RequestBody LogoutRequest request, @RequestHeader("Authorization") String accessToken) {
-		memberService.logout(request.email(), accessToken.substring(7));
-		return ResponseEntity.status(HttpStatus.OK).build();
+	public ResponseEntity<Void> logout(@Valid @RequestBody LogoutRequest request) {
+		String email = request.email();
+		String refreshToken = request.refreshToken();
+		memberService.logout(email, refreshToken);
+		return ResponseEntity.ok().build();
 	}
+
 
 	@PostMapping("signup")
 	public ResponseEntity<Long> signup(@Valid @RequestBody MemberRequest member) {

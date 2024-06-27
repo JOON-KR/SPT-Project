@@ -13,6 +13,7 @@ import BestSeries from "./components/Search/BestSeries";
 import MonthlySeries from "./components/Search/MonthlySeries";
 import SeriesDetail from "./components/Search/SeriesDetail";
 import Setting from "./components/main/Setting";
+import CreateSeries from "./components/Search/CreateSeries";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Route path="/monthlySeries" element={<MonthlySeries />} />
       <Route path="/series/:id" element={<SeriesDetail />} />
       <Route path="/setting" element={<Setting />} />
+      <Route path="/createSeries" element={<CreateSeries />} />
     </Routes>
   );
 }
