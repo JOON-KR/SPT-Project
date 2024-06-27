@@ -2,6 +2,7 @@ import React from "react";
 import { ListGroup, Badge, Card } from "react-bootstrap";
 import moment from "moment";
 import "./UserFeed.css"; // UserFeed에 대한 CSS 파일을 따로 생성합니다.
+import { Link } from "react-router-dom";
 
 const UserFeed = ({ items, type }) => {
   // 오늘날짜랑 차이 계산
@@ -37,7 +38,11 @@ const UserFeed = ({ items, type }) => {
           onClick={() => goDetail(item.id, type)}
         >
           <div className="ms-2 me-auto">
-            <div className="fw-bold">{item.title}</div>
+            <Link
+              to={type === "diary" ? `/diary/${item.id}` : `/series/${item.id}`}
+            >
+              <div className="fw-bold">{item.title}</div>
+            </Link>
           </div>
           <Badge pill bg="primary">
             {calculateDateDifference(item.date)}
