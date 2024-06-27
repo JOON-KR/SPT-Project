@@ -227,6 +227,7 @@ export const getSeriesDetail = async (seriesId) => {
   }
 }
 
+
 //시리즈를 읽고 작성한 유저 팔로우 하기
 export const followMember = async (memberId) => {
   try {
