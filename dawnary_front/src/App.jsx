@@ -14,6 +14,7 @@ import MonthlySeries from "./components/Search/MonthlySeries";
 import SeriesDetail from "./components/Search/SeriesDetail";
 import Setting from "./components/main/Setting";
 import CreateSeries from "./components/Search/CreateSeries";
+import DiaryView from "./components/calendar/diary/DiaryView";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
       <Route path="/series/:id" element={<SeriesDetail />} />
       <Route path="/setting" element={<Setting />} />
       <Route path="/createSeries" element={<CreateSeries />} />
+      <Route path="/diary/:id" element={<DiaryView />} />
     </Routes>
   );
 }

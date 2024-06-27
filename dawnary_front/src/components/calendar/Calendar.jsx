@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -13,6 +14,7 @@ export default function Calendar({ onDateClick }) {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [selectedDiaryId, setSelectedDiaryId] = useState(null);
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
   const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
 
@@ -67,8 +69,15 @@ export default function Calendar({ onDateClick }) {
     fetchEventsAndDiaries();
   }, [fetchEventsAndDiaries]);
 
+  const goToMyPage = () => {
+    navigate("/mypage");
+  };
+
   return (
     <>
+      <div className="calendar-header">
+        <button onClick={goToMyPage} className="mypage-button">마이페이지</button>
+      </div>
       <h2>달력</h2>
       <div className="calendar-container">
         <FullCalendar
