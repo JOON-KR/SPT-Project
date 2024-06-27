@@ -20,6 +20,7 @@ const MyPage = () => {
   const [diarys, setDiarys] = useState([]);
   const [selectedDiaryId, setSelectedDiaryId] = useState(null);
   const [mySeries, setMySeries] = useState([]);
+  const [seriesFeeds, setSeriesFeeds] = useState([]);
 
   const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
   const nickName = loginUser.name;
@@ -27,23 +28,7 @@ const MyPage = () => {
   const nav = useNavigate();
 
   const [followings, setFollowings] = useState([]);
-
   const [followers, setFollowers] = useState([]);
-
-  const [feeds, setFeeds] = useState([
-    { title: "첫 번째 아이템", author: "작성자1" },
-    { title: "두 번째 아이템", author: "작성자2" },
-    { title: "세 번째 아이템", author: "작성자3" },
-    { title: "네 번째 아이템", author: "작성자4" },
-    { title: "다섯 번째 아이템", author: "작성자5" },
-    { title: "여섯 번째 아이템", author: "작성자6" },
-    { title: "일곱 번째 아이템", author: "작성자7" },
-    { title: "여덟 번째 아이템", author: "작성자8" },
-    { title: "아홉 번째 아이템", author: "작성자9" },
-    { title: "열 번째 아이템", author: "작성자10" },
-    { title: "열한 번째 아이템", author: "작성자11" },
-    { title: "열두 번째 아이템", author: "작성자12" },
-  ]);
 
   useEffect(() => {
     const fetchFollowingData = async () => {
@@ -197,9 +182,29 @@ const MyPage = () => {
       }
     };
 
+    const fetchSeriesFeeds = async () => {
+      const access_token = "Bearer " + sessionStorage.getItem("token");
+
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/series/follow",
+          {
+            headers: {
+              Authorization: access_token,
+            },
+          }
+        );
+
+        setSeriesFeeds(response.data);
+      } catch (error) {
+        console.error("팔로우한 시리즈를 가져오는 중 오류 발생:", error);
+      }
+    };
+
     fetchDiaryFeeds();
     fetchDiarys();
     GetMyseries();
+    fetchSeriesFeeds();
   }, [memberId]);
 
   const getEmotionImage = (emotion) => {
@@ -380,7 +385,7 @@ const MyPage = () => {
           className="series-feed"
           style={{ maxHeight: "200px", overflowY: "auto" }}
         >
-          <Feed items={feeds} type={"series"} />
+          <Feed items={seriesFeeds} type={"series"} />
         </ListGroup>
       </div>
       {selectedDiaryId && (
