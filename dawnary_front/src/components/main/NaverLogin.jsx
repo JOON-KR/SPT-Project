@@ -34,9 +34,7 @@ const NaverLogin = () => {
         const response = await axios.get("http://localhost:8080/member/all");
         const allUserEmail = response.data.emails;
 
-        console.log(allUserEmail);
         const isExist = allUserEmail.includes(email);
-        console.log(isExist);
         if (!isExist) {
           const signUpResponse = await axios.post(
             "http://localhost:8080/member/signup",
@@ -116,7 +114,6 @@ const NaverLogin = () => {
 
         naverLogin.getLoginStatus((status) => {
           if (status) {
-            console.log(naverLogin.user);
             const userEmail = naverLogin.user.getEmail();
             const userName = naverLogin.user.getNickName();
 

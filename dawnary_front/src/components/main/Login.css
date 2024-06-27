@@ -23,9 +23,14 @@
   text-decoration-color: #42526e;
   text-underline-offset: 4px;
   color: #42526e;
+  cursor: pointer;
 }
 .social-login {
   margin-top: 15px;
+}
+
+.login-msg {
+  color: #fd7170;
 }
 
 hr {
