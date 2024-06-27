@@ -1,29 +1,50 @@
 .calendar-container {
-    width: 100%;
-    height: 100%; /* 적절한 높이 설정 */
-    max-width: 800px; /* 적절한 최대 가로 크기 설정 */
-    margin: 0 auto;
+  width: 100%;
+  height: 100%; /* 적절한 높이 설정 */
+  max-width: 800px; /* 적절한 최대 가로 크기 설정 */
+  margin: 0 auto;
 }
 
 .calendar-container > * {
-    min-width: 800px;
-    min-height: 520px; /* 최소 높이 설정 */
-  }
+  min-width: 800px;
+  min-height: 520px; /* 최소 높이 설정 */
+  text-decoration: none;
+}
 
 .event-detail-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    z-index: 1000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  z-index: 1000;
 }
 
 .event-detail-popup img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 10px auto;
-  }
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.mypage-button {
+  padding: 10px 20px;
+  background-color: olivedrab;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  border-radius: 5px;
+}
+
+.mypage-button:hover {
+  background-color: rgb(85, 114, 26);
+}

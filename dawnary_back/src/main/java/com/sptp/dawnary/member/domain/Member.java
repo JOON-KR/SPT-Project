@@ -8,7 +8,6 @@ import java.util.Set;
 import com.sptp.dawnary.follow.domain.Follow;
 import com.sptp.dawnary.member.dto.request.MemberRequest;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,6 +36,7 @@ public class Member {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "member_id")
 	private Long id;
 
 	@Column(name = "email", length = 50, updatable = false, unique = true)
@@ -48,17 +48,17 @@ public class Member {
 	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "image_path", nullable = true)
+	@Column(name = "image_path")
 	private String imagePath;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "ROLE", nullable = false)
 	private RoleType role;
 
-	@OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "following")
 	private Set<Follow> followers = new HashSet<>();
 
-	@OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "follower")
 	private Set<Follow> followings = new HashSet<>();
 
 	public void updatePassword(String password) {

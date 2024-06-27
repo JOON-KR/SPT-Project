@@ -37,7 +37,7 @@ const SeriesDetail = () => {
         {seriesDetail.diaries.length > 0 ? (
           seriesDetail.diaries.map((diary) => (
             <li key={diary.id} className={styles.diaryItem}>
-              <h4>{diary.title}</h4>
+              <h4 className={styles.diaryTitle}>{diary.title}</h4>
               <p>{diary.contents}</p>
             </li>
           ))

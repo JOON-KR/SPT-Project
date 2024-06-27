@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "@/utils/axiosInstance";
 import KakaoMap from "./KakaoMap";
 
 export default function ScheduleUpdate({ event, onClose }) {
@@ -10,8 +10,6 @@ export default function ScheduleUpdate({ event, onClose }) {
   const [content, setContent] = useState(event.content);
   const [time, setTime] = useState(event.date ? new Date(event.date).toLocaleString().substring(11, 16) : "");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-  const token = sessionStorage.getItem('token');
 
   useEffect(() => {
     if (event) {
@@ -40,12 +38,7 @@ export default function ScheduleUpdate({ event, onClose }) {
     try {
       const response = await axios.put(
         `http://localhost:8080/schedule/${event.id}`,
-        scheduleData, {
-          headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
-            'Content-Type': "application/json", // 콘텐츠 타입 설정
-          },
-        }
+        scheduleData
       );
       console.log("일정 수정 성공:", response.data);
       onClose();

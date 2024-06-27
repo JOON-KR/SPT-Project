@@ -60,11 +60,13 @@ public class MemberService {
 		return accessToken;
 	}
 
-	public void logout(String email, String accessToken) {
-		long remainingTime = jwtUtil.getRemainingTime(accessToken);
+	public void logout(String email, String refreshToken) {
+		// 리프레시 토큰을 블랙리스트에 추가
+		long remainingTime = jwtUtil.getRemainingTime(refreshToken);
+		redisService.addTokenToBlacklist(refreshToken, remainingTime);
 		redisService.deleteRefreshToken(email);
-		redisService.addTokenToBlacklist(accessToken, remainingTime);
 	}
+
 
 	public Long signup(Member member) {
 		Optional<Member> validMember = memberRepository.findByEmail(member.getEmail());
@@ -87,12 +89,15 @@ public class MemberService {
 		if(originMember.isEmpty()) {
 			throw new MemberNotFoundException();
 		}
+		Member origin = originMember.get();
+		String newPassword = request.password() != null ? encoder.encode(request.password()) : origin.getPassword();
+		String newName = request.name() != null ? request.name() : origin.getName();
 		Member updateMember = Member.builder()
 			.id(memberId)
-			.email(originMember.get().getEmail())
-			.password(request.password())
-			.name(request.name())
-			.role(originMember.get().getRole())
+			.email(origin.getEmail())
+			.password(newPassword)
+			.name(newName)
+			.role(origin.getRole())
 			.build();
 		return memberRepository.save(updateMember);
 	}

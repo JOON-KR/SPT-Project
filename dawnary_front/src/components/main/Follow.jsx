@@ -2,7 +2,7 @@ import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const Follow = ({ items, cName }) => {
+const Follow = ({ items, cName, type }) => {
   const nav = useNavigate();
 
   const goUserPage = (member) => {
@@ -15,7 +15,7 @@ const Follow = ({ items, cName }) => {
         className={`follow-list-title ${cName}`}
         style={{ textAlign: "center" }}
       >
-        팔로우 목록
+        {type === "following" ? "팔로잉" : "팔로워"}
       </h2>
       <ListGroup variant="flush" className={`follow-list-items ${cName} `}>
         {items.map((item, index) => (
@@ -25,7 +25,7 @@ const Follow = ({ items, cName }) => {
             onClick={() => goUserPage(item)} // 함수 참조 형태로 전달
             style={{ textAlign: "center", cursor: "pointer" }}
           >
-            {item.nickName}
+            {item.name}
           </ListGroup.Item>
         ))}
       </ListGroup>
