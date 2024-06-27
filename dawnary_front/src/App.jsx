@@ -3,7 +3,6 @@ import Login from "./components/main/Login";
 import MyPage from "./components/main/MyPage";
 import Regist from "./components/main/Regist";
 import UserPage from "./components/main/UserPage";
-import KakaoLogin from "./components/main/KakaoLogin";
 import MainCalendar from "./components/calendar/MainCalendar";
 import { Routes, Route } from "react-router-dom";
 import NaverLogin from "./components/main/NaverLogin";
@@ -14,6 +13,7 @@ import MonthlySeries from "./components/Search/MonthlySeries";
 import SeriesDetail from "./components/Search/SeriesDetail";
 import Setting from "./components/main/Setting";
 import CreateSeries from "./components/Search/CreateSeries";
+import DiaryView from "./components/calendar/diary/DiaryView";
 
 function App() {
   return (
@@ -23,7 +23,6 @@ function App() {
       <Route path="/regist" element={<Regist />} />
       <Route path="/myPage" element={<MyPage />} />
       <Route path="/userPage/:id" element={<UserPage />} />
-      <Route path="/kakaoLogin" element={<KakaoLogin />} />
       <Route path="/mainCalendar" element={<MainCalendar />} />
       <Route path="/naverLogin" element={<NaverLogin />} />
       <Route path="/searchResult" element={<SearchResults />} />
@@ -33,6 +32,7 @@ function App() {
       <Route path="/series/:id" element={<SeriesDetail />} />
       <Route path="/setting" element={<Setting />} />
       <Route path="/createSeries" element={<CreateSeries />} />
+      <Route path="/diary/:id" element={<DiaryView />} />
     </Routes>
   );
 }

@@ -5,34 +5,39 @@ import { AutoSearch } from './RESTapi';
 
 const AutoComplete = ({ searchTerm, onSuggestionClick }) => {
   const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (searchTerm) {
-        try {
-          const response = await AutoSearch(searchTerm);
-          // response 배열이 올바른지 확인
-          if (Array.isArray(response)) {
-            setSuggestions(response);
-          } else {
-            setSuggestions([]);
-            console.error('Invalid response structure', response);
-          }
-        } catch (error) {
-          console.error('자동완성 검색 오류:', error);
-          setSuggestions([]);
-        }
-      } else {
+      if (!searchTerm.trim()) {
         setSuggestions([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const response = await AutoSearch(searchTerm);
+        if (Array.isArray(response)) {
+          setSuggestions(response);
+        } else {
+          setSuggestions([]);
+          console.error('Invalid response structure', response);
+        }
+      } catch (error) {
+        console.error('자동완성 검색 오류:', error);
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const timerId = setTimeout(fetchSuggestions, 300); // 디바운싱을 위해 300ms 대기
+    fetchSuggestions();
 
-    return () => {
-      clearTimeout(timerId);
-    };
   }, [searchTerm]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   if (!suggestions.length) {
     return null;
@@ -44,7 +49,7 @@ const AutoComplete = ({ searchTerm, onSuggestionClick }) => {
         <li
           key={suggestion.id}
           className={barStyles.suggestion}
-          onClick={() => onSuggestionClick(suggestion.name)}
+          onClick={() => onSuggestionClick(suggestion)}
         >
           {suggestion.name} ({suggestion.email})
         </li>
