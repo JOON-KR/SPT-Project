@@ -8,7 +8,7 @@ import useUserStore from "../../stores/user";
 
 const NaverLogin = () => {
   const navigate = useNavigate();
-  const password = "qwerqwer!"; // 비밀번호는 변경되지 않는 것으로 가정
+  const password = "Abcdefg999!"; // 비밀번호는 변경되지 않는 것으로 가정
 
   const { setAllUserEmail } = useUserStore();
 
@@ -50,8 +50,8 @@ const NaverLogin = () => {
             );
 
             if (loginResponse.status === 200) {
-              const token = response.data.accessToken;
-              const refreshToken = response.data.refreshToken;
+              const token = loginResponse.data.accessToken;
+              const refreshToken = loginResponse.data.refreshToken;
               const payload = token.substring(
                 token.indexOf(".") + 1,
                 token.lastIndexOf(".")

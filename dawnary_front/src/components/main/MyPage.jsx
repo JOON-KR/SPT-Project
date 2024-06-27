@@ -21,14 +21,15 @@ const MyPage = () => {
   const [selectedDiaryId, setSelectedDiaryId] = useState(null);
   const [mySeries, setMySeries] = useState([]);
   const [seriesFeeds, setSeriesFeeds] = useState([]);
+  const [followings, setFollowings] = useState([]);
+  const [followers, setFollowers] = useState([]);
 
   const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
   const nickName = loginUser.name;
   const memberId = loginUser.id;
-  const nav = useNavigate();
+  const cName = "inside";
 
-  const [followings, setFollowings] = useState([]);
-  const [followers, setFollowers] = useState([]);
+  const nav = useNavigate();
 
   useEffect(() => {
     const fetchFollowingData = async () => {
@@ -73,31 +74,10 @@ const MyPage = () => {
 
     fetchFollowingData();
     fetchFollowerData();
-  }, [memberId]);
-
-  //달력 날짜 선택했을 때 실행되는 함수
-  const handleCalendarChange = (date) => {
-    // date를 moment로 변환하여 YYYY-MM-DD 형식의 문자열로 가져옵니다
-    const selectedDate = moment(date).format("YYYY-MM-DD");
-
-    // diarys 배열에서 선택된 날짜에 해당하는 일기의 id를 찾습니다
-    const diary = diarys.find((diary) => diary.date === selectedDate);
-
-    // 일기가 있으면 해당 일기의 id를 selectedDiaryId로 설정합니다
-    if (diary) {
-      setSelectedDiaryId(diary.id);
-    } else {
-      // 선택된 날짜에 일기가 없으면 selectedDiaryId를 초기화합니다
-      setSelectedDiaryId(null);
-    }
-  };
-
-  // 팝업 닫기
-  const closePopup = () => {
-    setSelectedDiaryId(null);
-  };
+  }, []);
 
   useEffect(() => {
+    //팔로우 일기 피드 로딩
     const fetchDiaryFeeds = async () => {
       const access_token = "Bearer " + sessionStorage.getItem("token");
 
@@ -118,6 +98,7 @@ const MyPage = () => {
       }
     };
 
+    //감정일기에 표시할 유저 일기 로딩
     const fetchDiarys = async () => {
       const access_token = "Bearer " + sessionStorage.getItem("token");
 
@@ -157,10 +138,8 @@ const MyPage = () => {
       }
     };
 
+    //나의 시리즈 피드 가져오기
     const GetMyseries = async () => {
-      const userJson = sessionStorage.getItem("loginUser"); // "loginUser" 키로 저장된 값을 가져옴
-      const user = JSON.parse(userJson);
-      const memberId = user.id;
       const access_token = "Bearer " + sessionStorage.getItem("token");
 
       try {
@@ -175,13 +154,13 @@ const MyPage = () => {
           config
         );
         setMySeries(response.data);
-        console.log(mySeries);
       } catch (error) {
         console.error("나의 시리즈 가져오기 실패:", error);
         throw error;
       }
     };
 
+    //팔로우 시리즈 피드 가져오기
     const fetchSeriesFeeds = async () => {
       const access_token = "Bearer " + sessionStorage.getItem("token");
 
@@ -207,6 +186,29 @@ const MyPage = () => {
     fetchSeriesFeeds();
   }, [memberId]);
 
+  //달력 날짜 선택했을 때 실행되는 함수
+  const handleCalendarChange = (date) => {
+    // date를 moment로 변환하여 YYYY-MM-DD 형식의 문자열로 가져옵니다
+    const selectedDate = moment(date).format("YYYY-MM-DD");
+
+    // diarys 배열에서 선택된 날짜에 해당하는 일기의 id를 찾습니다
+    const diary = diarys.find((diary) => diary.date === selectedDate);
+
+    // 일기가 있으면 해당 일기의 id를 selectedDiaryId로 설정합니다
+    if (diary) {
+      setSelectedDiaryId(diary.id);
+    } else {
+      // 선택된 날짜에 일기가 없으면 selectedDiaryId를 초기화합니다
+      setSelectedDiaryId(null);
+    }
+  };
+
+  // 팝업 닫기
+  const closePopup = () => {
+    setSelectedDiaryId(null);
+  };
+
+  //감정상태에 따른 사진 경로
   const getEmotionImage = (emotion) => {
     switch (emotion) {
       case "happy":
@@ -224,6 +226,7 @@ const MyPage = () => {
     }
   };
 
+  //감정일기 타일 렌더링
   const renderTileContent = ({ date, view }) => {
     if (view === "month") {
       const emotionDiary = diarys.find((diary) =>
@@ -242,23 +245,25 @@ const MyPage = () => {
     return null;
   };
 
-  const cName = "inside";
-
+  //팔로잉 사이드바 토글
   const toggleFollowing = () => {
     setShowFollowing(!showFollowing);
     setShowFollowers(false);
   };
 
+  //팔로워 사이드바 토글
   const toggleFollowers = () => {
     setShowFollowers(!showFollowers);
     setShowFollowing(false);
   };
 
+  //사이드바 닫기 동작
   const closeBox = () => {
     setShowFollowing(false);
     setShowFollowers(false);
   };
 
+  //사이드바 외부 영역 클릭
   const handleOutsideClick = (e) => {
     if (
       e.target.classList.contains("following") ||
