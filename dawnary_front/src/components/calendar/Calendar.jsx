@@ -72,10 +72,18 @@ export default function Calendar({ onDateClick }) {
   const goToMyPage = () => {
     navigate("/mypage");
   };
+  const goToSearch = () => {
+    navigate("/searchResult");
+  }
+  const goToSeries = () => {
+    navigate("/seriesResult");
+  }
 
   return (
     <>
       <div className="calendar-header">
+        <button onClick={goToSearch} className="mypage-button">검색</button>
+        <button onClick={goToSeries} className="mypage-button">시리즈조회</button>
         <button onClick={goToMyPage} className="mypage-button">마이페이지</button>
       </div>
       <h2>달력</h2>
