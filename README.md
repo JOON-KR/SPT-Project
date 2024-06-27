@@ -66,7 +66,8 @@
 ![메인화면_회원가입](https://github.com/JOON-KR/SPT-Project/assets/52641434/92388d3e-7be6-4db4-9976-cdae39c56954)
 #### 로그인
 ![로그인](https://github.com/JOON-KR/SPT-Project/assets/52641434/35acc8de-ee41-41f2-8d94-dbf76bdb9eec)
-
+#### 네이버 아이디 로그인
+![네이버 아이디 로그인](https://github.com/JOON-KR/SPT-Project/assets/114348883/079ca774-2252-4beb-90cb-a472065bb904)
 
 ## 메인 달력 페이지
 ### 사용 기술 
