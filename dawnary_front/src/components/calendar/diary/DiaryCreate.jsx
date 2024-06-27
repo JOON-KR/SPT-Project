@@ -63,6 +63,7 @@ export default function DiaryCreate({ date, onClose }) {
       );
       console.log("일기 등록 성공:", response.data);
       onClose();
+      window.location.reload();
     } catch (error) {
       console.log(diaryData);
       console.error("일기 등록 실패:", error);
