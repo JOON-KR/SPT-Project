@@ -49,6 +49,12 @@ const MainHeader = ({ onSearch, onFilterChange }) => {
         <Link to="/myPage">
           <button className={barStyles.routeButton}>마이페이지</button>
         </Link>
+        <Link to="/seriesResult">
+          <button className={barStyles.routeButton}>전체 시리즈 조회</button>
+        </Link>
+        <Link to="/createSeries">
+          <button className={barStyles.routeButton}>시리즈 등록하기</button>
+        </Link>
       </div>
       <UserAutoComplete
         searchTerm={searchTerm}

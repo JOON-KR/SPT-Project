@@ -210,7 +210,7 @@ export const getMonthlySeries = async () => {
   }
 };
 
-
+// 시리즈의 상세정보를 불러오는 api 호출
 export const getSeriesDetail = async (seriesId) => {
   try {
     const config = {
@@ -226,3 +226,45 @@ export const getSeriesDetail = async (seriesId) => {
     throw error
   }
 }
+
+//시리즈를 읽고 작성한 유저 팔로우 하기
+export const followMember = async (memberId) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    };
+
+    const response = await axios.post(`${BASE_URL}/follow/${memberId}` , config)
+    
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('팔로우 요청 실패' , error)
+    throw error
+  }
+}
+
+
+export const GetMyseries = async () => {
+  
+  const userJson = sessionStorage.getItem("loginUser"); // "loginUser" 키로 저장된 값을 가져옴
+  const user = JSON.parse(userJson);
+  const memberId = user.id;
+
+  try {
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    };
+
+    const response = await axios.get(`${BASE_URL}/series/${memberId}`, config);
+    return response.data;
+  } catch (error) {
+    console.error('나의 시리즈 가져오기 실패:', error);
+    throw error;
+  }
+};

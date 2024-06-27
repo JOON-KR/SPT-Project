@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { CreateMySeries, GetMyDiary } from './RESTapi';
-import styles from './SearchCss/CreateSeries.module.css'
+import styles from './SearchCss/CreateSeries.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const CreateSeries = ({ ACCESS_TOKEN }) => {
   const [title, setTitle] = useState('');
@@ -10,6 +11,9 @@ const CreateSeries = ({ ACCESS_TOKEN }) => {
   const [selectedDiaries, setSelectedDiaries] = useState([]);
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchDiaries();
   }, []);
@@ -41,6 +45,7 @@ const CreateSeries = ({ ACCESS_TOKEN }) => {
     try {
       const response = await CreateMySeries(seriesData, ACCESS_TOKEN);
       console.log('시리즈 작성 완료:', response);
+      navigate('/seriesResult'); // 성공적으로 시리즈를 작성한 후 /seriesResult로 이동
     } catch (err) {
       setError('시리즈 작성에 실패했습니다');
     }
@@ -80,17 +85,17 @@ const CreateSeries = ({ ACCESS_TOKEN }) => {
           <h2 className={styles.diariesSelection}>일기 선택하기</h2>
           {diaries.map((diary) => (
             <div key={diary.id} className={styles.diaryItem}>
-            <input
-              type="checkbox"
-              checked={selectedDiaries.includes(diary.id)}
-              onChange={() => handleDiarySelection(diary.id)}
-              className={styles.checkbox}
-            />
-            <div className={styles.diaryContent}>
-              <label>{diary.title}</label>
-              <label>{new Date(diary.date).toISOString().split('T')[0]}</label>
+              <input
+                type="checkbox"
+                checked={selectedDiaries.includes(diary.id)}
+                onChange={() => handleDiarySelection(diary.id)}
+                className={styles.checkbox}
+              />
+              <div className={styles.diaryContent}>
+                <label>{diary.title}</label>
+                <label>{new Date(diary.date).toISOString().split('T')[0]}</label>
+              </div>
             </div>
-          </div>
           ))}
         </div>
         <button type="submit" className={styles.button}>나만의 시리즈 작성하기</button>
