@@ -20,17 +20,6 @@ const Feed = ({ items, type }) => {
   //디테일 페이지로 이동 - 다이어리 or 시리즈
   const nav = useNavigate();
 
-  // const goDetail = (id, type) => {
-  //   console.log("클릭함");
-  //   if (type === "diary") {
-  //     console.log("diary");
-  //     // nav(`/series/${id}`);
-  //   } else {
-  //     console.log("series");
-  //     // nav(`/diary/${id}`);
-  //   }
-  // };
-
   //피드에 내용이 없는 경우
   if (items.length === 0) {
     return <div className="empty-feed-box">아직 피드가 없어요 😅</div>;

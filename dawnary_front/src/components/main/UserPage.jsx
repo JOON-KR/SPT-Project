@@ -27,28 +27,38 @@ const UserPage = () => {
     const access_token = "Bearer " + sessionStorage.getItem("token");
 
     // 일기 피드 요청
-    axios
-      .get(`http://localhost:8080/diary/member/${id}`, {
-        headers: { Authorization: access_token },
-      })
-      .then((response) => {
-        setDiaryFeeds(response.data);
-      })
-      .catch((error) => {
-        console.error("일기 피드 로딩 실패:", error);
-      });
+    const fetchDiaryFeeds = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/diary/member/${id}`,
+          {
+            headers: { Authorization: access_token },
+          }
+        );
 
+        setDiaryFeeds(response.data);
+      } catch (error) {
+        console.error("일기 피드 로딩 실패:", error);
+      }
+    };
     // 시리즈 피드 요청
-    axios
-      .get(`http://localhost:8080/series/member/${id}`, {
-        headers: { Authorization: access_token },
-      })
-      .then((response) => {
+    const fetchSeriesFeeds = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/series/member/${id}`,
+          {
+            headers: { Authorization: access_token },
+          }
+        );
+
         setSeriesFeeds(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("시리즈 피드 로딩 실패:", error);
-      });
+      }
+    };
+
+    fetchDiaryFeeds();
+    fetchSeriesFeeds();
   }, [id]);
 
   return (
@@ -60,7 +70,7 @@ const UserPage = () => {
           <ListGroup
             as="ul"
             className="diary-feed m-3"
-            style={{ maxHeight: "700px", overflowY: "auto" }}
+            style={{ maxHeight: "800px", overflowY: "auto" }}
           >
             <UserFeed items={diaryFeeds} type={"diary"} />
           </ListGroup>
@@ -71,7 +81,7 @@ const UserPage = () => {
           <ListGroup
             as="ul"
             className="series-feed m-3"
-            style={{ maxHeight: "700px", overflowY: "auto" }}
+            style={{ maxHeight: "800px", overflowY: "auto" }}
           >
             <UserFeed items={seriesFeeds} type={"series"} />
           </ListGroup>
