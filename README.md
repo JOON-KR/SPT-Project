@@ -42,6 +42,10 @@
 - 팔로잉 피드 확인
 - 감정 캘린더 : 해당 날짜의 감정을 이모티콘으로 시각화, 클릭시 확인
 ### 👨🏻‍💻 시연 영상
+#### 내 일기&시리즈 조회
+![마이페이지_내일기_내시리즈조회](https://github.com/JOON-KR/SPT-Project/assets/52641434/21d7d20d-7031-45d1-86cc-4d8c1e49b0d0)
+#### 팔로잉 일기 조회
+![마이페이지_팔로잉일기조회](https://github.com/JOON-KR/SPT-Project/assets/52641434/7a6e16b1-ed1b-4ab8-ad26-8ae6fa136f15)
 
 ## 로그인 페이지
 ### 사용 기술
@@ -58,6 +62,11 @@
 - JPA의 Valid 어노테이션으로 회원가입시 유효성 검사처리
 - 네이버 로그인 연동
 ### 👨🏻‍💻 시연 영상
+#### 회원가입
+![메인화면_회원가입](https://github.com/JOON-KR/SPT-Project/assets/52641434/92388d3e-7be6-4db4-9976-cdae39c56954)
+#### 로그인
+![로그인](https://github.com/JOON-KR/SPT-Project/assets/52641434/35acc8de-ee41-41f2-8d94-dbf76bdb9eec)
+
 
 ## 메인 달력 페이지
 ### 사용 기술 
@@ -78,6 +87,11 @@
 - record클래스를 사용하요 불변성 dto구성
 - JPQL을 사용한 복잡한 쿼리처리
 ### 👨🏻‍💻 시연 영상
+#### 스케줄 등록 & 조회
+![일정등록](https://github.com/JOON-KR/SPT-Project/assets/52641434/d2b1fb42-23c1-4331-80d1-e3725a172898)
+#### 다이어리 등록 & 조회
+![일기등록](https://github.com/JOON-KR/SPT-Project/assets/52641434/16d5c33b-99e9-4435-b0e1-ee42d2bf1cfa)
+
 
 ## 통합 검색 페이지
 ### 사용 기술
