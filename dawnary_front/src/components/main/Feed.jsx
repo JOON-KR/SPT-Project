@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge, ListGroup } from "react-bootstrap";
 import moment from "moment";
+import { useNavigate, Link } from "react-router-dom";
 
 const Feed = ({ items, type }) => {
   //오늘날짜랑 차이 계산
@@ -17,7 +18,18 @@ const Feed = ({ items, type }) => {
   };
 
   //디테일 페이지로 이동 - 다이어리 or 시리즈
-  const goDetail = (id, type) => {};
+  const nav = useNavigate();
+
+  // const goDetail = (id, type) => {
+  //   console.log("클릭함");
+  //   if (type === "diary") {
+  //     console.log("diary");
+  //     // nav(`/series/${id}`);
+  //   } else {
+  //     console.log("series");
+  //     // nav(`/diary/${id}`);
+  //   }
+  // };
 
   //피드에 내용이 없는 경우
   if (items.length === 0) {
@@ -31,11 +43,14 @@ const Feed = ({ items, type }) => {
           as="li"
           className="d-flex justify-content-between align-items-start"
           key={index}
-          onClick={goDetail(item.id, type)}
         >
           <div className="ms-2 me-auto">
-            <div className="fw-bold">{item.title}</div>
-            {item.name}
+            <Link
+              to={type === "diary" ? `/diary/${item.id}` : `/series/${item.id}`}
+            >
+              <div className="fw-bold">{item.title}</div>
+              {item.name}
+            </Link>
           </div>
           <div>
             <Badge pill bg="primary">

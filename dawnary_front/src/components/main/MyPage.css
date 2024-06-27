@@ -74,9 +74,10 @@
   margin-left: 20px;
 }
 
+.my-series-feed,
 .diary-feed,
 .series-feed {
-  max-height: "350px";
+  /* max-height: "200px"; */
   overflow-y: "auto";
   margin: 20px;
   cursor: pointer;
