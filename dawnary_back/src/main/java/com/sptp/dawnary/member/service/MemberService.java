@@ -89,12 +89,15 @@ public class MemberService {
 		if(originMember.isEmpty()) {
 			throw new MemberNotFoundException();
 		}
+		Member origin = originMember.get();
+		String newPassword = request.password() != null ? encoder.encode(request.password()) : origin.getPassword();
+		String newName = request.name() != null ? request.name() : origin.getName();
 		Member updateMember = Member.builder()
 			.id(memberId)
-			.email(originMember.get().getEmail())
-			.password(request.password())
-			.name(request.name())
-			.role(originMember.get().getRole())
+			.email(origin.getEmail())
+			.password(newPassword)
+			.name(newName)
+			.role(origin.getRole())
 			.build();
 		return memberRepository.save(updateMember);
 	}
