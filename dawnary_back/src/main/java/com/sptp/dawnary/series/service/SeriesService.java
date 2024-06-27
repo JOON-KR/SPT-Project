@@ -112,6 +112,9 @@ public class SeriesService {
 
         List<DiaryResponse> diaries = getDiaries(series.get().getId());
 
+        series.get().setViewCnt(series.get().getViewCnt() + 1);
+
+        seriesRepository.save(series.get());
 
         return SeriesResponse.toResponse(series.get(), diaries);
     }
