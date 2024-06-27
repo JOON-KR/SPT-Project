@@ -28,3 +28,23 @@
   display: block;
   margin: 10px auto;
 }
+
+.calendar-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.mypage-button {
+  padding: 10px 20px;
+  background-color: olivedrab;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  border-radius: 5px;
+}
+
+.mypage-button:hover {
+  background-color: rgb(85, 114, 26);
+}
