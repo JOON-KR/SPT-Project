@@ -12,4 +12,6 @@ public interface SeriesCustomRepository {
 
     List<Series> findMemberSeriesByLatest(Long loginMemberId, Long memberId);
     List<Series> findMemberSeriesByLikes(Long loginMemberId, Long memberId);
+
+    List<Series> findFollowSeriesByLatest(Long loginMemberId);
 }

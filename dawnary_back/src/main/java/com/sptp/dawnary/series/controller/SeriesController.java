@@ -46,6 +46,12 @@ public class SeriesController {
         return new ResponseEntity<>(seriesService.findMemberSeriesByLikes(memberId), HttpStatus.OK);
     }
 
+    // 멤버 시리즈 조회(좋아요 순)
+    @GetMapping("/follow")
+    public ResponseEntity<?> getFollowSeries() {
+        return new ResponseEntity<>(seriesService.findFollowSeriesByLatest(), HttpStatus.OK);
+    }
+
     // 특정 시리즈 조회
     @GetMapping("/{seriesId}")
     public ResponseEntity<?> getDetailSeries(@PathVariable("seriesId") Long seriesId) {

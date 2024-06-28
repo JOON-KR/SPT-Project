@@ -1,6 +1,8 @@
 package com.sptp.dawnary.series.repository;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sptp.dawnary.follow.domain.QFollow;
 import com.sptp.dawnary.like.domain.QLike;
 import com.sptp.dawnary.series.domain.QSeries;
 import com.sptp.dawnary.series.domain.Series;
@@ -79,4 +81,19 @@ public class SeriesCustomRepositoryImpl implements SeriesCustomRepository {
                 .orderBy(like.count().desc())
                 .fetch();
     }
+
+    @Override
+    public List<Series> findFollowSeriesByLatest(Long loginMemberId) {
+        QSeries series = QSeries.series;
+        QFollow follow = QFollow.follow;
+        return queryFactory.selectFrom(series)
+                .where(series.member.id.in(
+                        JPAExpressions.select(follow.following.id)
+                                .from(follow)
+                                .where(follow.follower.id.eq(loginMemberId))
+                ))
+                .orderBy(series.regDate.desc())
+                .fetch();
+    }
+
 }

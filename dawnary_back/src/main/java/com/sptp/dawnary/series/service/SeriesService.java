@@ -78,6 +78,12 @@ public class SeriesService {
                 .toList();
     }
 
+    public List<SeriesResponse> findFollowSeriesByLatest() {
+        return seriesRepository.findFollowSeriesByLatest(MemberInfo.getMemberId()).stream()
+                .map(series -> SeriesResponse.toResponse(series, getDiaries(series.getId())))
+                .toList();
+    }
+
     // 시리즈 저장
     public SeriesResponse saveSeries(SeriesRequest seriesFormDto) {
         Series series = Series.toEntity(seriesFormDto);
