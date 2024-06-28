@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import styles from "./SearchCss/SeriesList.module.css";
 
 const SeriesItem = ({ series }) => {
   return (
     <li className={styles.seriesItem}>
-      <h2>{series.title}</h2>
+      <Link to={`/series/${series.id}`}>
+        <h2>{series.title}</h2>
+      </Link>
       <p>작성자: {series.name}</p>
       <p>등록일: {new Date(series.regDate).toLocaleString()}</p>
       {series.imagePath && <img src={series.imagePath} alt={series.title} style={{ width: '100px', height: '100px' }} />}

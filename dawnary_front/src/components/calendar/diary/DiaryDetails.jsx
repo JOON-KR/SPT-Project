@@ -12,7 +12,27 @@ export default function DiaryDetails({ diaryId, onClose }) {
       const response = await axios.get(
         `http://localhost:8080/diary/${diaryId}`
       );
-      setDiary(response.data);
+
+      const updatedDiarys = (diary) => {
+        let emotion = "";
+        if (diary.sentiment >= -1 && diary.sentiment < -0.6) {
+          emotion = "upset";
+        } else if (diary.sentiment >= -0.6 && diary.sentiment < -0.2) {
+          emotion = "bad";
+        } else if (diary.sentiment >= -0.2 && diary.sentiment < 0.2) {
+          emotion = "soso";
+        } else if (diary.sentiment >= 0.2 && diary.sentiment < 0.6) {
+          emotion = "good";
+        } else if (diary.sentiment >= 0.6 && diary.sentiment <= 1) {
+          emotion = "happy";
+        }
+        return {
+          ...diary,
+          emotion: emotion,
+        };
+      };
+
+      setDiary(updatedDiarys(response.data));
       if (response.data.imagePath) {
         fetchImage(response.data.imagePath);
       }
@@ -71,7 +91,7 @@ export default function DiaryDetails({ diaryId, onClose }) {
             {imageUrl && <img src={imageUrl} alt="Diary" />}
             <p>날씨 : {diary.weather}</p>
             <p>내용 : {diary.content}</p>
-            <p>기분 : {diary.sentiment}</p>
+            <p>기분 : {diary.emotion}</p>
             <div>
               <button onClick={onClose}>닫기</button>
               <button onClick={handleEditClick}>수정</button>

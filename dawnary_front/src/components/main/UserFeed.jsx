@@ -2,6 +2,7 @@ import React from "react";
 import { ListGroup, Badge, Card } from "react-bootstrap";
 import moment from "moment";
 import "./UserFeed.css"; // UserFeed에 대한 CSS 파일을 따로 생성합니다.
+import { Link } from "react-router-dom";
 
 const UserFeed = ({ items, type }) => {
   // 오늘날짜랑 차이 계산
@@ -17,11 +18,6 @@ const UserFeed = ({ items, type }) => {
     }
   };
 
-  // 디테일 페이지로 이동 - 다이어리 or 시리즈
-  const goDetail = (id, type) => {
-    // 이동 로직 구현
-  };
-
   //피드에 내용이 없는 경우
   if (items.length === 0) {
     return <div className="empty-feed-box">아직 피드가 없어요 😅</div>;
@@ -34,10 +30,14 @@ const UserFeed = ({ items, type }) => {
           as="li"
           className="d-flex justify-content-between align-items-start h-30"
           key={index}
-          onClick={() => goDetail(item.id, type)}
         >
           <div className="ms-2 me-auto">
-            <div className="fw-bold">{item.title}</div>
+            <Link
+              to={type === "diary" ? `/diary/${item.id}` : `/series/${item.id}`}
+            >
+              <div className="fw-bold">{item.title}</div>
+              {item.name}
+            </Link>
           </div>
           <Badge pill bg="primary">
             {calculateDateDifference(item.date)}

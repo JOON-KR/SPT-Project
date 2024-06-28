@@ -42,6 +42,7 @@ export default function ScheduleCreate({ date, onClose }) {
       );
       console.log("일정 등록 성공:", response.data);
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("일정 등록 실패:", error);
       console.log(scheduleData);
