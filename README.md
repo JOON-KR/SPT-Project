@@ -106,6 +106,9 @@
 - 시리즈 / 멤버를 구분하여 통합 검색어 추천 리스트 생성
 - Lodash로 ES에 저장된 모든 키워드를 재정렬
 ### 👨🏻‍💻 시연 영상
+#### 통합 검색창
+![검색창](https://github.com/JOON-KR/SPT-Project/assets/156158702/bc2a113e-49a1-41c6-b1a5-00178ac9924f)
+
 
 ## 시리즈 페이지
 ### 사용 기술
@@ -114,6 +117,13 @@
 - 이달의 추천, 신작 시리즈 보기 기능
 - 최신순, 추천순 정렬
 - 명예의 전당
+
+### 👨🏻‍💻 시연 영상
+#### 전체 시리즈 조회
+![전체시리즈조회](https://github.com/JOON-KR/SPT-Project/assets/156158702/faebef3d-9d8d-4bfa-add3-ec712614f04d)
+#### 시리즈 등록
+![시리즈이제는대야한다](https://github.com/JOON-KR/SPT-Project/assets/156158702/65a7764f-a719-44f9-b303-414273fd7f19)
+
 
 # ELK STACK
 ![image](https://github.com/JOON-KR/SPT-Project/assets/171137407/ab1459ad-38e2-49db-bb55-24d0a35d2928)
